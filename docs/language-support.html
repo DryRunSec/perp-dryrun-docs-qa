@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PR Blocking - DryRun Security Docs</title>
-  <meta name="description" content="Configure DryRun Security to block pull requests when critical vulnerabilities are detected.">
+  <title>Language and Framework Support - DryRun Security Docs</title>
+  <meta name="description" content="Languages, frameworks, and package ecosystems supported across all DryRun Security scanning capabilities.">
   <link rel="icon" href="../assets/favicon.ico" type="image/png">
   <link rel="apple-touch-icon" href="../assets/logo192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,7 +65,7 @@
 <li><a href="../docs/iac-scanning.html">IaC Scanning</a></li>
 <li><a href="../docs/sca.html">SCA</a></li>
 <li><a href="../docs/auto-fix.html">Auto Fix</a></li>
-<li><a href="../docs/language-support.html">Language and Framework Support</a></li>
+<li><a href="../docs/language-support.html" class="active">Language and Framework Support</a></li>
 <li><a href="../docs/vulnerability-coverage-matrix.html">Vulnerability Coverage Matrix</a></li>
 </ul>
 </div>
@@ -78,7 +78,7 @@
 <li><a href="../docs/repository-context.html">Repository Context</a></li>
 <li><a href="../docs/risk-register.html">Risk Register</a></li>
 <li><a href="../docs/finding-tuning.html">Finding Tuning with Feedback</a></li>
-<li><a href="../docs/pr-blocking.html" class="active">PR Blocking</a></li>
+<li><a href="../docs/pr-blocking.html">PR Blocking</a></li>
 <li><a href="../docs/permissions.html">Permissions</a></li>
 <li><a href="../docs/mcp.html">MCP</a></li>
 <li><a href="../docs/dryrun-api.html">DryRun API</a></li>
@@ -98,104 +98,80 @@
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="document.querySelector('.sidebar').classList.remove('open');document.getElementById('sidebarOverlay').style.display='none'"></div>
     <main class="content-area">
       <div class="content-inner">
-        <div class="breadcrumb"><a href="../index.html">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">Platform</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">PR Blocking</span></div>
+        <div class="breadcrumb"><a href="../index.html">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">Scanning</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Language and Framework Support</span></div>
         <div class="page-heading-row">
-          <h1 class="page-heading">PR Blocking</h1>
+          <h1 class="page-heading">Language and Framework Support</h1>
           <button class="btn-download-pdf" onclick="window.print()" title="Download as PDF"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 7.5 8 10l3.5-2.5"/><path d="M2.5 11v2a1 1 0 001 1h9a1 1 0 001-1v-2"/></svg><span>PDF</span></button>
         </div>
-        <p class="page-description">Configure DryRun Security to block pull requests when critical vulnerabilities are detected.</p>
+        <p class="page-description">Languages, frameworks, and package ecosystems supported across all DryRun Security scanning capabilities.</p>
         <div class="doc-content">
-<h2 id="overview">Overview</h2>
+<p>DryRun Security supports a broad range of languages, frameworks, and package ecosystems across its scanning capabilities. Coverage varies by scanning mode: PR scanning and DeepScan analyze source code, while SCA analyzes dependency manifests and lock files.</p>
 
-<p>DryRun Security can be configured to block pull requests from being merged when security findings exceed your defined thresholds. PR Blocking integrates with your source code management platform's native branch protection features to enforce security gates in your development workflow.</p>
+<h2 id="pr-scanning-and-deepscan">PR Scanning and DeepScan</h2>
 
-<h2 id="how-it-works">How It Works</h2>
+<p>Both <a href="./pr-scanning.html">PR scanning</a> and <a href="./deepscan.html">DeepScan</a> support the same set of programming languages and frameworks. The scanner automatically detects the language and framework in use during analysis and tailors its review accordingly.</p>
 
-<p>When PR Blocking is enabled, DryRun Security reports its scan results as a required status check on each pull request. If findings meet or exceed the configured severity threshold, the check is marked as failed, preventing the PR from being merged until the issues are resolved.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Language</th>
+      <th>Frameworks and Runtimes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>JavaScript / TypeScript</td><td>Node.js, React, Angular, Vue</td></tr>
+    <tr><td>Python</td><td>Django, Flask, FastAPI</td></tr>
+    <tr><td>Java</td><td>Spring, Jakarta EE</td></tr>
+    <tr><td>Go</td><td></td></tr>
+    <tr><td>Ruby</td><td>Rails, Sinatra</td></tr>
+    <tr><td>PHP</td><td>Laravel, Symfony</td></tr>
+    <tr><td>C#</td><td>.NET</td></tr>
+    <tr><td>Kotlin</td><td></td></tr>
+    <tr><td>Swift</td><td></td></tr>
+    <tr><td>Rust</td><td></td></tr>
+  </tbody>
+</table>
 
-<ul>
-  <li><strong>GitHub:</strong> DryRun Security integrates with GitHub's required status checks. Configure the DryRun Security check as required in your branch protection rules.</li>
-  <li><strong>GitLab:</strong> DryRun Security integrates with GitLab's merge request approval rules to block merges when findings are present.</li>
-</ul>
+<h2 id="sca-ecosystems">SCA: Dependency Ecosystems</h2>
 
-<h2 id="configuring-blocking">Configuring PR Blocking</h2>
+<p><a href="./sca.html">Software Composition Analysis (SCA)</a> runs as part of DeepScan and scans package manifests and lock files across all major package ecosystems. Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.</p>
 
-<ol>
-  <li>Navigate to the <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">DryRun Security dashboard</a>.</li>
-  <li>Go to <strong>Settings</strong> for the repository you want to configure.</li>
-  <li>Under <strong>PR Blocking</strong>, enable the blocking toggle.</li>
-  <li>Set the <strong>severity threshold</strong> - findings at or above this level will block the PR. Options include:
-    <ul>
-      <li><strong>Critical</strong> - Only block on critical severity findings.</li>
-      <li><strong>High</strong> - Block on high and critical findings.</li>
-      <li><strong>Medium</strong> - Block on medium, high, and critical findings.</li>
-      <li><strong>Low</strong> - Block on all findings.</li>
-    </ul>
-  </li>
-  <li>Configure your SCM's branch protection to require the DryRun Security status check.</li>
-</ol>
+<table>
+  <thead>
+    <tr>
+      <th>Ecosystem</th>
+      <th>Manifest and Lock Files</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>JavaScript / Node.js</td><td><code>package.json</code>, <code>package-lock.json</code>, <code>yarn.lock</code></td></tr>
+    <tr><td>Python</td><td><code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code></td></tr>
+    <tr><td>Ruby</td><td><code>Gemfile</code>, <code>Gemfile.lock</code></td></tr>
+    <tr><td>Java / Kotlin</td><td><code>pom.xml</code>, Gradle build files</td></tr>
+    <tr><td>Go</td><td><code>go.mod</code>, <code>go.sum</code></td></tr>
+    <tr><td>Rust</td><td><code>Cargo.toml</code>, <code>Cargo.lock</code></td></tr>
+    <tr><td>.NET</td><td><code>*.csproj</code>, <code>packages.config</code></td></tr>
+  </tbody>
+</table>
 
-<h2 id="override-workflow">Override Workflow</h2>
+<h2 id="language-detection">Automatic Language Detection</h2>
 
-<p>In cases where a blocked PR needs to be merged despite findings (for example, an accepted risk or false positive), authorized users can override the block:</p>
+<p>DryRun Security automatically detects languages and frameworks in use during scanning. No manual configuration is required: the scanner profiles the repository structure, file extensions, and framework conventions to tailor its security analysis to your specific stack.</p>
 
-<ul>
-  <li>Use <a href="./finding-tuning.html">Finding Tuning with Feedback</a> to mark findings as accepted risk or false positive.</li>
-  <li>Repository administrators can bypass branch protection rules when necessary.</li>
-  <li>All overrides are logged in the <a href="./risk-register.html">Risk Register</a> for audit purposes.</li>
-</ul>
-
-<h2 id="configure-blocking">Configure Blocking with Branch Protection</h2>
-
-<p>The recommended approach is to configure a severity threshold at the configuration level. Any finding at or above that threshold will trigger the blocking flow across all agents. See <a href="#configuring-pr-blocking">Configuring PR Blocking</a> above.</p>
-
-<p>For teams that prefer per-policy or per-analyzer blocking, that is still supported. After enabling <strong>Blocking</strong> on a specific policy or analyzer, follow these steps:</p>
-
-<h3 id="set-up-branch-protection">Set Up a Classic Branch Protection Rule</h3>
-
-<ol>
-  <li>On GitHub, navigate to the main page of the repository.</li>
-  <li>Under your repository name, click <strong>Settings</strong>.</li>
-  <li>In the <strong>Code and automation</strong> section of the sidebar, click <strong>Branches</strong>.</li>
-  <li>Choose <strong>Add classic branch protection rule</strong>.</li>
-  <li>Under <strong>Branch name pattern</strong>, type the name of the branch to protect (e.g., <code>main</code>).</li>
-  <li>Select <strong>Require status checks to pass before merging</strong>.</li>
-  <li>In the search field, search for DryRun Security status checks to require. Choose <strong>Code Policies</strong> for Custom Code Policies, or the agent name (e.g., <strong>Secrets Analyzer</strong>) for Code Security Agents.</li>
-  <li>Click <strong>Create</strong>.</li>
-</ol>
-
-<p>When a Custom Code Policy has <strong>Blocking</strong> enabled, it appears as a single Check in GitHub under the name <strong>Code Policies</strong>. When a Code Security Agent has blocking enabled, it appears as a Check with the agent's name (e.g., <strong>Secrets Analyzer</strong>).</p>
-
-<h2 id="github-branch-protection-rules">GitHub Branch Protection Rules</h2>
-
-<p>Use GitHub Branch Protection Rules to enforce DryRun Security checks before merging.</p>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/10-github-settings.png" alt="GitHub repository Settings page" loading="lazy"></figure>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/11-github-branches.png" alt="GitHub Branches settings" loading="lazy"></figure>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/12-branch-protection.png" alt="GitHub Branch Protection rule" loading="lazy"></figure>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/13-branch-name.png" alt="Branch name pattern for protection" loading="lazy"></figure>
-
-<p>Require DryRun Security status checks to pass before merging.</p>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/14-require-checks.png" alt="Requiring status checks for DryRun Security" loading="lazy"></figure>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/15-checks-policies.png" alt="DryRun Security policy checks in branch protection" loading="lazy"></figure>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/16-checks-secrets.png" alt="DryRun Security secrets check in branch protection" loading="lazy"></figure>
-<figure class="docs-screenshot"><img src="../assets/images/configurations/17-checks-details.png" alt="DryRun Security check details in branch protection" loading="lazy"></figure>
+<p>For SCA, the scanner identifies all manifest and lock files present in the repository and checks each dependency against the appropriate vulnerability database for that ecosystem.</p>
         </div>
 <nav class="prev-next">
-<a href="../docs/finding-tuning.html" class="prev-next-link prev-link"><span class="prev-next-label">← Previous</span><span class="prev-next-title">Finding Tuning with Feedback</span></a>
-<a href="../docs/compliance-grc.html" class="prev-next-link next-link"><span class="prev-next-label">Next →</span><span class="prev-next-title">Compliance &amp; GRC</span></a>
+<a href="../docs/auto-fix.html" class="prev-next-link prev-link"><span class="prev-next-label">← Previous</span><span class="prev-next-title">Auto Fix</span></a>
+<a href="../docs/vulnerability-coverage-matrix.html" class="prev-next-link next-link"><span class="prev-next-label">Next →</span><span class="prev-next-title">Vulnerability Coverage Matrix</span></a>
 </nav>
       </div>
     </main>
 <aside class="toc-sidebar">
 <p class="toc-title">On this page</p>
 <ul class="toc-list">
-<li class="toc-h2"><a href="#overview">Overview</a></li>
-<li class="toc-h2"><a href="#how-it-works">How It Works</a></li>
-<li class="toc-h2"><a href="#configuring-blocking">Configuring PR Blocking</a></li>
-<li class="toc-h2"><a href="#override-workflow">Override Workflow</a></li>
-<li class="toc-h2"><a href="#configure-blocking">Configure Blocking with Branch Protection</a></li>
-<li class="toc-h3"><a href="#set-up-branch-protection">Set Up a Classic Branch Protection Rule</a></li>
-<li class="toc-h2"><a href="#github-branch-protection-rules">GitHub Branch Protection Rules</a></li>
+<li class="toc-h2"><a href="#pr-scanning-and-deepscan">PR Scanning and DeepScan</a></li>
+<li class="toc-h2"><a href="#sca-ecosystems">SCA: Dependency Ecosystems</a></li>
+<li class="toc-h2"><a href="#language-detection">Automatic Language Detection</a></li>
 </ul>
 </aside>
   </div>

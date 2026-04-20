@@ -9,6 +9,8 @@
   <url><loc>https://docs.dryrun.security/docs/iac-scanning.html</loc><priority>0.8</priority></url>
   <url><loc>https://docs.dryrun.security/docs/sca.html</loc><priority>0.8</priority></url>
   <url><loc>https://docs.dryrun.security/docs/auto-fix.html</loc><priority>0.8</priority></url>
+  <url><loc>https://docs.dryrun.security/docs/language-support.html</loc><priority>0.8</priority></url>
+  <url><loc>https://docs.dryrun.security/docs/vulnerability-coverage-matrix.html</loc><priority>0.8</priority></url>
   <url><loc>https://docs.dryrun.security/docs/code-security-intelligence.html</loc><priority>0.8</priority></url>
   <url><loc>https://docs.dryrun.security/docs/pr-scanning-configuration.html</loc><priority>0.8</priority></url>
   <url><loc>https://docs.dryrun.security/docs/custom-code-policies.html</loc><priority>0.8</priority></url>

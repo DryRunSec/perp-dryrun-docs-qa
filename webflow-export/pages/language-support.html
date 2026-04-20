@@ -1,0 +1,56 @@
+<div class="drs-doc-content">
+<p>DryRun Security supports a broad range of languages, frameworks, and package ecosystems across its scanning capabilities. Coverage varies by scanning mode: PR scanning and DeepScan analyze source code, while SCA analyzes dependency manifests and lock files.</p>
+
+<h2 id="pr-scanning-and-deepscan">PR Scanning and DeepScan</h2>
+
+<p>Both <a href="./pr-scanning.html">PR scanning</a> and <a href="./deepscan.html">DeepScan</a> support the same set of programming languages and frameworks. The scanner automatically detects the language and framework in use during analysis and tailors its review accordingly.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Language</th>
+      <th>Frameworks and Runtimes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>JavaScript / TypeScript</td><td>Node.js, React, Angular, Vue</td></tr>
+    <tr><td>Python</td><td>Django, Flask, FastAPI</td></tr>
+    <tr><td>Java</td><td>Spring, Jakarta EE</td></tr>
+    <tr><td>Go</td><td></td></tr>
+    <tr><td>Ruby</td><td>Rails, Sinatra</td></tr>
+    <tr><td>PHP</td><td>Laravel, Symfony</td></tr>
+    <tr><td>C#</td><td>.NET</td></tr>
+    <tr><td>Kotlin</td><td></td></tr>
+    <tr><td>Swift</td><td></td></tr>
+    <tr><td>Rust</td><td></td></tr>
+  </tbody>
+</table>
+
+<h2 id="sca-ecosystems">SCA: Dependency Ecosystems</h2>
+
+<p><a href="./sca.html">Software Composition Analysis (SCA)</a> runs as part of DeepScan and scans package manifests and lock files across all major package ecosystems. Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Ecosystem</th>
+      <th>Manifest and Lock Files</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>JavaScript / Node.js</td><td><code>package.json</code>, <code>package-lock.json</code>, <code>yarn.lock</code></td></tr>
+    <tr><td>Python</td><td><code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code></td></tr>
+    <tr><td>Ruby</td><td><code>Gemfile</code>, <code>Gemfile.lock</code></td></tr>
+    <tr><td>Java / Kotlin</td><td><code>pom.xml</code>, Gradle build files</td></tr>
+    <tr><td>Go</td><td><code>go.mod</code>, <code>go.sum</code></td></tr>
+    <tr><td>Rust</td><td><code>Cargo.toml</code>, <code>Cargo.lock</code></td></tr>
+    <tr><td>.NET</td><td><code>*.csproj</code>, <code>packages.config</code></td></tr>
+  </tbody>
+</table>
+
+<h2 id="language-detection">Automatic Language Detection</h2>
+
+<p>DryRun Security automatically detects languages and frameworks in use during scanning. No manual configuration is required: the scanner profiles the repository structure, file extensions, and framework conventions to tailor its security analysis to your specific stack.</p>
+
+<p>For SCA, the scanner identifies all manifest and lock files present in the repository and checks each dependency against the appropriate vulnerability database for that ecosystem.</p>
+</div>
