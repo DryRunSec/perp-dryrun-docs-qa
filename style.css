@@ -719,6 +719,9 @@ details[open] .api-endpoint-summary::before {
   height: auto;
   border-radius: 0;
 }
+.docs-screenshot.docs-screenshot-sm {
+  max-width: 480px;
+}
 
 /* Responsive video embed */
 .video-embed {

@@ -1229,7 +1229,7 @@ Finding Tuning with Feedback,finding-tuning,"<p>Developers and AppSec engineers 
   <li>Use the audit trail to confirm all triage decisions are intentional and documented</li>
 </ul>
 
-<figure class=""docs-screenshot""><img src=""assets/images/risk-register/03-finding-triage.png"" alt=""Finding triage in the Risk Register"" loading=""lazy""></figure>
+<figure class=""docs-screenshot docs-screenshot-sm""><img src=""assets/images/risk-register/03-finding-triage.png"" alt=""Finding triage in the Risk Register"" loading=""lazy""></figure>
 
 <figure class=""docs-screenshot""><img src=""assets/images/risk-register/04-triage-pr.png"" alt=""Finding triage from the PR workflow"" loading=""lazy""></figure>
 
