@@ -1392,95 +1392,93 @@ PAGES['finding-tuning'] = {
     'description': 'Tune security findings and reduce false positives with feedback from developers and AppSec engineers.',
     'section': 'Platform',
     'content': '''
-<p>DryRun Security knows that LLMs are not perfect. Even with a very low false positive rate, the system is designed to learn from your team. That is why DryRun Security lets both AppSec engineers and developers submit feedback directly back into the models, progressively calibrating scans to your codebase over time.</p>
+<p>Developers and AppSec engineers can dismiss findings directly from the PR thread or the Risk Register dashboard. Every dismissal is logged for audit. Dismissals marked as <strong>False Positive</strong> or <strong>Won&rsquo;t Fix / Nitpick</strong> also feed back into the model, improving scan accuracy over time.</p>
 
-<p>Every piece of feedback - whether a developer marks a finding as a false positive in a PR thread or an AppSec engineer dismisses it from the Risk Register - feeds into the <a href="./code-security-intelligence.html">Code Security Knowledge Graph</a> and improves future scan accuracy across your organization.</p>
+<h2 id="dismissal-statuses">Dismissal Statuses</h2>
 
-<h2 id="feedback-from-scm">Feedback from the SCM (Developers)</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Description</th>
+      <th>Available From</th>
+      <th>LLM Learning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>False Positive</strong></td>
+      <td>The finding is not real or does not apply to the codebase. DryRun Security fingerprints the pattern and suppresses it in future scans. Context provided improves detection accuracy across similar patterns over time.</td>
+      <td>PR comment and Risk Register</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><strong>Won&rsquo;t Fix / Nitpick</strong></td>
+      <td>The finding is valid but below the bar the team cares about, or the team has decided not to fix it. Feeds back into the model to reduce similar noise over time.</td>
+      <td>PR comment and Risk Register</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><strong>Accepted Risk</strong></td>
+      <td>The team knowingly accepts the risk and will not remediate it. Removed from the active view and SCM comment. Documented in the audit trail with the reason and who accepted it.</td>
+      <td>Risk Register</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>In Progress</strong></td>
+      <td>A fix is planned but not yet applied. Removed from the active view and SCM comment. DryRun Security resolves it once the fix is applied.</td>
+      <td>Risk Register</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><strong>Resolved</strong></td>
+      <td>The finding has been addressed. Removed from the active view and SCM comment.</td>
+      <td>Risk Register</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>Developers can submit feedback directly from the pull request thread without leaving their workflow. When DryRun Security flags a finding in a PR, the developer can reply in the PR comment thread to mark it as a false positive or nitpick:</p>
+<p>False Positive and Won&rsquo;t Fix / Nitpick dismissals feed into the <a href="./code-security-intelligence.html">Code Security Knowledge Graph</a>, building a model of your codebase&rsquo;s specific patterns and risk profile. Scan accuracy improves continuously as your team triages findings.</p>
 
-<p><code>@dryrunsecurity FP [issue ID]</code></p>
+<h2 id="from-the-pr">From the PR</h2>
 
-<p>When a developer submits feedback this way, DryRun Security:</p>
-<ul>
-  <li>Analyzes the feedback and logs it for the audit trail</li>
-  <li>Removes the finding from the active list</li>
-  <li>Regenerates the PR summary comment to reflect the updated findings</li>
-  <li>Feeds the signal back into the system to improve future scans</li>
-</ul>
+<p>Developers can dismiss findings directly from the pull request thread without leaving their workflow. Dismissals sync to the Risk Register for AppSec review.</p>
 
-<p>No tickets, no context switching, no waiting. The feedback loop stays where developers already work. <a href="https://www.dryrun.security/blog/security-that-listens-introducing-pr-feedback-in-dryrun-security" target="_blank" rel="noopener noreferrer">Learn more about PR feedback in DryRun Security</a>.</p>
+<p>To mark a finding as a false positive:</p>
+<p><code>@dryrunsecurity FP [issue ID] details why</code></p>
+
+<p>To mark a finding as a nitpick:</p>
+<p><code>@dryrunsecurity NIT [issue ID] details why</code></p>
+
+<p>When a developer submits a dismissal, DryRun Security removes the finding from the active list, regenerates the PR summary comment, logs the decision for the audit trail, and feeds the signal back into the system.</p>
+
+<p>If a finding is incorrectly blocking a merge via <a href="./pr-blocking.html">branch protection rules</a>, developers can dismiss it directly in the PR thread. DryRun Security automatically removes the block without requiring AppSec intervention. The dismissal is logged so AppSec can review it afterward.</p>
 
 <figure class="docs-screenshot"><img src="{asset_prefix}assets/images/risk-register/05-scm-feedback.jpg" alt="SCM feedback workflow" loading="lazy"></figure>
 
-<h2 id="feedback-from-risk-register">Feedback from the Risk Register (AppSec)</h2>
+<h2 id="from-the-risk-register">From the Risk Register</h2>
 
-<p>AppSec engineers manage finding dismissals from the <a href="./risk-register.html">Risk Register</a> dashboard, which provides a centralized view across all repositories and scan types. From the Risk Register, AppSec teams can:</p>
+<p>AppSec engineers manage dismissals from the <a href="./risk-register.html">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Triage</strong> to choose a status and optionally add context.</p>
+
+<p>From the Risk Register, AppSec teams can also:</p>
 <ul>
-  <li>Review all dismissed findings with full context: who dismissed it, when, and why</li>
   <li>Override dismissals when a finding represents real risk that was incorrectly dismissed</li>
-  <li>Monitor dismissal patterns across the organization to identify trends and training opportunities</li>
-  <li>Use the audit trail to ensure all triage decisions are intentional and documented</li>
+  <li>Monitor dismissal patterns across the organization to identify trends</li>
+  <li>Use the audit trail to confirm all triage decisions are intentional and documented</li>
 </ul>
-
-<p>Select one or more findings using the checkboxes, then click <strong>Triage</strong> to choose a reason and optionally add context. When you mark a finding as <strong>False Positive</strong>, DryRun Security fingerprints the vulnerability pattern and suppresses it in future scans automatically. The context you provide feeds into the Knowledge Graph to improve detection accuracy over time.</p>
 
 <figure class="docs-screenshot"><img src="{asset_prefix}assets/images/risk-register/03-finding-triage.png" alt="Finding triage in the Risk Register" loading="lazy"></figure>
 
 <figure class="docs-screenshot"><img src="{asset_prefix}assets/images/risk-register/04-triage-pr.png" alt="Finding triage from the PR workflow" loading="lazy"></figure>
 
-<h2 id="use-cases">Use Cases</h2>
-
-<h3 id="weeding-out-false-positives">Weeding Out False Positives</h3>
-<p>When a finding is not real or does not apply to the codebase, developers can mark it as a false positive directly from the PR using <code>@dryrunsecurity FP [issue ID]</code>. The feedback is logged and improves future scans so the same false positive does not resurface. AppSec engineers can also mark false positives from the Risk Register with additional context that feeds into the Knowledge Graph.</p>
-
-<h3 id="marking-nitpick">Marking Low-Impact Findings as Nitpick</h3>
-<p>Some findings are technically valid but below the bar the team cares about. Marking them as nitpick removes them from the active list without dismissing the class of issue entirely. This keeps the signal-to-noise ratio high for developers while preserving the finding data for AppSec review.</p>
-
-<h3 id="triaging-accepted-risk">Triaging Accepted Risk / Won't Fix</h3>
-<p>When a team knowingly accepts a risk and will not remediate it, the finding can be dismissed as won't fix. AppSec engineers can review these in the Risk Register to ensure accepted risk is intentional and documented. The audit trail provides visibility into which risks have been accepted, by whom, and with what justification.</p>
-
-<h3 id="unblocking-pr">Unblocking a PR Incorrectly Blocked by a Finding</h3>
-<p>If a finding is incorrectly blocking a merge via <a href="./pr-blocking.html">branch protection rules</a>, developers can mark it as a false positive directly in the PR thread. DryRun Security will automatically remove the block, allowing the PR to be merged without waiting for AppSec intervention. The feedback is logged so AppSec can review it afterward, and the signal improves future scans to prevent the same incorrect block from recurring.</p>
-
-<h2 id="how-dryrun-learns">How DryRun Security Learns from Feedback</h2>
-
-<p>Most security tools treat triage as a dead end: you dismiss a finding, and it disappears until it shows up again next week. DryRun Security treats every triage decision as a learning signal:</p>
-<ul>
-  <li><strong>False positive fingerprinting</strong> - When you mark a finding as a false positive, DryRun Security fingerprints the vulnerability pattern and automatically suppresses it in future PR scans and DeepScans.</li>
-  <li><strong>Context-based learning</strong> - When you add context explaining why a finding is safe, that context is stored and used to calibrate future analysis in similar situations across your codebase.</li>
-  <li><strong>Pattern recognition</strong> - Over time, triage decisions feed into the <a href="./code-security-intelligence.html">Code Security Knowledge Graph</a>, improving accuracy for your specific frameworks, deployment patterns, and risk profile.</li>
-</ul>
-<p>The result: false positive rates decrease over time as DryRun Security accumulates organizational knowledge from your team's feedback.</p>
-
 <h2 id="dismissed-findings">Dismissed Findings</h2>
 
-<p>You can view and manage dismissed findings in the Risk Register using the <strong>Dismissed</strong> filter option. This shows all previously dismissed findings with full context: the dismissal category, reason, who dismissed it, when, and any notes provided at the time of dismissal.</p>
+<p>View dismissed findings in the Risk Register using the <strong>Dismissed</strong> filter. Each entry shows the dismissal status, reason, who dismissed it, and when. Use the <strong>Restore</strong> button to return a finding to the active queue if the dismissal needs to be revisited.</p>
 
-<p>Each dismissed finding has a <strong>Restore</strong> button to bring it back to your active queue if circumstances change or the dismissal needs to be revisited.</p>
-
-<p>The dismissal flow includes <strong>Resolved</strong> and <strong>Won&rsquo;t Fix / Nitpick</strong> values in addition to the standard options, giving teams more precise categorization when triaging findings.</p>
-
-<h2 id="faqs">FAQs</h2>
-
-<p><strong>What is Finding Triage?</strong><br>
-Finding Triage lets you categorize a finding and record why, using a triage reason and optional context. Triaged findings are marked resolved in the UI, and the decisions feed back into DryRun Security to improve future scans.</p>
-
-<p><strong>Does DryRun Security actually learn from my triage decisions?</strong><br>
-Yes. Every triage decision - the reason, the context you provide, the fingerprint - is stored in the Code Security Knowledge Graph. DryRun Security uses this to suppress duplicate findings immediately and to improve detection accuracy for similar patterns over time.</p>
-
-<p><strong>What happens when I mark a finding as a False Positive?</strong><br>
-DryRun Security fingerprints the vulnerability pattern. If the same fingerprint is detected in a future PR scan or DeepScan, the finding is automatically suppressed.</p>
-
-<p><strong>How is the context field used?</strong><br>
-Context is stored with the triage decision and used in two ways: immediately to suppress similar false positives, and over time to improve analysis accuracy through the Knowledge Graph.</p>
-
-<p><strong>Can developers submit feedback from their PR workflow?</strong><br>
-Yes. Developers can reply directly in the PR thread with <code>@dryrunsecurity FP [issue ID]</code> to mark a finding as a false positive. DryRun Security removes the finding, regenerates the PR summary, and feeds the signal back into the system. Those decisions also sync to the Risk Register for AppSec review.</p>
-
-<p><strong>What is the difference between a false positive and a nitpick?</strong><br>
-A false positive means the finding is not real or does not apply to the codebase. A nitpick means the finding is technically valid but below the bar the team cares about. Both are removed from the active list, but they are tracked separately so AppSec can monitor patterns.</p>
+<div class="callout callout-warning">
+<p><strong>When a finding is valid but mitigating circumstances exist:</strong> Sometimes your team knows DryRun Security is right about a finding, but another layer of protection already addresses it. Rather than marking it as a false positive, the right resolution is to update your AGENTS.md with the context that explains why. This tells DryRun Security about the mitigating control so it does not raise the same class of issue again, without misrepresenting the finding as invalid. See <a href="./repository-context.html">Repository Context</a> for details.</p>
+</div>
 
 ''',
 }
