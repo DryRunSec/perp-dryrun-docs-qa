@@ -2489,30 +2489,58 @@ Slack Integration,slack-integration,"<p>In this section we set up an integration
 <p>Changes in the repository that match the integration's risk level will now trigger a notification.</p>",Receive DryRun Security alerts and notifications in Slack.,Integrations
 Webhook Integration,webhook-integration,"<h2 id=""overview"">Overview</h2>
 
-<p>DryRun Security supports webhook integration, allowing you to send security events to any HTTP endpoint. Use webhooks to integrate DryRun Security with custom dashboards, ticketing systems, SIEMs, or any other tool in your security workflow.</p>
+<p>DryRun Security sends a webhook POST request to a configured endpoint when a finding is detected on a pull request. Use this to route finding data to custom dashboards, ticketing systems, SIEMs, or automation tools.</p>
 
-<h2 id=""configuring-webhooks"">Configuring Webhooks</h2>
+<p>Webhook setup is a two-step process: first create the webhook in Integrations, then attach it to a configuration to activate it for specific repositories.</p>
+
+<h2 id=""step-1-create-a-webhook"">Step 1: Create a Webhook</h2>
 
 <ol>
-  <li>Navigate to the <a href=""https://app.dryrun.security"" target=""_blank"" rel=""noopener noreferrer"">DryRun Security dashboard</a>.</li>
-  <li>Go to <strong>Settings &gt; Integrations &gt; Webhooks</strong>.</li>
-  <li>Click <strong>Add Webhook</strong>.</li>
-  <li>Enter the <strong>URL</strong> of your webhook endpoint.</li>
-  <li>Select which <strong>events</strong> should trigger the webhook:
-    <ul>
-      <li><strong>New Finding</strong> - Triggered when a new vulnerability is discovered.</li>
-      <li><strong>Finding Resolved</strong> - Triggered when a finding is fixed or dismissed.</li>
-      <li><strong>Scan Complete</strong> - Triggered when a PR scan or DeepScan finishes.</li>
-      <li><strong>Policy Violation</strong> - Triggered when a custom code policy is violated.</li>
-    </ul>
-  </li>
-  <li>Optionally configure a <strong>secret token</strong> for request signature verification.</li>
+  <li>In the left nav of the <a href=""https://app.dryrun.security"" target=""_blank"" rel=""noopener noreferrer"">DryRun Security dashboard</a>, click <strong>Integrations</strong>.</li>
+  <li>Find the <strong>Generic Webhook</strong> entry and click <strong>Details</strong>.</li>
+  <li>Click <strong>Add Webhook +</strong>.</li>
+  <li>Enter a <strong>Name</strong> for the webhook.</li>
+  <li>Enter the <strong>Webhook URL</strong> of your endpoint.</li>
+  <li>Select a <strong>Risk Level</strong>. Findings at the selected severity and above will trigger the webhook.</li>
+</ol>
+
+<table>
+  <thead>
+    <tr><th>Risk Level</th><th>Findings included</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>All</td><td>All findings regardless of severity</td></tr>
+    <tr><td>Medium</td><td>Medium, High, and Critical</td></tr>
+    <tr><td>High</td><td>High and Critical</td></tr>
+    <tr><td>Critical</td><td>Critical only</td></tr>
+  </tbody>
+</table>
+
+<ol start=""7"">
+  <li>Use the <strong>Enabled</strong> toggle to activate or pause the webhook at any time.</li>
+  <li>Check <strong>Global</strong> to trigger this webhook for all repositories, regardless of configuration. Leave it unchecked to activate it only through specific configurations (see Step 2).</li>
   <li>Click <strong>Save</strong>.</li>
 </ol>
 
+<h2 id=""step-2-activate-for-repositories"">Step 2: Activate for Repositories</h2>
+
+<p>A webhook only fires for repositories included in a configuration with notifications enabled. To attach your webhook to a configuration:</p>
+
+<ol>
+  <li>Navigate to <strong>Configurations</strong> in the dashboard.</li>
+  <li>Click <strong>Edit</strong> on an existing configuration.</li>
+  <li>Toggle <strong>Notifications Enabled</strong> on.</li>
+  <li>In the <strong>Select Integrations</strong> dropdown, choose the webhook you created in Step 1.</li>
+  <li>Click <strong>Save</strong> at the bottom of the page.</li>
+</ol>
+
+<p>The webhook will now fire for any PR finding in the repositories covered by that configuration.</p>
+
+<p class=""docs-note"">If you have not created a webhook yet, click <strong>Add +</strong> on the Configurations page to go directly to the Generic Webhook setup page.</p>
+
 <h2 id=""payload-format"">Payload Format</h2>
 
-<p>Webhook payloads are sent as HTTP POST requests with a JSON body. Each payload includes:</p>
+<p>DryRun Security sends an HTTP POST with a JSON body to your endpoint when a finding is detected.</p>
 
 <pre><code>{
   ""event"": ""new_finding"",
@@ -2528,7 +2556,7 @@ Webhook Integration,webhook-integration,"<h2 id=""overview"">Overview</h2>
     ""line"": 127,
     ""description"": ""User input is rendered without escaping...""
   }
-}</code></pre>",Send DryRun Security events to any webhook endpoint for custom integrations.,Integrations
+}</code></pre>",Receive a POST request to any HTTP endpoint when DryRun Security detects a finding on a pull request.,Integrations
 Jira Integration,jira-integration,"<h2 id=""overview"">Overview</h2>
 
 <p>DryRun Security does not have a native Jira integration today, but admins can connect DryRun Security to Jira using an automation middleware tool, either <strong>Tines</strong> or <strong>Zapier</strong>. DryRun Security sends a webhook when a finding is detected on a PR scan. The middleware receives the webhook, unpacks the finding details, checks Jira for an existing ticket for that finding, and either creates a new ticket or updates the existing one.</p>

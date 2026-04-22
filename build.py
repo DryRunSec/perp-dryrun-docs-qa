@@ -6,6 +6,7 @@ Usage: python3 build.py
 Site structure: 4 sections, 18 pages
 """
 import csv
+import datetime
 import html
 import io
 import json
@@ -2784,35 +2785,63 @@ PAGES['slack-integration'] = {
 
 PAGES['webhook-integration'] = {
     'title': 'Webhook Integration',
-    'description': 'Send DryRun Security events to any webhook endpoint for custom integrations.',
+    'description': 'Receive a POST request to any HTTP endpoint when DryRun Security detects a finding on a pull request.',
     'section': 'Integrations',
     'content': '''
 <h2 id="overview">Overview</h2>
 
-<p>DryRun Security supports webhook integration, allowing you to send security events to any HTTP endpoint. Use webhooks to integrate DryRun Security with custom dashboards, ticketing systems, SIEMs, or any other tool in your security workflow.</p>
+<p>DryRun Security sends a webhook POST request to a configured endpoint when a finding is detected on a pull request. Use this to route finding data to custom dashboards, ticketing systems, SIEMs, or automation tools.</p>
 
-<h2 id="configuring-webhooks">Configuring Webhooks</h2>
+<p>Webhook setup is a two-step process: first create the webhook in Integrations, then attach it to a configuration to activate it for specific repositories.</p>
+
+<h2 id="step-1-create-a-webhook">Step 1: Create a Webhook</h2>
 
 <ol>
-  <li>Navigate to the <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">DryRun Security dashboard</a>.</li>
-  <li>Go to <strong>Settings &gt; Integrations &gt; Webhooks</strong>.</li>
-  <li>Click <strong>Add Webhook</strong>.</li>
-  <li>Enter the <strong>URL</strong> of your webhook endpoint.</li>
-  <li>Select which <strong>events</strong> should trigger the webhook:
-    <ul>
-      <li><strong>New Finding</strong> - Triggered when a new vulnerability is discovered.</li>
-      <li><strong>Finding Resolved</strong> - Triggered when a finding is fixed or dismissed.</li>
-      <li><strong>Scan Complete</strong> - Triggered when a PR scan or DeepScan finishes.</li>
-      <li><strong>Policy Violation</strong> - Triggered when a custom code policy is violated.</li>
-    </ul>
-  </li>
-  <li>Optionally configure a <strong>secret token</strong> for request signature verification.</li>
+  <li>In the left nav of the <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">DryRun Security dashboard</a>, click <strong>Integrations</strong>.</li>
+  <li>Find the <strong>Generic Webhook</strong> entry and click <strong>Details</strong>.</li>
+  <li>Click <strong>Add Webhook +</strong>.</li>
+  <li>Enter a <strong>Name</strong> for the webhook.</li>
+  <li>Enter the <strong>Webhook URL</strong> of your endpoint.</li>
+  <li>Select a <strong>Risk Level</strong>. Findings at the selected severity and above will trigger the webhook.</li>
+</ol>
+
+<table>
+  <thead>
+    <tr><th>Risk Level</th><th>Findings included</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>All</td><td>All findings regardless of severity</td></tr>
+    <tr><td>Medium</td><td>Medium, High, and Critical</td></tr>
+    <tr><td>High</td><td>High and Critical</td></tr>
+    <tr><td>Critical</td><td>Critical only</td></tr>
+  </tbody>
+</table>
+
+<ol start="7">
+  <li>Use the <strong>Enabled</strong> toggle to activate or pause the webhook at any time.</li>
+  <li>Check <strong>Global</strong> to trigger this webhook for all repositories, regardless of configuration. Leave it unchecked to activate it only through specific configurations (see Step 2).</li>
   <li>Click <strong>Save</strong>.</li>
 </ol>
 
+<h2 id="step-2-activate-for-repositories">Step 2: Activate for Repositories</h2>
+
+<p>A webhook only fires for repositories included in a configuration with notifications enabled. To attach your webhook to a configuration:</p>
+
+<ol>
+  <li>Navigate to <strong>Configurations</strong> in the dashboard.</li>
+  <li>Click <strong>Edit</strong> on an existing configuration.</li>
+  <li>Toggle <strong>Notifications Enabled</strong> on.</li>
+  <li>In the <strong>Select Integrations</strong> dropdown, choose the webhook you created in Step 1.</li>
+  <li>Click <strong>Save</strong> at the bottom of the page.</li>
+</ol>
+
+<p>The webhook will now fire for any PR finding in the repositories covered by that configuration.</p>
+
+<p class="docs-note">If you have not created a webhook yet, click <strong>Add +</strong> on the Configurations page to go directly to the Generic Webhook setup page.</p>
+
 <h2 id="payload-format">Payload Format</h2>
 
-<p>Webhook payloads are sent as HTTP POST requests with a JSON body. Each payload includes:</p>
+<p>DryRun Security sends an HTTP POST with a JSON body to your endpoint when a finding is detected.</p>
 
 <pre><code>{
   "event": "new_finding",
@@ -3520,12 +3549,62 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{esc(title)} - DryRun Security Docs</title>
   <meta name="description" content="{esc(description)}">
+  <!-- OpenGraph -->
+  <meta property="og:title" content="{esc(title)} - DryRun Security Docs">
+  <meta property="og:description" content="{esc(description)}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://docs.dryrun.security/docs/{slug}.html">
+  <meta property="og:image" content="https://docs.dryrun.security/assets/og-default.png">
+  <meta property="og:site_name" content="DryRun Security Docs">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{esc(title)} - DryRun Security Docs">
+  <meta name="twitter:description" content="{esc(description)}">
+  <meta name="twitter:image" content="https://docs.dryrun.security/assets/og-default.png">
+  <!-- Canonical & robots -->
+  <link rel="canonical" href="https://docs.dryrun.security/docs/{slug}.html">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="DryRun Security">
   <link rel="icon" href="{asset_prefix}assets/favicon.ico" type="image/png">
   <link rel="apple-touch-icon" href="{asset_prefix}assets/logo192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{asset_prefix}style.css">
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "name": "{esc(title)}",
+    "description": "{esc(description)}",
+    "url": "https://docs.dryrun.security/docs/{slug}.html",
+    "publisher": {{
+      "@type": "Organization",
+      "name": "DryRun Security",
+      "url": "https://dryrun.security"
+    }}
+  }}
+  </script>
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "DryRun Security Docs",
+        "item": "https://docs.dryrun.security/"
+      }},
+      {{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{esc(title)}",
+        "item": "https://docs.dryrun.security/docs/{slug}.html"
+      }}
+    ]
+  }}
+  </script>
 </head>
 <body>
 {header}
@@ -3703,12 +3782,46 @@ def render_index_page() -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DryRun Security Documentation</title>
   <meta name="description" content="{esc(description)}">
+  <!-- OpenGraph -->
+  <meta property="og:title" content="DryRun Security Documentation">
+  <meta property="og:description" content="{esc(description)}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://docs.dryrun.security/">
+  <meta property="og:image" content="https://docs.dryrun.security/assets/og-default.png">
+  <meta property="og:site_name" content="DryRun Security Docs">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DryRun Security Documentation">
+  <meta name="twitter:description" content="{esc(description)}">
+  <meta name="twitter:image" content="https://docs.dryrun.security/assets/og-default.png">
+  <!-- Canonical & robots -->
+  <link rel="canonical" href="https://docs.dryrun.security/">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="DryRun Security">
   <link rel="icon" href="{asset_prefix}assets/favicon.ico" type="image/png">
   <link rel="apple-touch-icon" href="{asset_prefix}assets/logo192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{asset_prefix}style.css">
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "DryRun Security",
+    "url": "https://dryrun.security",
+    "sameAs": ["https://docs.dryrun.security"]
+  }}
+  </script>
+  <script type="application/ld+json">
+  {{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "DryRun Security Docs",
+    "url": "https://docs.dryrun.security",
+    "description": "Documentation for DryRun Security, an AI-native application security platform"
+  }}
+  </script>
 </head>
 <body>
 {header}
@@ -3733,13 +3846,44 @@ def render_index_page() -> str:
 # ---------------------------------------------------------------------------
 
 def render_sitemap(base_url: str = 'https://docs.dryrun.security') -> str:
+    today = datetime.date.today().isoformat()
     lines = ['<?xml version="1.0" encoding="UTF-8"?>']
     lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-    lines.append(f'  <url><loc>{base_url}/</loc><priority>1.0</priority></url>')
+    lines.append(f'  <url><loc>{base_url}/</loc><priority>1.0</priority><lastmod>{today}</lastmod></url>')
     for slug in ORDERED_PAGES:
-        lines.append(f'  <url><loc>{base_url}/docs/{slug}.html</loc><priority>0.8</priority></url>')
+        lines.append(f'  <url><loc>{base_url}/docs/{slug}.html</loc><priority>0.8</priority><lastmod>{today}</lastmod></url>')
     lines.append('</urlset>')
     return '\n'.join(lines)
+
+
+def render_llms_txt(base_url: str = 'https://docs.dryrun.security') -> str:
+    """Generate llms.txt for AI crawler indexing per llmstxt.org spec."""
+    lines = []
+    lines.append('# DryRun Security Docs')
+    lines.append('')
+    lines.append('> AI-native application security platform documentation. Covers PR scanning, DeepScan, secrets detection, IaC scanning, SCA, custom code policies, risk register, finding tuning, and integrations.')
+    lines.append('')
+    lines.append('## Docs')
+    for slug in ORDERED_PAGES:
+        page = PAGES[slug]
+        title = page['title']
+        description = page.get('description', '')
+        lines.append(f'- [{title}]({base_url}/docs/{slug}.html): {description}')
+    return '\n'.join(lines) + '\n'
+
+
+def render_llms_full_txt(base_url: str = 'https://docs.dryrun.security') -> str:
+    """Generate llms-full.txt: concatenated clean markdown of all docs pages."""
+    sections = []
+    for slug in ORDERED_PAGES:
+        page = PAGES[slug]
+        title = page['title']
+        description = page.get('description', '')
+        content_html = page['content']
+        clean = re.sub(r'<[^>]+>', '', content_html)
+        clean = re.sub(r'\n{3,}', '\n\n', clean.strip())
+        sections.append(f'# {title}\n\nURL: {base_url}/docs/{slug}.html\n\n{description}\n\n{clean}')
+    return '\n\n---\n\n'.join(sections) + '\n'
 
 
 def render_robots() -> str:
@@ -4097,12 +4241,18 @@ def build(output_dir: str = None) -> None:
     (output_dir / 'robots.txt').write_text(render_robots(), encoding='utf-8')
     print('  Generated: robots.txt')
 
+    # llms.txt and llms-full.txt for AI crawler indexing
+    (output_dir / 'llms.txt').write_text(render_llms_txt(), encoding='utf-8')
+    print('  Generated: llms.txt')
+    (output_dir / 'llms-full.txt').write_text(render_llms_full_txt(), encoding='utf-8')
+    print('  Generated: llms-full.txt')
+
     # Webflow export
     generate_webflow_csv(output_dir)
     generate_webflow_pages(output_dir)
     generate_webflow_readme(output_dir)
 
-    total = len(ORDERED_PAGES) + 3  # pages + index + sitemap + robots
+    total = len(ORDERED_PAGES) + 5  # pages + index + sitemap + robots + llms.txt + llms-full.txt
     webflow_total = len(ORDERED_PAGES) + 2  # pages + CSV + README
     print(f'\nBuild complete: {total} site files + {webflow_total} webflow-export files generated in {output_dir}')
 
