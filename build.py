@@ -107,15 +107,15 @@ PAGES['documentation'] = {
     'content': '''
 <div class="landing-section">
   <div class="landing-grid cols-3">
-    <a class="landing-card persona" href="./risk-register.html">
+    <a class="landing-card persona" href="./risk-register">
       <span class="landing-card-title">AppSec Engineers</span>
       <span class="landing-card-desc">Surface top-level risk across your organization, review findings in depth, and run targeted security reviews on any repository.</span>
     </a>
-    <a class="landing-card persona" href="./quick-start.html">
+    <a class="landing-card persona" href="./quick-start">
       <span class="landing-card-title">Developers</span>
       <span class="landing-card-desc">Connect your repositories, understand PR findings as they appear, and triage false positives without leaving your workflow.</span>
     </a>
-    <a class="landing-card persona" href="./pr-scanning-configuration.html">
+    <a class="landing-card persona" href="./pr-scanning-configuration">
       <span class="landing-card-title">Admins</span>
       <span class="landing-card-desc">Configure repository scanning rules, manage notification channels, customize finding interpretation, and integrate via the API and MCP.</span>
     </a>
@@ -127,27 +127,27 @@ PAGES['documentation'] = {
     <h2 id="scanning-products">Products</h2>
   </div>
   <div class="landing-grid cols-3">
-    <a class="landing-card" href="./pr-scanning.html">
+    <a class="landing-card" href="./pr-scanning">
       <span class="landing-card-title">PR Scanning</span>
       <span class="landing-card-desc">Every PR is reviewed by DryRun Security&#x27;s AI engine, which posts contextual findings directly in your code review.</span>
     </a>
-    <a class="landing-card" href="./deepscan.html">
+    <a class="landing-card" href="./deepscan">
       <span class="landing-card-title">Repository Scanning with DeepScan</span>
       <span class="landing-card-desc">Scan an entire codebase on demand to uncover vulnerabilities that predate PR-level analysis.</span>
     </a>
-    <a class="landing-card" href="./secrets-scanning.html">
+    <a class="landing-card" href="./secrets-scanning">
       <span class="landing-card-title">Secrets Scanning</span>
       <span class="landing-card-desc">Catch API keys, tokens, and hardcoded passwords in diffs before they are merged into protected branches.</span>
     </a>
-    <a class="landing-card" href="./iac-scanning.html">
+    <a class="landing-card" href="./iac-scanning">
       <span class="landing-card-title">IaC Scanning</span>
       <span class="landing-card-desc">Scan Terraform configurations for security misconfigurations and insecure defaults in pull requests.</span>
     </a>
-    <a class="landing-card" href="./sca.html">
+    <a class="landing-card" href="./sca">
       <span class="landing-card-title">SCA</span>
       <span class="landing-card-desc">Identify known CVEs and license issues in your open-source dependencies with DeepScan.</span>
     </a>
-    <a class="landing-card" href="./auto-fix.html">
+    <a class="landing-card" href="./auto-fix">
       <span class="landing-card-title">Auto Fix</span>
       <span class="landing-card-desc">Accept AI-generated fixes for common vulnerability patterns and verify the remediation in a single step.</span>
     </a>
@@ -159,7 +159,7 @@ PAGES['documentation'] = {
     <h2 id="code-security-intelligence">Code Security Intelligence</h2>
   </div>
   <div class="landing-grid cols-3">
-    <a class="landing-card" href="./code-security-intelligence.html" style="grid-column: 1 / -1">
+    <a class="landing-card" href="./code-security-intelligence" style="grid-column: 1 / -1">
       <span class="landing-card-title">Code Security Intelligence</span>
       <span class="landing-card-desc">An intelligence layer built on top of all finding data and trends, surfacing feature ships, vulnerability trends, architecture risks, developer patterns, shadow AI usage, incident investigation, and more.</span>
     </a>
@@ -171,27 +171,27 @@ PAGES['documentation'] = {
     <h2 id="platform-integrations">Platform & Integrations</h2>
   </div>
   <div class="landing-grid cols-3">
-    <a class="landing-card" href="./pr-blocking.html">
+    <a class="landing-card" href="./pr-blocking">
       <span class="landing-card-title">PR Blocking</span>
       <span class="landing-card-desc">Prevent PRs from merging when findings exceed the severity or policy thresholds you define.</span>
     </a>
-    <a class="landing-card" href="./custom-code-policies.html">
+    <a class="landing-card" href="./custom-code-policies">
       <span class="landing-card-title">Custom Code Policies</span>
       <span class="landing-card-desc">Write organization-specific security rules in plain language and enforce them on every scan.</span>
     </a>
-    <a class="landing-card" href="./compliance-grc.html">
+    <a class="landing-card" href="./compliance-grc">
       <span class="landing-card-title">Compliance & GRC</span>
       <span class="landing-card-desc">Generate compliance reports, maintain audit trails, and demonstrate regulatory readiness from a single dashboard.</span>
     </a>
-    <a class="landing-card" href="./slack-integration.html">
+    <a class="landing-card" href="./slack-integration">
       <span class="landing-card-title">Slack Integration</span>
       <span class="landing-card-desc">Route finding alerts and scan summaries to the Slack channels your team already monitors.</span>
     </a>
-    <a class="landing-card" href="./webhook-integration.html">
+    <a class="landing-card" href="./webhook-integration">
       <span class="landing-card-title">Webhook Integration</span>
       <span class="landing-card-desc">Stream scan events and finding data to any HTTP endpoint for custom automation and reporting pipelines.</span>
     </a>
-    <a class="landing-card" href="./mcp.html">
+    <a class="landing-card" href="./mcp">
       <span class="landing-card-title">MCP</span>
       <span class="landing-card-desc">Expose DryRun Security data to AI coding assistants and agents through the Model Context Protocol.</span>
     </a>
@@ -230,42 +230,42 @@ PAGES['quick-start'] = {
     </tr>
     <tr>
       <td>2</td>
-      <td><strong><a href="./deepscan.html">DeepScan</a></strong></td>
+      <td><strong><a href="./deepscan">DeepScan</a></strong></td>
       <td>Run a full-repository scan to establish your baseline security posture.</td>
     </tr>
     <tr>
       <td>3</td>
-      <td><strong><a href="./risk-register.html">Review findings in the Risk Register</a></strong></td>
+      <td><strong><a href="./risk-register">Review findings in the Risk Register</a></strong></td>
       <td>Examine and prioritize vulnerabilities surfaced across your repositories.</td>
     </tr>
     <tr>
       <td>4</td>
-      <td><strong><a href="./finding-tuning.html">Triage false positives as needed</a></strong></td>
+      <td><strong><a href="./finding-tuning">Triage false positives as needed</a></strong></td>
       <td>Suppress findings that are not applicable so future scans stay focused on real risks.</td>
     </tr>
     <tr>
       <td>5</td>
-      <td><strong><a href="./repository-context.html">Configure context</a></strong></td>
+      <td><strong><a href="./repository-context">Configure context</a></strong></td>
       <td>Provide repository-level context so DryRun Security&#x27;s analysis is tailored to your codebase.</td>
     </tr>
     <tr>
       <td>6</td>
-      <td><strong><a href="./custom-code-policies.html">Create Custom Code Policies</a></strong></td>
+      <td><strong><a href="./custom-code-policies">Create Custom Code Policies</a></strong></td>
       <td>Define organization-specific security rules written in plain English.</td>
     </tr>
     <tr>
       <td>7</td>
-      <td><strong><a href="./slack-integration.html">Configure integrations and notifications</a></strong></td>
+      <td><strong><a href="./slack-integration">Configure integrations and notifications</a></strong></td>
       <td>Route alerts to Slack, webhooks, or other channels your team already uses.</td>
     </tr>
     <tr>
       <td>8</td>
-      <td><strong><a href="./pr-blocking.html">Enforcement</a></strong></td>
+      <td><strong><a href="./pr-blocking">Enforcement</a></strong></td>
       <td>Configure blocking rules to prevent PRs from merging when findings exceed your defined severity or policy thresholds.</td>
     </tr>
     <tr>
       <td>9</td>
-      <td><strong><a href="./code-security-intelligence.html">Unlock the power of Code Security Intelligence</a></strong></td>
+      <td><strong><a href="./code-security-intelligence">Unlock the power of Code Security Intelligence</a></strong></td>
       <td>Query the intelligence index to track features, trends, and risks across your organization.</td>
     </tr>
   </tbody>
@@ -398,9 +398,9 @@ PAGES['quick-start'] = {
 <h2 id="references">References</h2>
 
 <ul>
-  <li><a href="./pr-scanning.html">PR Code Reviews</a> - understand how DryRun Security analyzes your pull requests.</li>
-  <li><a href="./pr-scanning-configuration.html">Configurations</a> - customize which agents and policies run on each repository.</li>
-  <li><a href="./custom-code-policies.html">Custom Code Policies</a> - create custom security rules in plain English.</li>
+  <li><a href="./pr-scanning">PR Code Reviews</a> - understand how DryRun Security analyzes your pull requests.</li>
+  <li><a href="./pr-scanning-configuration">Configurations</a> - customize which agents and policies run on each repository.</li>
+  <li><a href="./custom-code-policies">Custom Code Policies</a> - create custom security rules in plain English.</li>
 </ul>
 ''',
 }
@@ -458,7 +458,7 @@ PAGES['deepscan'] = {
 
 <h3 id="option-1-risk-register">Option 1 - Risk Register</h3>
 
-<p>Filter the <a href="../docs/risk-register.html">Risk Register</a> by DeepScan to see all findings surfaced by DeepScan across repositories. This gives a unified view alongside PR scan findings for triage and prioritization.</p>
+<p>Filter the <a href="./risk-register">Risk Register</a> by DeepScan to see all findings surfaced by DeepScan across repositories. This gives a unified view alongside PR scan findings for triage and prioritization.</p>
 
 <h3 id="option-2-deepscan-page">Option 2 - DeepScan Page</h3>
 
@@ -466,11 +466,11 @@ PAGES['deepscan'] = {
 
 <h2 id="vulnerability-categories">Vulnerability Categories</h2>
 
-<p>DeepScan detects a broad set of vulnerability categories across your codebase. For the complete list of all finding types surfaced by DeepScan, PR scanning, and SCA, see the <a href="./vulnerability-coverage-matrix.html">Vulnerability Coverage Matrix</a>.</p>
+<p>DeepScan detects a broad set of vulnerability categories across your codebase. For the complete list of all finding types surfaced by DeepScan, PR scanning, and SCA, see the <a href="./vulnerability-coverage-matrix">Vulnerability Coverage Matrix</a>.</p>
 
 <h2 id="supported-languages">Supported Languages</h2>
 
-<p>DeepScan supports a wide range of languages and frameworks. For the full list including PR scanning and SCA ecosystem coverage, see <a href="./language-support.html">Language and Framework Support</a>.</p>
+<p>DeepScan supports a wide range of languages and frameworks. For the full list including PR scanning and SCA ecosystem coverage, see <a href="./language-support">Language and Framework Support</a>.</p>
 
 <h2 id="behavioral-analysis">Git Behavioral Analysis</h2>
 
@@ -552,7 +552,7 @@ PAGES['pr-scanning'] = {
   <li><strong>Secrets Analyzer</strong></li>
   <li><strong>Server-Side Request Forgery Analyzer</strong></li>
   <li><strong>SQL Injection Analyzer</strong></li>
-  <li>Any <a href="./custom-code-policies.html">custom code policies</a> created by your team</li>
+  <li>Any <a href="./custom-code-policies">custom code policies</a> created by your team</li>
 </ul>
 
 <p>All findings are filtered to the changed regions of the pull request. Pre-existing issues in unchanged code are excluded from the results so developers can focus on what they introduced.</p>
@@ -582,9 +582,9 @@ PAGES['pr-scanning'] = {
   </tbody>
 </table>
 
-<p>When findings are detected, inline comments are posted directly on the affected lines of code with a description of the vulnerability and remediation guidance. For details on enforcing merge gates with check statuses, see <a href="./pr-blocking.html">PR Blocking</a>.</p>
+<p>When findings are detected, inline comments are posted directly on the affected lines of code with a description of the vulnerability and remediation guidance. For details on enforcing merge gates with check statuses, see <a href="./pr-blocking">PR Blocking</a>.</p>
 
-<p>If you are seeing noisy or irrelevant findings, you can <a href="./finding-tuning.html">tune your findings</a> to reduce noise and focus on the issues that matter most to your team.</p>
+<p>If you are seeing noisy or irrelevant findings, you can <a href="./finding-tuning">tune your findings</a> to reduce noise and focus on the issues that matter most to your team.</p>
 
 <h2 id="configuration">Configuration</h2>
 
@@ -634,11 +634,11 @@ PAGES['pr-scanning'] = {
 
 <p>Configurations follow an inheritance model: the <code>default</code> configuration applies to all repositories, and repository-specific configurations override it. This lets you set organization-wide baselines while customizing behavior for individual repositories or teams.</p>
 
-<p>See <a href="./pr-scanning-configuration.html">PR Scanning Configuration</a> for a full walkthrough of creating and managing configurations.</p>
+<p>See <a href="./pr-scanning-configuration">PR Scanning Configuration</a> for a full walkthrough of creating and managing configurations.</p>
 
 <h2 id="pr-scanning-vs-deepscan">How PR Scanning Differs From DeepScan</h2>
 
-<p>DryRun Security offers two scanning modes. PR Scanning analyzes changes as they arrive in pull requests. <a href="./deepscan.html">DeepScan</a> performs a full-repository analysis to find vulnerabilities in existing code. The two modes are complementary:</p>
+<p>DryRun Security offers two scanning modes. PR Scanning analyzes changes as they arrive in pull requests. <a href="./deepscan">DeepScan</a> performs a full-repository analysis to find vulnerabilities in existing code. The two modes are complementary:</p>
 
 <table>
   <thead>
@@ -684,11 +684,11 @@ PAGES['pr-scanning'] = {
 
 <h2 id="supported-languages">Supported Languages</h2>
 
-<p>PR scanning supports the same languages and frameworks as DeepScan. For the full list, see <a href="./language-support.html">Language and Framework Support</a>.</p>
+<p>PR scanning supports the same languages and frameworks as DeepScan. For the full list, see <a href="./language-support">Language and Framework Support</a>.</p>
 
 <h2 id="vulnerability-categories">Vulnerability Categories</h2>
 
-<p>PR scanning can detect a broad set of vulnerability categories. For the complete system-wide reference, see the <a href="./vulnerability-coverage-matrix.html">Vulnerability Coverage Matrix</a>.</p>
+<p>PR scanning can detect a broad set of vulnerability categories. For the complete system-wide reference, see the <a href="./vulnerability-coverage-matrix">Vulnerability Coverage Matrix</a>.</p>
 
 ''',
 }
@@ -743,7 +743,7 @@ PAGES['iac-scanning'] = {
   <li><strong>Subdomain takeover risks</strong> - Dangling DNS records or CDN configurations that could be claimed by an attacker</li>
 </ul>
 
-<p>Beyond the built-in IaC checks, teams can use <a href="./custom-code-policies.html">Custom Code Policies</a> to monitor additional infrastructure concerns. Custom policies let you enforce specific configuration requirements, flag unapproved resource types, or define any other infrastructure rules that matter to your organization. This extends IaC coverage to match your team's specific infrastructure security requirements.</p>
+<p>Beyond the built-in IaC checks, teams can use <a href="./custom-code-policies">Custom Code Policies</a> to monitor additional infrastructure concerns. Custom policies let you enforce specific configuration requirements, flag unapproved resource types, or define any other infrastructure rules that matter to your organization. This extends IaC coverage to match your team's specific infrastructure security requirements.</p>
 
 <h2 id="how-findings-appear">How Findings Appear</h2>
 
@@ -760,7 +760,7 @@ PAGES['sca'] = {
 
 <p>Software Composition Analysis (SCA) identifies the third-party libraries and open-source packages your application depends on and checks whether any carry known security vulnerabilities. The majority of code in any production service comes from the open-source ecosystem, making dependency risk one of the most important areas to monitor.</p>
 
-<p>DryRun Security analyzes your dependency manifests and lock files as part of <a href="./deepscan.html">DeepScan</a>, detecting when dependencies carry known vulnerabilities. Because this analysis covers the entire codebase, you get a comprehensive view of supply chain risk rather than only seeing what changed in a single commit.</p>
+<p>DryRun Security analyzes your dependency manifests and lock files as part of <a href="./deepscan">DeepScan</a>, detecting when dependencies carry known vulnerabilities. Because this analysis covers the entire codebase, you get a comprehensive view of supply chain risk rather than only seeing what changed in a single commit.</p>
 
 <p>Beyond simple CVE matching, DryRun Security evaluates how a vulnerable dependency is actually used in your code. A vulnerable function in a library you only use for unrelated functionality presents a different risk profile than one you call directly with user-supplied input. This context-aware assessment helps your team prioritize remediation based on actual exploitability rather than CVSS scores alone.</p>
 
@@ -780,13 +780,13 @@ PAGES['sca'] = {
 
 <p>Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.</p>
 
-<p>SCA is performed as part of <a href="./deepscan.html">DeepScan</a>, identifying vulnerable dependencies across the entire codebase. This provides a comprehensive baseline of dependency risk across your repositories.</p>
+<p>SCA is performed as part of <a href="./deepscan">DeepScan</a>, identifying vulnerable dependencies across the entire codebase. This provides a comprehensive baseline of dependency risk across your repositories.</p>
 
 <h2 id="how-to-view-findings">How to View Findings</h2>
 
-<p>All SCA findings from <a href="./deepscan.html">DeepScan</a> are tracked in the <a href="./risk-register.html">Risk Register</a> for centralized triage and prioritization. You can filter by the SCA agent type to isolate dependency-related risk from code-level findings.</p>
+<p>All SCA findings from <a href="./deepscan">DeepScan</a> are tracked in the <a href="./risk-register">Risk Register</a> for centralized triage and prioritization. You can filter by the SCA agent type to isolate dependency-related risk from code-level findings.</p>
 
-<p>DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Materials) generation. You can download a complete inventory of your software dependencies for compliance and audit purposes from the <a href="./compliance-grc.html">SBOM Generation</a> page.</p>
+<p>DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Materials) generation. You can download a complete inventory of your software dependencies for compliance and audit purposes from the <a href="./compliance-grc">SBOM Generation</a> page.</p>
 ''',
 }
 
@@ -822,8 +822,8 @@ PAGES['auto-fix'] = {
 <p>Auto fix is enabled by:</p>
 
 <ol>
-  <li>Creating an API key from the DryRun Security dashboard (see <a href="./api-access-keys.html">API Access Keys</a>)</li>
-  <li>Connecting your AI coding tool to the DryRun Security <a href="./mcp.html">MCP (Model Context Protocol) server</a></li>
+  <li>Creating an API key from the DryRun Security dashboard (see <a href="./api-access-keys">API Access Keys</a>)</li>
+  <li>Connecting your AI coding tool to the DryRun Security <a href="./mcp">MCP (Model Context Protocol) server</a></li>
   <li>Installing the DryRun Security remediation skill: visit the <strong>Integrations</strong> page in the DryRun Security UI for instructions</li>
 </ol>
 
@@ -841,7 +841,7 @@ PAGES['language-support'] = {
 
 <h2 id="pr-scanning-and-deepscan">PR Scanning and DeepScan</h2>
 
-<p>Both <a href="./pr-scanning.html">PR scanning</a> and <a href="./deepscan.html">DeepScan</a> support the same set of programming languages and frameworks. The scanner automatically detects the language and framework in use during analysis and tailors its review accordingly.</p>
+<p>Both <a href="./pr-scanning">PR scanning</a> and <a href="./deepscan">DeepScan</a> support the same set of programming languages and frameworks. The scanner automatically detects the language and framework in use during analysis and tailors its review accordingly.</p>
 
 <table>
   <thead>
@@ -866,7 +866,7 @@ PAGES['language-support'] = {
 
 <h2 id="sca-ecosystems">SCA: Dependency Ecosystems</h2>
 
-<p><a href="./sca.html">Software Composition Analysis (SCA)</a> runs as part of DeepScan and scans package manifests and lock files across all major package ecosystems. Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.</p>
+<p><a href="./sca">Software Composition Analysis (SCA)</a> runs as part of DeepScan and scans package manifests and lock files across all major package ecosystems. Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.</p>
 
 <table>
   <thead>
@@ -899,7 +899,7 @@ PAGES['vulnerability-coverage-matrix'] = {
     'description': 'All finding types detectable by DryRun Security across PR scanning, DeepScan, and SCA, with CWE mappings.',
     'section': 'Scanning',
     'content': '''
-<p>DryRun Security detects vulnerabilities across three scanning modes: <a href="./pr-scanning.html">PR scanning</a>, <a href="./deepscan.html">DeepScan</a>, and <a href="./sca.html">SCA</a>. The categories below represent the full set of finding types surfaced across all scanning sources. CWE mappings are provided as reference anchors for each category.</p>
+<p>DryRun Security detects vulnerabilities across three scanning modes: <a href="./pr-scanning">PR scanning</a>, <a href="./deepscan">DeepScan</a>, and <a href="./sca">SCA</a>. The categories below represent the full set of finding types surfaced across all scanning sources. CWE mappings are provided as reference anchors for each category.</p>
 
 <h2 id="all-finding-types">All Finding Types</h2>
 
@@ -978,7 +978,7 @@ PAGES['code-security-intelligence'] = {
 
 <h2 id="overview">Overview</h2>
 
-<p>DryRun Security takes vulnerability scanning to the next level by building an intelligence layer on top of all the finding data and trends from <a href="./pr-scanning.html">PR scanning</a> and <a href="./deepscan.html">DeepScan</a>. This intelligence layer is actionable and enables AppSec teams to do meaningful security work beyond just reviewing individual findings, surfacing trends, patterns, risks, and insights across the entire codebase and development organization.</p>
+<p>DryRun Security takes vulnerability scanning to the next level by building an intelligence layer on top of all the finding data and trends from <a href="./pr-scanning">PR scanning</a> and <a href="./deepscan">DeepScan</a>. This intelligence layer is actionable and enables AppSec teams to do meaningful security work beyond just reviewing individual findings, surfacing trends, patterns, risks, and insights across the entire codebase and development organization.</p>
 
 <p>Every pull request DryRun Security reviews and every DeepScan contributes to a structured, queryable intelligence index. This index powers a range of security workflows that would otherwise require manual data collection, spreadsheet tracking, and cross-referencing multiple tools.</p>
 
@@ -1086,7 +1086,7 @@ PAGES['code-security-intelligence'] = {
 
 <h2 id="mcp-integration">MCP Integration</h2>
 
-<p>AppSec engineers and AI coding tools can also access the intelligence layer programmatically via DryRun Security&#x27;s MCP integration. This enables AI coding assistants and agents to query findings, trends, and risk data directly from the development environment. See <a href="./mcp.html">MCP Integration</a> for setup instructions.</p>
+<p>AppSec engineers and AI coding tools can also access the intelligence layer programmatically via DryRun Security&#x27;s MCP integration. This enables AI coding assistants and agents to query findings, trends, and risk data directly from the development environment. See <a href="./mcp">MCP Integration</a> for setup instructions.</p>
 ''',
 }
 
@@ -1168,8 +1168,8 @@ PAGES['pr-scanning-configuration'] = {
   <li><strong>Select Repositories</strong> - A dropdown selector to choose which repositories use this configuration. Repositories can only belong to one configuration at a time; repositories already assigned to another configuration will be greyed out.</li>
   <li><strong>Issue Comment Enabled</strong> - Toggle to enable or disable DryRun Security's PR/MR comment. When enabled, DryRun posts a summary comment on each pull request with findings. Comments are not sent to draft PRs; findings from draft PR scans are still visible in the Risk Register.</li>
   <li><strong>PR Blocking Enabled</strong> - Toggle to enable PR blocking globally for this configuration. When enabled, findings from configured agents and policies will create GitHub status checks that must pass before merging.</li>
-  <li><strong>Notifications Enabled</strong> - Toggle to enable notification delivery. When enabled, choose which integrations receive alerts (see <a href="../docs/slack-integration.html">Notifications</a> for setup details).</li>
-  <li><strong>Severity-Based PR Blocking</strong> - Toggle to block PRs based on severity. When enabled, set a minimum severity threshold; any finding at or above that level will block the PR from being merged. See <a href="../docs/pr-blocking.html">PR Blocking</a> for threshold options.</li>
+  <li><strong>Notifications Enabled</strong> - Toggle to enable notification delivery. When enabled, choose which integrations receive alerts (see <a href="./slack-integration">Notifications</a> for setup details).</li>
+  <li><strong>Severity-Based PR Blocking</strong> - Toggle to block PRs based on severity. When enabled, set a minimum severity threshold; any finding at or above that level will block the PR from being merged. See <a href="./pr-blocking">PR Blocking</a> for threshold options.</li>
   <li><strong>Show Comment for No Findings</strong> - Toggle to control whether DryRun posts a comment even when no security findings are detected. Toggle off for the familiar behavior where DryRun posts a comment only when scans produce findings. Toggle on to have DryRun post a comment on every PR scanned, useful for visibility and audit trails.</li>
   <li><strong>Deduplicate Notifications</strong> - Toggle to reduce duplicate notifications on PRs where the severity has not changed. When enabled, repeated notifications for the same severity are suppressed, reducing noise.</li>
 </ul>
@@ -1179,7 +1179,7 @@ PAGES['pr-scanning-configuration'] = {
 <p>Below the general settings, the <strong>Policy Enforcement Agent</strong> section lets you attach Custom Code Policies to this configuration:</p>
 
 <ul>
-  <li><strong>Add Policy</strong> - Attach an existing policy from your organization's <a href="../docs/custom-code-policies.html">Policy Library</a></li>
+  <li><strong>Add Policy</strong> - Attach an existing policy from your organization's <a href="./custom-code-policies">Policy Library</a></li>
   <li><strong>Create Policy</strong> - Write a new Custom Code Policy directly from this screen</li>
 </ul>
 
@@ -1253,7 +1253,7 @@ PAGES['custom-code-policies'] = {
   <li>Once the policy is returning expected results, click <strong>Save</strong> to save it for use in a Repository configuration.</li>
 </ol>
 
-<p>To apply the Code Policy to one or more repositories, click <strong>Configure</strong> and follow the steps in <a href="./pr-scanning-configuration.html">Configure Repositories</a>.</p>
+<p>To apply the Code Policy to one or more repositories, click <strong>Configure</strong> and follow the steps in <a href="./pr-scanning-configuration">Configure Repositories</a>.</p>
 
 
 <h2 id="field-usage">Field Usage</h2>
@@ -1337,7 +1337,7 @@ PAGES['risk-register'] = {
     'description': 'One view to see, search, and act on all security risk across your organization.',
     'section': 'Platform',
     'content': '''
-<p>The Risk Register is the working space for AppSec engineers, designed to surface findings that need action taken. It aggregates findings from two sources: the <a href="./pr-scanning.html">PR Scanner</a>, which reviews every pull request for vulnerabilities in real time, and <a href="./deepscan.html">DeepScan</a>, which performs full-repository security analysis on demand. Findings range from critical vulnerabilities and secrets exposures to policy violations and dependency risks. Because these findings represent real or potential security issues in your codebase, the Risk Register provides a single place to review, triage, and act on them before they become incidents.</p>
+<p>The Risk Register is the working space for AppSec engineers, designed to surface findings that need action taken. It aggregates findings from two sources: the <a href="./pr-scanning">PR Scanner</a>, which reviews every pull request for vulnerabilities in real time, and <a href="./deepscan">DeepScan</a>, which performs full-repository security analysis on demand. Findings range from critical vulnerabilities and secrets exposures to policy violations and dependency risks. Because these findings represent real or potential security issues in your codebase, the Risk Register provides a single place to review, triage, and act on them before they become incidents.</p>
 
 <figure class="docs-screenshot"><img src="{asset_prefix}assets/images/risk-register/01-risk-register.png" alt="DryRun Security Risk Register dashboard" loading="lazy"></figure>
 
@@ -1440,7 +1440,7 @@ PAGES['finding-tuning'] = {
   </tbody>
 </table>
 
-<p>False Positive and Won&rsquo;t Fix / Nitpick dismissals feed into the <a href="./code-security-intelligence.html">Code Security Knowledge Graph</a>, building a model of your codebase&rsquo;s specific patterns and risk profile. Scan accuracy improves continuously as your team triages findings.</p>
+<p>False Positive and Won&rsquo;t Fix / Nitpick dismissals feed into the <a href="./code-security-intelligence">Code Security Knowledge Graph</a>, building a model of your codebase&rsquo;s specific patterns and risk profile. Scan accuracy improves continuously as your team triages findings.</p>
 
 <h2 id="from-the-pr">From the PR</h2>
 
@@ -1454,13 +1454,13 @@ PAGES['finding-tuning'] = {
 
 <p>When a developer submits a dismissal, DryRun Security removes the finding from the active list, regenerates the PR summary comment, logs the decision for the audit trail, and feeds the signal back into the system.</p>
 
-<p>If a finding is incorrectly blocking a merge via <a href="./pr-blocking.html">branch protection rules</a>, developers can dismiss it directly in the PR thread. DryRun Security automatically removes the block without requiring AppSec intervention. The dismissal is logged so AppSec can review it afterward.</p>
+<p>If a finding is incorrectly blocking a merge via <a href="./pr-blocking">branch protection rules</a>, developers can dismiss it directly in the PR thread. DryRun Security automatically removes the block without requiring AppSec intervention. The dismissal is logged so AppSec can review it afterward.</p>
 
 <figure class="docs-screenshot"><img src="{asset_prefix}assets/images/risk-register/05-scm-feedback.jpg" alt="SCM feedback workflow" loading="lazy"></figure>
 
 <h2 id="from-the-risk-register">From the Risk Register</h2>
 
-<p>AppSec engineers manage dismissals from the <a href="./risk-register.html">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Dismiss</strong> to choose a status and optionally add context.</p>
+<p>AppSec engineers manage dismissals from the <a href="./risk-register">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Dismiss</strong> to choose a status and optionally add context.</p>
 
 <p>From the Risk Register, AppSec teams can also:</p>
 <ul>
@@ -1478,7 +1478,7 @@ PAGES['finding-tuning'] = {
 <p>View dismissed findings in the Risk Register using the <strong>Dismissed</strong> filter. Each entry shows the dismissal status, reason, who dismissed it, and when. Use the <strong>Restore</strong> button to return a finding to the active queue if the dismissal needs to be revisited.</p>
 
 <div class="callout callout-warning">
-<p><strong>When a finding is valid but mitigating circumstances exist:</strong> Sometimes your team knows DryRun Security is right about a finding, but another layer of protection already addresses it. Rather than marking it as a false positive, the right resolution is to update your AGENTS.md with the context that explains why. This tells DryRun Security about the mitigating control so it does not raise the same class of issue again, without misrepresenting the finding as invalid. See <a href="./repository-context.html">Repository Context</a> for details.</p>
+<p><strong>When a finding is valid but mitigating circumstances exist:</strong> Sometimes your team knows DryRun Security is right about a finding, but another layer of protection already addresses it. Rather than marking it as a false positive, the right resolution is to update your AGENTS.md with the context that explains why. This tells DryRun Security about the mitigating control so it does not raise the same class of issue again, without misrepresenting the finding as invalid. See <a href="./repository-context">Repository Context</a> for details.</p>
 </div>
 
 ''',
@@ -1524,9 +1524,9 @@ PAGES['pr-blocking'] = {
 <p>In cases where a blocked PR needs to be merged despite findings (for example, an accepted risk or false positive), authorized users can override the block:</p>
 
 <ul>
-  <li>Use <a href="./finding-tuning.html">Finding Tuning with Feedback</a> to mark findings as accepted risk or false positive.</li>
+  <li>Use <a href="./finding-tuning">Finding Tuning with Feedback</a> to mark findings as accepted risk or false positive.</li>
   <li>Repository administrators can bypass branch protection rules when necessary.</li>
-  <li>All overrides are logged in the <a href="./risk-register.html">Risk Register</a> for audit purposes.</li>
+  <li>All overrides are logged in the <a href="./risk-register">Risk Register</a> for audit purposes.</li>
 </ul>
 
 <h2 id="configure-blocking">Configure Blocking with Branch Protection</h2>
@@ -1588,14 +1588,14 @@ PAGES['compliance-grc'] = {
 <ul>
   <li><strong>Findings history</strong> - complete record of every vulnerability found, when it was found, and when it was resolved</li>
   <li><strong>Remediation timelines</strong> - time-to-fix metrics for each finding, broken down by severity and category</li>
-  <li><strong>Policy enforcement records</strong> - which <a href="../docs/custom-code-policies.html">Custom Code Policies</a> were evaluated, what they found, and how findings were resolved</li>
+  <li><strong>Policy enforcement records</strong> - which <a href="./custom-code-policies">Custom Code Policies</a> were evaluated, what they found, and how findings were resolved</li>
   <li><strong>Scan coverage</strong> - which repositories were scanned, how frequently, and what percentage of PRs received security review</li>
   <li><strong>DeepScan reports</strong> - point-in-time full-repository security assessments for baseline evidence</li>
 </ul>
 
 <h2 id="dashboard-reporting">Dashboard and Reporting</h2>
 
-<p>The <a href="../docs/code-security-intelligence.html">Security Dashboard</a> provides real-time metrics that map to common compliance requirements:</p>
+<p>The <a href="./code-security-intelligence">Security Dashboard</a> provides real-time metrics that map to common compliance requirements:</p>
 
 <ul>
   <li>Vulnerability trends over time (are things getting better or worse?)</li>
@@ -1605,11 +1605,11 @@ PAGES['compliance-grc'] = {
   <li>Coverage gaps (repositories not yet connected)</li>
 </ul>
 
-<p>Use the <a href="../docs/code-security-intelligence.html">intelligence index</a> to generate custom audit-ready reports by asking natural language questions like "show me a chart of risky alerts by repo for last quarter."</p>
+<p>Use the <a href="./code-security-intelligence">intelligence index</a> to generate custom audit-ready reports by asking natural language questions like "show me a chart of risky alerts by repo for last quarter."</p>
 
 <h2 id="risk-register">Risk Register as Audit Trail</h2>
 
-<p>The <a href="../docs/risk-register.html">Risk Register</a> serves as the central audit trail for all findings. Every finding includes:</p>
+<p>The <a href="./risk-register">Risk Register</a> serves as the central audit trail for all findings. Every finding includes:</p>
 
 <ul>
   <li>The specific code change that introduced the vulnerability</li>
@@ -1622,11 +1622,11 @@ PAGES['compliance-grc'] = {
 
 <h2 id="sbom-and-ai-bom">SBOM and AI-BOM</h2>
 
-<p>DryRun Security generates <a href="../docs/compliance-grc.html">Software Bills of Materials (SBOM)</a> that document the third-party components in your codebase. SBOMs are increasingly required by regulation (Executive Order 14028, EU Cyber Resilience Act) and by enterprise customers who need supply chain transparency.</p>
+<p>DryRun Security generates <a href="./compliance-grc">Software Bills of Materials (SBOM)</a> that document the third-party components in your codebase. SBOMs are increasingly required by regulation (Executive Order 14028, EU Cyber Resilience Act) and by enterprise customers who need supply chain transparency.</p>
 
 <h2 id="deepscan-compliance">DeepScan for Compliance Assessments</h2>
 
-<p>Run a <a href="../docs/deepscan.html">DeepScan</a> to generate a point-in-time security assessment of an entire repository. This is useful for:</p>
+<p>Run a <a href="./deepscan">DeepScan</a> to generate a point-in-time security assessment of an entire repository. This is useful for:</p>
 
 <ul>
   <li>Initial onboarding - establishing a security baseline when connecting a repository</li>
@@ -1748,7 +1748,7 @@ PAGES['mcp'] = {
   <li>Track security posture changes over time</li>
 </ul>
 
-<p>For the full list of Code Security Intelligence capabilities, see <a href="./code-security-intelligence.html">Code Security Intelligence</a>.</p>
+<p>For the full list of Code Security Intelligence capabilities, see <a href="./code-security-intelligence">Code Security Intelligence</a>.</p>
 
 <h2 id="supported-clients">Supported Clients</h2>
 
@@ -1768,13 +1768,13 @@ PAGES['mcp'] = {
   </tbody>
 </table>
 
-<p>For step-by-step setup instructions for each tool, go to <strong>Settings &gt; Integrations</strong> in the DryRun Security dashboard, or see <a href="./ai-coding-integration.html">AI Coding Integration</a>.</p>
+<p>For step-by-step setup instructions for each tool, go to <strong>Settings &gt; Integrations</strong> in the DryRun Security dashboard, or see <a href="./ai-coding-integration">AI Coding Integration</a>.</p>
 
 <h2 id="authentication">Authentication</h2>
 
 <p>The MCP server uses API key authentication. Pass your API key as a Bearer token in the <code>Authorization</code> header.</p>
 
-<p>Before connecting, generate an API key from <strong>Settings &gt; Access Keys</strong> in the DryRun Security dashboard. See <a href="./api-access-keys.html">API Access Keys</a> for instructions.</p>
+<p>Before connecting, generate an API key from <strong>Settings &gt; Access Keys</strong> in the DryRun Security dashboard. See <a href="./api-access-keys">API Access Keys</a> for instructions.</p>
 
 <p>The MCP server URL is:</p>
 
@@ -1811,11 +1811,11 @@ PAGES['mcp'] = {
   <li>Select <strong>Add</strong></li>
 </ol>
 
-<p>Replace <code>&lt;your-api-key&gt;</code> with the key from <strong>Settings &gt; Access Keys</strong>. See <a href="./api-access-keys.html">API Access Keys</a>.</p>
+<p>Replace <code>&lt;your-api-key&gt;</code> with the key from <strong>Settings &gt; Access Keys</strong>. See <a href="./api-access-keys">API Access Keys</a>.</p>
 
 <h2 id="remediation-skill">DryRun Remediation Skill</h2>
 
-<p>In addition to the MCP connection, you can install the DryRun Security remediation skill into your AI coding tool. The skill enables the tool to automatically detect findings and generate fixes. See <a href="./dryrun-skill.html">DryRun Skill</a> for installation instructions.</p>
+<p>In addition to the MCP connection, you can install the DryRun Security remediation skill into your AI coding tool. The skill enables the tool to automatically detect findings and generate fixes. See <a href="./dryrun-skill">DryRun Skill</a> for installation instructions.</p>
 
 <h2 id="verifying-the-connection">Verifying the Connection</h2>
 
@@ -1842,7 +1842,7 @@ PAGES['dryrun-api'] = {
 
 <h2 id="authentication">Authentication</h2>
 
-<p>For information on creating and managing API keys, see the <a href="./api-access-keys.html">API Access Keys</a> page. All API requests require a valid API key sent in the <code>Authorization</code> header using the <code>Bearer</code> scheme.</p>
+<p>For information on creating and managing API keys, see the <a href="./api-access-keys">API Access Keys</a> page. All API requests require a valid API key sent in the <code>Authorization</code> header using the <code>Bearer</code> scheme.</p>
 
 <h2 id="quick-start">Quick Start</h2>
 
@@ -2871,12 +2871,12 @@ PAGES['jira-integration'] = {
 
 <p>DryRun Security does not have a native Jira integration today, but admins can connect DryRun Security to Jira using an automation middleware tool, either <strong>Tines</strong> or <strong>Zapier</strong>. DryRun Security sends a webhook when a finding is detected on a PR scan. The middleware receives the webhook, unpacks the finding details, checks Jira for an existing ticket for that finding, and either creates a new ticket or updates the existing one.</p>
 
-<p>When a PR is scanned and a finding is returned, DryRun Security sends a POST request with a JSON payload containing the event type, timestamp, repository, pull request number, and a finding object with <code>id</code>, <code>severity</code>, <code>category</code>, <code>title</code>, <code>file</code>, <code>line</code>, and <code>description</code>. See the <a href="./webhook-integration.html">Webhook Integration</a> page for the full payload structure and configuration details.</p>
+<p>When a PR is scanned and a finding is returned, DryRun Security sends a POST request with a JSON payload containing the event type, timestamp, repository, pull request number, and a finding object with <code>id</code>, <code>severity</code>, <code>category</code>, <code>title</code>, <code>file</code>, <code>line</code>, and <code>description</code>. See the <a href="./webhook-integration">Webhook Integration</a> page for the full payload structure and configuration details.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
 <ul>
-  <li>DryRun Security webhook configured (see <a href="./webhook-integration.html">Webhook Integration</a>)</li>
+  <li>DryRun Security webhook configured (see <a href="./webhook-integration">Webhook Integration</a>)</li>
   <li>A Jira project with API access (Jira API token and project key)</li>
   <li>A <a href="https://www.tines.com/" target="_blank" rel="noopener noreferrer">Tines</a> or <a href="https://zapier.com/" target="_blank" rel="noopener noreferrer">Zapier</a> account</li>
 </ul>
@@ -3022,7 +3022,7 @@ PAGES['api-access-keys'] = {
     'content': '''
 <h2 id="overview">Overview</h2>
 
-<p>API access keys allow you to authenticate with the <a href="./dryrun-api.html">DryRun API</a> for programmatic access to DryRun Security. Use API keys to integrate DryRun Security into your CI/CD pipelines, custom tooling, or automation workflows.</p>
+<p>API access keys allow you to authenticate with the <a href="./dryrun-api">DryRun API</a> for programmatic access to DryRun Security. Use API keys to integrate DryRun Security into your CI/CD pipelines, custom tooling, or automation workflows.</p>
 
 <h2 id="creating-keys">Creating an API Key</h2>
 
@@ -3103,7 +3103,7 @@ PAGES['ai-coding-integration'] = {
 
 <pre><code>claude mcp add --transport http dryrun-security   https://insights-mcp.dryrun.security/api/insights/mcp   --header "Authorization: Bearer &lt;dryrunsec_token&gt;"</code></pre>
 
-<p>Replace <code>&lt;dryrunsec_token&gt;</code> with your API token from <strong>Settings &gt; Access Keys</strong>. See <a href="../docs/dryrun-api.html">API Usage Guide</a> for how to generate an access key.</p>
+<p>Replace <code>&lt;dryrunsec_token&gt;</code> with your API token from <strong>Settings &gt; Access Keys</strong>. See <a href="./dryrun-api">API Usage Guide</a> for how to generate an access key.</p>
 
 <h3 id="add-skill-flow">Adding the Remediation Skill</h3>
 
@@ -3122,20 +3122,20 @@ PAGES['ai-coding-integration'] = {
   <li><strong>Claude Desktop</strong> - Connect the DryRun Insights MCP to Claude Desktop for security-aware conversations about your codebase</li>
 </ul>
 
-<p>See <a href="./mcp.html">MCP Integration</a> for detailed configuration instructions for all supported clients.</p>
+<p>See <a href="./mcp">MCP Integration</a> for detailed configuration instructions for all supported clients.</p>
 
 <h2 id="ai-native-ide">AI-Native IDE Workflows</h2>
 
 <p>For teams using AI coding assistants, the DryRun Security integration is particularly valuable. It allows the AI assistant to query DryRun Security's security intelligence as part of code generation - helping AI assistants write more secure code by understanding what vulnerabilities have been found in the codebase and what security patterns are in use.</p>
 
-<p>This is especially relevant as teams adopt <code>AGENTS.md</code> to guide AI coding agents. See <a href="./repository-context.html">AGENTS.md</a> for how to configure security guidelines that AI agents and DryRun Security both use.</p>
+<p>This is especially relevant as teams adopt <code>AGENTS.md</code> to guide AI coding agents. See <a href="./repository-context">AGENTS.md</a> for how to configure security guidelines that AI agents and DryRun Security both use.</p>
 
 
 <h2 id="ai-tool-integrations">AI Tool Integrations</h2>
 
 <h2 id="ai-generated-code-coverage">AI-Generated Code Coverage</h2>
 
-<p>DryRun Security reviews all code in every pull request, regardless of whether it was written by a human or generated by an AI coding tool. No special configuration or setup is needed - if the code reaches a PR, DryRun analyzes it with the same <a href="../docs/code-security-intelligence.html">Contextual Security Analysis</a> applied to all changes.</p>
+<p>DryRun Security reviews all code in every pull request, regardless of whether it was written by a human or generated by an AI coding tool. No special configuration or setup is needed - if the code reaches a PR, DryRun analyzes it with the same <a href="./code-security-intelligence">Contextual Security Analysis</a> applied to all changes.</p>
 
 <p>This is important because AI coding assistants are generating an increasing share of production code, and AI-generated code carries its own patterns of security risk.</p>
 
@@ -3169,19 +3169,19 @@ PAGES['ai-coding-integration'] = {
 
 <h2 id="visibility-into-ai-changes">Visibility into AI-Generated Changes</h2>
 
-<p>DryRun Security's <a href="../docs/ai-coding-integration.html">AI Coding Visibility</a> feature provides observability into how AI tools are being used across your codebase - which repositories have the most AI-generated code, what types of changes are being made, and where security findings correlate with AI-generated contributions.</p>
+<p>DryRun Security's <a href="./ai-coding-integration">AI Coding Visibility</a> feature provides observability into how AI tools are being used across your codebase - which repositories have the most AI-generated code, what types of changes are being made, and where security findings correlate with AI-generated contributions.</p>
 
 <h2 id="mcp-workflows">MCP for Agentic Workflows</h2>
 
-<p>For teams using AI coding agents that operate autonomously (creating PRs, making multi-file changes), DryRun Security's <a href="../docs/mcp.html">MCP integration</a> enables the agent to query security status, check findings, and respond to security feedback programmatically. This creates a closed loop where AI agents can fix their own security issues before a human reviews the PR.</p>
+<p>For teams using AI coding agents that operate autonomously (creating PRs, making multi-file changes), DryRun Security's <a href="./mcp">MCP integration</a> enables the agent to query security status, check findings, and respond to security feedback programmatically. This creates a closed loop where AI agents can fix their own security issues before a human reviews the PR.</p>
 
 <h2 id="related-pages-ai-tools">Related Pages</h2>
 
 <ul>
-  <li><a href="../docs/ai-coding-integration.html">Securing AI-Generated Code</a> - DryRun's approach to AI code security</li>
-  <li><a href="../docs/ai-coding-integration.html">AI Coding Visibility</a> - observability into AI-generated changes</li>
-  <li><a href="../docs/ai-coding-integration.html">Malicious Agent Detection</a> - detecting adversarial AI behavior</li>
-  <li><a href="../docs/mcp.html">MCP Integration</a> - programmatic access for AI agents</li>
+  <li><a href="./ai-coding-integration">Securing AI-Generated Code</a> - DryRun's approach to AI code security</li>
+  <li><a href="./ai-coding-integration">AI Coding Visibility</a> - observability into AI-generated changes</li>
+  <li><a href="./ai-coding-integration">Malicious Agent Detection</a> - detecting adversarial AI behavior</li>
+  <li><a href="./mcp">MCP Integration</a> - programmatic access for AI agents</li>
 </ul>
 
 
@@ -3209,7 +3209,7 @@ PAGES['ai-coding-integration'] = {
 
 <h2 id="organizational-visibility">Organizational Visibility</h2>
 
-<p>Beyond per-PR security analysis, DryRun Security provides visibility into AI coding activity across your organization - tracking where AI-generated code is being introduced and what security implications it carries. See <a href="./ai-coding-integration.html">AI Coding Visibility</a> for details.</p>
+<p>Beyond per-PR security analysis, DryRun Security provides visibility into AI coding activity across your organization - tracking where AI-generated code is being introduced and what security implications it carries. See <a href="./ai-coding-integration">AI Coding Visibility</a> for details.</p>
 
 
 <h2 id="ai-coding-visibility">AI Coding Visibility</h2>
@@ -3283,14 +3283,14 @@ PAGES['ai-coding-integration'] = {
 
 <ul>
   <li><strong>Prompt injection via code</strong> - malicious instructions embedded in code comments, documentation, or dependency files that manipulate AI coding assistants into generating insecure code</li>
-  <li><strong>Malicious agent skills</strong> - AI agents with tool access (file system, network, shell) that can be manipulated into performing unintended actions. See <a href="../docs/ai-coding-integration.html">Malicious Agent Detection</a> for details</li>
+  <li><strong>Malicious agent skills</strong> - AI agents with tool access (file system, network, shell) that can be manipulated into performing unintended actions. See <a href="./ai-coding-integration">Malicious Agent Detection</a> for details</li>
   <li><strong>Training data poisoning</strong> - AI models generating code patterns derived from intentionally vulnerable training examples</li>
   <li><strong>Supply chain attacks via AI</strong> - adversaries using AI-generated PRs to introduce subtle backdoors that pass human review</li>
 </ul>
 
 <h2 id="behavioral-analysis">Behavioral Analysis</h2>
 
-<p>DryRun Security applies <a href="../docs/code-security-intelligence.html">Git Behavioral Analysis</a> to detect anomalous patterns in AI-generated contributions. This includes:</p>
+<p>DryRun Security applies <a href="./code-security-intelligence">Git Behavioral Analysis</a> to detect anomalous patterns in AI-generated contributions. This includes:</p>
 
 <ul>
   <li>Unusual commit patterns - timing, frequency, or volume that deviates from established baselines</li>
@@ -3305,7 +3305,7 @@ PAGES['ai-coding-integration'] = {
 
 <h2 id="threat-modeling-support">Threat Modeling Support</h2>
 
-<p>DryRun Security's <a href="../docs/code-security-intelligence.html">intelligence index</a> capabilities support threat modeling exercises by answering questions like:</p>
+<p>DryRun Security's <a href="./code-security-intelligence">intelligence index</a> capabilities support threat modeling exercises by answering questions like:</p>
 
 <ul>
   <li>"Which repositories have the most AI-generated code changes this month?"</li>
@@ -3318,10 +3318,10 @@ PAGES['ai-coding-integration'] = {
 <h2 id="related-pages">Related Pages</h2>
 
 <ul>
-  <li><a href="../docs/ai-coding-integration.html">Malicious Agent Detection</a> - detecting adversarial AI agent behavior</li>
-  <li><a href="../docs/code-security-intelligence.html">Git Behavioral Analysis</a> - anomaly detection in commit patterns</li>
-  <li><a href="../docs/ai-coding-integration.html">AI Coding Visibility</a> - observability into AI-generated changes</li>
-  <li><a href="../docs/ai-coding-integration.html">Securing AI-Generated Code</a> - security analysis for AI-written code</li>
+  <li><a href="./ai-coding-integration">Malicious Agent Detection</a> - detecting adversarial AI agent behavior</li>
+  <li><a href="./code-security-intelligence">Git Behavioral Analysis</a> - anomaly detection in commit patterns</li>
+  <li><a href="./ai-coding-integration">AI Coding Visibility</a> - observability into AI-generated changes</li>
+  <li><a href="./ai-coding-integration">Securing AI-Generated Code</a> - security analysis for AI-written code</li>
 </ul>
 ''',
 }
@@ -3439,7 +3439,11 @@ def render_sidebar(current_slug: str, asset_prefix: str) -> str:
             page = PAGES.get(slug, {})
             title = page.get('title', slug)
             active_class = ' class="active"' if slug == current_slug else ''
-            parts.append(f'<li><a href="{esc(asset_prefix)}docs/{esc(slug)}.html"{active_class}>{esc(title)}</a></li>')
+            if slug == 'documentation':
+                href = f'{esc(asset_prefix)}'
+            else:
+                href = f'{esc(asset_prefix)}{esc(slug)}'
+            parts.append(f'<li><a href="{href}"{active_class}>{esc(title)}</a></li>')
         parts.append('</ul>')
         parts.append('</div>')
     parts.append('</div>')
@@ -3480,8 +3484,12 @@ def render_prev_next(slug: str, asset_prefix: str) -> str:
         prev_slug = ORDERED_PAGES[idx - 1]
         prev_page = PAGES.get(prev_slug, {})
         prev_title = prev_page.get('title', prev_slug)
+        if prev_slug == 'documentation':
+            prev_href = f'{esc(asset_prefix)}'
+        else:
+            prev_href = f'{esc(asset_prefix)}{esc(prev_slug)}'
         parts.append(
-            f'<a href="{esc(asset_prefix)}docs/{esc(prev_slug)}.html" class="prev-next-link prev-link">'
+            f'<a href="{prev_href}" class="prev-next-link prev-link">'
             f'<span class="prev-next-label">← Previous</span>'
             f'<span class="prev-next-title">{esc(prev_title)}</span>'
             f'</a>'
@@ -3493,8 +3501,12 @@ def render_prev_next(slug: str, asset_prefix: str) -> str:
         next_slug = ORDERED_PAGES[idx + 1]
         next_page = PAGES.get(next_slug, {})
         next_title = next_page.get('title', next_slug)
+        if next_slug == 'documentation':
+            next_href = f'{esc(asset_prefix)}'
+        else:
+            next_href = f'{esc(asset_prefix)}{esc(next_slug)}'
         parts.append(
-            f'<a href="{esc(asset_prefix)}docs/{esc(next_slug)}.html" class="prev-next-link next-link">'
+            f'<a href="{next_href}" class="prev-next-link next-link">'
             f'<span class="prev-next-label">Next →</span>'
             f'<span class="prev-next-title">{esc(next_title)}</span>'
             f'</a>'
@@ -3507,7 +3519,7 @@ def render_prev_next(slug: str, asset_prefix: str) -> str:
 HEADER_HTML = '''  <header class="site-header">
     <div class="header-inner">
       <div class="header-left">
-        <a href="{asset_prefix}docs/documentation.html" class="logo-link">
+        <a href="{asset_prefix}" class="logo-link">
           <img class="logo logo-dark-mode" src="{asset_prefix}assets/logo-dark.svg" alt="DryRun Security">
           <svg class="logo logo-light-mode" viewBox="0 0 450 119" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DryRun Security"><path d="M160.284 0C176.345 0 185.949 10.3885 185.949 25.6751V25.7541C185.949 40.9616 176.345 51.3501 160.284 51.3501H140.719V0H160.284ZM148.977 43.5488H160.284C171.077 43.5488 177.612 36.2808 177.612 25.7343V25.6553C177.612 15.1285 171.057 7.78151 160.284 7.78151H148.977V43.5488Z"/><path d="M237.714 51.3501H228.406L216.94 33.9898H204.286V51.3501H196.029V0H216.485C229.357 0 236.426 6.59652 236.426 17.222V17.301C236.426 25.0826 232.407 30.6521 224.822 32.8838L237.694 51.3501H237.714ZM204.306 7.50501V26.8008H216.505C223.871 26.8008 228.189 23.6013 228.189 17.301V17.222C228.189 10.8428 223.871 7.50501 216.505 7.50501H204.306Z"/><path d="M265.893 25.1615L281.735 0H290.884L270.052 32.5678V51.3304H261.715V32.5678L240.882 0H249.952L265.873 25.1615H265.893Z"/><path d="M340.431 51.3501H331.124L319.678 33.9898H307.024V51.3501H298.766V0H319.222C332.094 0 339.164 6.59652 339.164 17.222V17.301C339.164 25.0826 335.144 30.6521 327.559 32.8838L340.431 51.3501ZM307.024 7.50501V26.8008H319.222C326.589 26.8008 330.906 23.6013 330.906 17.301V17.222C330.906 10.8428 326.589 7.50501 319.222 7.50501H307.024Z"/><path d="M385.344 0H393.681V28.4203C393.681 45.2671 383.779 52.2389 371.284 52.2389H371.205C358.709 52.2389 348.808 45.2671 348.808 28.4203V0H357.145V28.4203C357.145 40.2901 363.996 44.2203 371.205 44.2203H371.284C378.492 44.2203 385.344 40.2901 385.344 28.4203V0Z"/><path d="M441.881 0H449.921V51.3501H442.336L413.622 13.8053V51.3501H405.582V0H413.167L441.881 37.5448V0Z"/><path d="M167.314 89.4481C165.215 86.0313 161.908 84.1748 156.878 84.1748H156.819C151.472 84.1748 148.383 86.1103 148.383 89.1321C148.383 91.2848 149.591 93.1018 154.185 94.1881L162.403 96.1236C169.572 97.7826 171.572 102.503 171.513 107.342C171.513 113.938 165.71 118.066 156.898 118.066H156.839C148.898 118.066 143.274 115.044 140.68 109.475L145.749 105.841C148.007 110.679 151.809 112.615 156.957 112.615H157.017C162.423 112.615 165.294 110.423 165.294 107.164C165.294 104.458 163.75 102.542 159.829 101.496L150.838 99.2441C144.501 97.7036 142.185 93.7931 142.185 89.3493C142.185 82.4763 147.987 78.6646 157.076 78.6646H157.136C163.651 78.6646 168.384 81.0346 171.037 84.9846L167.334 89.4481H167.314Z"/><path d="M210.009 79.3164V85.0439H190.702V95.5509H208.029V101.338H190.702V111.687H210.009V117.414H184.583V79.3362H210.009V79.3164Z"/><path d="M250.566 87.6311C247.912 85.4388 244.605 84.3921 241.021 84.3921H240.961C232.842 84.3921 227.614 90.2776 227.614 98.3159V98.3751C227.674 106.512 232.902 112.358 240.961 112.358H241.021C244.882 112.358 248.031 111.193 250.566 109.119L253.932 113.741C250.506 116.723 246.15 118.086 241.021 118.086H240.961C228.981 118.086 221.475 110.047 221.475 98.3949V98.3356C221.475 86.7226 228.981 78.6843 240.961 78.6843H241.021C245.813 78.6843 250.348 79.9483 253.932 83.0293L250.566 87.6508V87.6311Z"/><path d="M292.548 79.3164H298.726V100.39C298.726 112.891 291.379 118.046 282.112 118.046H282.052C272.784 118.046 265.438 112.872 265.438 100.39V79.3164H271.616V100.39C271.616 109.198 276.686 112.121 282.052 112.121H282.112C287.458 112.121 292.548 109.198 292.548 100.39V79.3164Z"/><path d="M344.114 117.394H337.223L328.727 104.517H319.341V117.394H313.222V79.3164H328.391C337.936 79.3164 343.183 84.2144 343.183 92.0749V92.1342C343.183 97.921 340.193 102.029 334.569 103.688L344.114 117.394ZM319.341 84.8662V99.1652H328.391C333.856 99.1652 337.045 96.7952 337.045 92.1144V92.0552C337.045 87.3152 333.837 84.8464 328.391 84.8464H319.341V84.8662Z"/><path d="M356.966 117.394V79.3164H363.085V117.394H356.966Z"/><path d="M406.018 79.3164V85.2019H393.879V117.394H387.7V85.2019H375.561V79.3164H406.018Z"/><path d="M431.445 97.9802L443.208 79.3164H450L434.554 103.471V117.394H428.375V103.471L412.929 79.3164H419.662L431.465 97.9802H431.445Z"/><path d="M114.163 10.5269H107.767C107.213 10.5269 106.777 10.9614 106.777 11.5144V17.1629L72.221 76.966L62.478 58.3417L73.7854 35.9452H78.3401C78.8945 35.9452 79.3302 35.5107 79.3302 34.9577V28.5784C79.3302 28.0254 78.8945 27.5909 78.3401 27.5909H71.9437C71.3893 27.5909 70.9536 28.0254 70.9536 28.5784V30.2966H50.2992V28.5784C50.2992 28.0254 49.8636 27.5909 49.3091 27.5909H42.9128C42.3583 27.5909 41.9226 28.0254 41.9226 28.5784V34.9577C41.9226 35.5107 42.3583 35.9452 42.9128 35.9452H47.4278L59.1511 58.3615L35.7243 104.794L8.3766 52.7327V47.0249C8.3766 46.4719 7.94094 46.0374 7.38646 46.0374H0.990142C0.435663 46.0374 0 46.4719 0 47.0249V53.4042C0 53.9572 0.435663 54.3917 0.990142 54.3917H5.92105L32.4371 104.893C31.9024 104.912 31.4865 105.347 31.4865 105.88V112.259C31.4865 112.812 31.9222 113.247 32.4767 113.247H38.873C39.4275 113.247 39.8631 112.812 39.8631 112.259V105.88C39.8631 105.88 39.8631 105.821 39.8631 105.781C39.8235 105.327 39.4473 104.972 38.972 104.912L60.8343 61.6005L68.8941 77.0055C68.4386 77.0845 68.0624 77.4795 68.0624 77.9535V84.3328C68.0624 84.8858 68.498 85.3203 69.0525 85.3203H75.4489C76.0033 85.3203 76.439 84.8858 76.439 84.3328V77.9535C76.439 77.4597 76.0627 77.0647 75.6073 77.0055L109.193 18.8811H114.163C114.718 18.8811 115.154 18.4466 115.154 17.8936V11.5144C115.154 10.9614 114.718 10.5269 114.163 10.5269ZM60.7947 55.1422L50.2794 35.0367C50.2794 35.0367 50.2794 34.9972 50.2794 34.9774V33.2592H70.9338V34.9774C70.9338 34.9774 70.9338 34.9774 70.9338 34.9972L60.7749 55.1422H60.7947Z"/><path d="M9.28748 40.8627C9.12906 40.8627 8.97063 40.843 8.81221 40.7837C8.39635 40.6455 7.52503 40.3492 7.58443 39.9345C7.64384 39.4605 7.76266 39.263 7.88148 38.9075C15.8422 15.6814 37.1897 1.61938 61.8244 1.61938C76.1815 1.61938 89.291 6.1224 99.9053 15.7407C100.103 15.925 100.348 16.2081 100.638 16.5899C100.876 16.8862 100.262 17.5182 100.004 17.8144C99.4499 18.4267 98.5191 18.4662 97.925 17.9132C87.8652 8.78865 75.4488 4.56214 61.8244 4.56214C38.4571 4.56214 19.684 17.9724 10.6737 39.8752C10.436 40.4677 9.88157 40.8627 9.28748 40.8627Z" fill="#38D92D"/><path d="M26.219 103.944C25.9022 103.865 25.5259 103.609 25.2487 103.391C13.4066 93.6745 6.03995 79.9679 4.53493 64.8197C4.49533 64.4839 4.3369 63.6939 4.61414 63.5359C4.9904 63.3186 5.36665 63.2594 5.84192 63.2199C6.63403 63.1014 7.36674 63.7334 7.46575 64.5432C8.91136 78.9212 15.9018 91.9167 27.13 101.14C27.7637 101.653 27.8231 102.443 27.3082 103.075C27.0112 103.431 26.5161 103.865 26.219 103.984V103.944Z" fill="#38D92D"/><path d="M61.8245 116.446C56.5966 116.446 51.4281 115.755 46.4575 114.372C46.1011 114.274 45.7446 114.214 45.3684 113.977C44.9921 113.74 45.309 112.99 45.4278 112.555C45.6456 111.765 46.4575 111.311 47.2497 111.528C51.9627 112.832 56.8738 113.484 61.8245 113.484C91.9447 113.484 116.441 89.0529 116.441 59.0131C116.441 49.1776 114.262 41.3171 109.233 32.9233C108.817 32.2321 108.916 31.0471 109.708 30.5533C110.104 30.2966 110.322 30.1386 110.678 30.0793C110.975 30.0398 111.431 30.7113 111.609 31.0076C116.896 39.8556 119.391 48.6641 119.391 59.0329C119.391 90.6922 93.5685 116.446 61.8245 116.446Z" fill="#38D92D"/><path d="M35.6254 93.0228L53.1113 58.0653L44.4574 41.3172H38.4968C37.6056 41.3172 36.8927 40.6062 36.8927 39.7175V23.7792C36.8927 22.8904 37.6056 22.1794 38.4968 22.1794H82.7165C83.6077 22.1794 84.3206 22.8904 84.3206 23.7792V39.7372C84.3206 40.626 83.6077 41.337 82.7165 41.337H76.7955L68.4783 57.9665L72.5181 65.7678L97.2914 22.9102C88.1425 13.9832 75.6469 8.4729 61.8443 8.4729C37.467 8.4729 17.1295 25.6357 12.258 48.4865L35.6452 93.0228H35.6254Z" fill="#38D92D"/><path d="M81.8649 76.9266V89.1518C81.8649 90.0406 81.152 90.7516 80.2609 90.7516H64.28C63.3889 90.7516 62.676 90.0406 62.676 89.1518V76.6105L60.8739 73.1148L44.1801 106.473C49.6655 108.507 55.6064 109.613 61.8046 109.613C89.8059 109.613 112.5 86.9793 112.5 59.0528C112.5 50.2245 110.223 41.9295 106.242 34.7207L81.8451 76.9463L81.8649 76.9266Z" fill="#38D92D"/></svg>
         </a>
@@ -3525,7 +3537,7 @@ HEADER_HTML = '''  <header class="site-header">
 FOOTER_HTML = ''''''
 
 
-def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
+def render_doc_page(slug: str, page: dict, asset_prefix: str = './',
                     search_index: str = '[]') -> str:
     title = page['title']
     description = page['description']
@@ -3534,6 +3546,12 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
     raw_content = raw_content.replace('{asset_prefix}', asset_prefix)
     content_with_ids = inject_heading_ids(raw_content)
     toc_items = extract_toc(content_with_ids)
+
+    base_url = 'https://docs.dryrun.security'
+    if slug == 'documentation':
+        canonical_url = f'{base_url}/'
+    else:
+        canonical_url = f'{base_url}/{slug}'
 
     header = HEADER_HTML.replace('{asset_prefix}', asset_prefix)
     footer = FOOTER_HTML.replace('{asset_prefix}', asset_prefix)
@@ -3552,7 +3570,7 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
   <meta property="og:title" content="{esc(title)} - DryRun Security Docs">
   <meta property="og:description" content="{esc(description)}">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://docs.dryrun.security/docs/{slug}.html">
+  <meta property="og:url" content="{canonical_url}">
   <meta property="og:image" content="https://docs.dryrun.security/assets/og-default.png">
   <meta property="og:site_name" content="DryRun Security Docs">
   <!-- Twitter Card -->
@@ -3561,7 +3579,7 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
   <meta name="twitter:description" content="{esc(description)}">
   <meta name="twitter:image" content="https://docs.dryrun.security/assets/og-default.png">
   <!-- Canonical & robots -->
-  <link rel="canonical" href="https://docs.dryrun.security/docs/{slug}.html">
+  <link rel="canonical" href="{canonical_url}">
   <meta name="robots" content="index, follow">
   <meta name="author" content="DryRun Security">
   <link rel="icon" href="{asset_prefix}assets/favicon.ico" type="image/png">
@@ -3576,7 +3594,7 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
     "@type": "TechArticle",
     "name": "{esc(title)}",
     "description": "{esc(description)}",
-    "url": "https://docs.dryrun.security/docs/{slug}.html",
+    "url": "{canonical_url}",
     "publisher": {{
       "@type": "Organization",
       "name": "DryRun Security",
@@ -3599,7 +3617,7 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
         "@type": "ListItem",
         "position": 2,
         "name": "{esc(title)}",
-        "item": "https://docs.dryrun.security/docs/{slug}.html"
+        "item": "{canonical_url}"
       }}
     ]
   }}
@@ -3612,7 +3630,7 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = '../',
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="document.querySelector('.sidebar').classList.remove('open');document.getElementById('sidebarOverlay').style.display='none'"></div>
     <main class="content-area">
       <div class="content-inner">
-        <div class="breadcrumb"><a href="{asset_prefix}index.html">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">{esc(section_name)}</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">{esc(title)}</span></div>
+        <div class="breadcrumb"><a href="{asset_prefix}">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">{esc(section_name)}</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">{esc(title)}</span></div>
         <div class="page-heading-row">
           <h1 class="page-heading">{esc(title)}</h1>
           <button class="btn-download-pdf" onclick="window.print()" title="Download as PDF"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 7.5 8 10l3.5-2.5"/><path d="M2.5 11v2a1 1 0 001 1h9a1 1 0 001-1v-2"/></svg><span>PDF</span></button>
@@ -3850,7 +3868,9 @@ def render_sitemap(base_url: str = 'https://docs.dryrun.security') -> str:
     lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
     lines.append(f'  <url><loc>{base_url}/</loc><priority>1.0</priority><lastmod>{today}</lastmod></url>')
     for slug in ORDERED_PAGES:
-        lines.append(f'  <url><loc>{base_url}/docs/{slug}.html</loc><priority>0.8</priority><lastmod>{today}</lastmod></url>')
+        if slug == 'documentation':
+            continue
+        lines.append(f'  <url><loc>{base_url}/{slug}</loc><priority>0.8</priority><lastmod>{today}</lastmod></url>')
     lines.append('</urlset>')
     return '\n'.join(lines)
 
@@ -3867,7 +3887,11 @@ def render_llms_txt(base_url: str = 'https://docs.dryrun.security') -> str:
         page = PAGES[slug]
         title = page['title']
         description = page.get('description', '')
-        lines.append(f'- [{title}]({base_url}/docs/{slug}.html): {description}')
+        if slug == 'documentation':
+            url = f'{base_url}/'
+        else:
+            url = f'{base_url}/{slug}'
+        lines.append(f'- [{title}]({url}): {description}')
     return '\n'.join(lines) + '\n'
 
 
@@ -3881,7 +3905,11 @@ def render_llms_full_txt(base_url: str = 'https://docs.dryrun.security') -> str:
         content_html = page['content']
         clean = re.sub(r'<[^>]+>', '', content_html)
         clean = re.sub(r'\n{3,}', '\n\n', clean.strip())
-        sections.append(f'# {title}\n\nURL: {base_url}/docs/{slug}.html\n\n{description}\n\n{clean}')
+        if slug == 'documentation':
+            url = f'{base_url}/'
+        else:
+            url = f'{base_url}/{slug}'
+        sections.append(f'# {title}\n\nURL: {url}\n\n{description}\n\n{clean}')
     return '\n\n---\n\n'.join(sections) + '\n'
 
 
@@ -4209,28 +4237,25 @@ def build(output_dir: str = None) -> None:
     else:
         output_dir = Path(output_dir)
 
-    docs_dir = output_dir / 'docs'
-    docs_dir.mkdir(parents=True, exist_ok=True)
-
     # Pre-generate the search index once for all pages
     search_index = generate_search_index()
 
-    # Generate doc pages
+    # Generate doc pages at root; documentation slug becomes index.html
     for slug in ORDERED_PAGES:
         page = PAGES.get(slug)
         if page is None:
             print(f'WARNING: No content defined for slug: {slug}')
             continue
-        html_content = render_doc_page(slug, page, asset_prefix='../',
+        html_content = render_doc_page(slug, page, asset_prefix='./',
                                        search_index=search_index)
-        out_path = docs_dir / f'{slug}.html'
+        if slug == 'documentation':
+            out_path = output_dir / 'index.html'
+            out_name = 'index.html'
+        else:
+            out_path = output_dir / f'{slug}.html'
+            out_name = f'{slug}.html'
         out_path.write_text(html_content, encoding='utf-8')
-        print(f'  Generated: docs/{slug}.html')
-
-    # Generate index
-    index_html = render_index_page()
-    (output_dir / 'index.html').write_text(index_html, encoding='utf-8')
-    print('  Generated: index.html')
+        print(f'  Generated: {out_name}')
 
     # Sitemap
     (output_dir / 'sitemap.xml').write_text(render_sitemap(), encoding='utf-8')
