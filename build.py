@@ -1460,7 +1460,7 @@ PAGES['finding-tuning'] = {
 
 <h2 id="from-the-risk-register">From the Risk Register</h2>
 
-<p>AppSec engineers manage dismissals from the <a href="./risk-register.html">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Triage</strong> to choose a status and optionally add context.</p>
+<p>AppSec engineers manage dismissals from the <a href="./risk-register.html">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Dismiss</strong> to choose a status and optionally add context.</p>
 
 <p>From the Risk Register, AppSec teams can also:</p>
 <ul>
@@ -1469,9 +1469,9 @@ PAGES['finding-tuning'] = {
   <li>Use the audit trail to confirm all triage decisions are intentional and documented</li>
 </ul>
 
-<figure class="docs-screenshot docs-screenshot-sm"><img src="{asset_prefix}assets/images/risk-register/03-finding-triage.png" alt="Finding triage in the Risk Register" loading="lazy"></figure>
+<figure class="docs-screenshot"><img src="{asset_prefix}assets/images/risk-register/03-finding-triage.png" alt="Finding triage in the Risk Register" loading="lazy"></figure>
 
-<figure class="docs-screenshot"><img src="{asset_prefix}assets/images/risk-register/04-triage-pr.png" alt="Finding triage from the PR workflow" loading="lazy"></figure>
+<figure class="docs-screenshot docs-screenshot-sm"><img src="{asset_prefix}assets/images/risk-register/04-triage-pr.png" alt="Finding triage from the PR workflow" loading="lazy"></figure>
 
 <h2 id="dismissed-findings">Dismissed Findings</h2>
 
@@ -3443,6 +3443,13 @@ def render_sidebar(current_slug: str, asset_prefix: str) -> str:
         parts.append('</ul>')
         parts.append('</div>')
     parts.append('</div>')
+    parts.append('<div class="sidebar-footer">')
+    parts.append('<button class="sidebar-theme-btn" id="themeToggle" aria-label="Toggle light/dark mode">')
+    parts.append('<svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>')
+    parts.append('<svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>')
+    parts.append('<span class="theme-label">Toggle dark mode</span>')
+    parts.append('</button>')
+    parts.append('</div>')
     parts.append('</nav>')
     return '\n'.join(parts)
 
@@ -3505,15 +3512,6 @@ HEADER_HTML = '''  <header class="site-header">
         </a>
       </div>
       <div class="header-right">
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
-          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-          </svg>
-          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
         <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M3 5h14M3 10h14M3 15h14"/>

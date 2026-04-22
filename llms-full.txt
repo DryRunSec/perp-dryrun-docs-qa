@@ -1247,7 +1247,7 @@ If a finding is incorrectly blocking a merge via branch protection rules, develo
 
 From the Risk Register
 
-AppSec engineers manage dismissals from the Risk Register, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click Triage to choose a status and optionally add context.
+AppSec engineers manage dismissals from the Risk Register, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click Dismiss to choose a status and optionally add context.
 
 From the Risk Register, AppSec teams can also:
 
