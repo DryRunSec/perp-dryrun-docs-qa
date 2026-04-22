@@ -218,7 +218,7 @@ class TestRelativePaths:
     def test_doc_pages_have_inline_logo_svg(self):
         for html_file in DOCS_DIR.glob("*.html"):
             content = html_file.read_text()
-            assert 'class="logo" viewBox="0 0 450 119"' in content, (
+            assert 'class="logo logo-light-mode" viewBox="0 0 450 119"' in content, (
                 f"{html_file.name} should contain inline logo SVG"
             )
 

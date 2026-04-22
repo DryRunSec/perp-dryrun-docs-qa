@@ -133,6 +133,12 @@ body {
   fill: #111827;
 }
 
+/* Dark/light mode logo swap */
+.logo-dark-mode { display: none; }
+.logo-light-mode { display: block; }
+html:not([data-theme="light"]) .logo-light-mode { display: none; }
+html:not([data-theme="light"]) .logo-dark-mode { display: block; width: 128px; height: auto; }
+
 .header-divider {
   width: 1px;
   height: 20px;
@@ -1100,7 +1106,7 @@ a.landing-card:hover * {
 /* ===== Footer ===== */
 .site-footer {
   border-top: 1px solid var(--border);
-  background: #ffffff;
+  background: var(--bg-surface);
 }
 
 .footer-main { padding: 56px 24px 40px; }
@@ -1261,6 +1267,10 @@ a.landing-card:hover * {
 html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
 html:not([data-theme="light"]) .theme-toggle .icon-sun { display: none; }
 
+html:not([data-theme="light"]) .site-header {
+  background: rgba(15,17,24,0.92);
+}
+
 html:not([data-theme="light"]) .sidebar-links a.active {
   color: #ffffff;
   background: #4f46e5;
@@ -1268,6 +1278,10 @@ html:not([data-theme="light"]) .sidebar-links a.active {
   border-radius: 6px;
   margin: 0 8px;
   padding-left: 12px;
+}
+
+html:not([data-theme="light"]) .sidebar-section-title {
+  color: #38D92D;
 }
 
 /* ===== Utility ===== */
