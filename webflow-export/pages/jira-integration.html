@@ -3,12 +3,12 @@
 
 <p>DryRun Security does not have a native Jira integration today, but admins can connect DryRun Security to Jira using an automation middleware tool, either <strong>Tines</strong> or <strong>Zapier</strong>. DryRun Security sends a webhook when a finding is detected on a PR scan. The middleware receives the webhook, unpacks the finding details, checks Jira for an existing ticket for that finding, and either creates a new ticket or updates the existing one.</p>
 
-<p>When a PR is scanned and a finding is returned, DryRun Security sends a POST request with a JSON payload containing the event type, timestamp, repository, pull request number, and a finding object with <code>id</code>, <code>severity</code>, <code>category</code>, <code>title</code>, <code>file</code>, <code>line</code>, and <code>description</code>. See the <a href="./webhook-integration.html">Webhook Integration</a> page for the full payload structure and configuration details.</p>
+<p>When a PR is scanned and a finding is returned, DryRun Security sends a POST request with a JSON payload containing the event type, timestamp, repository, pull request number, and a finding object with <code>id</code>, <code>severity</code>, <code>category</code>, <code>title</code>, <code>file</code>, <code>line</code>, and <code>description</code>. See the <a href="./webhook-integration">Webhook Integration</a> page for the full payload structure and configuration details.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
 <ul>
-  <li>DryRun Security webhook configured (see <a href="./webhook-integration.html">Webhook Integration</a>)</li>
+  <li>DryRun Security webhook configured (see <a href="./webhook-integration">Webhook Integration</a>)</li>
   <li>A Jira project with API access (Jira API token and project key)</li>
   <li>A <a href="https://www.tines.com/" target="_blank" rel="noopener noreferrer">Tines</a> or <a href="https://zapier.com/" target="_blank" rel="noopener noreferrer">Zapier</a> account</li>
 </ul>

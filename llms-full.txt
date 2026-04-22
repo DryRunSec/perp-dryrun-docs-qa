@@ -1,6 +1,6 @@
 # Documentation
 
-URL: https://docs.dryrun.security/docs/documentation.html
+URL: https://docs.dryrun.security/
 
 DryRun Security is an AI-native application security platform that reviews every pull request and repository scan for vulnerabilities in real time. It builds an intelligence layer on top of all scan data, surfacing trends, patterns, and risks across your entire codebase and development organization. These docs cover setup, scanning, code security intelligence, platform administration, and integrations.
 
@@ -89,7 +89,7 @@ AppSec Engineers
 
 # Quick Start
 
-URL: https://docs.dryrun.security/docs/quick-start.html
+URL: https://docs.dryrun.security/quick-start
 
 Install DryRun Security on GitHub or GitLab and start scanning pull requests in minutes.
 
@@ -277,7 +277,7 @@ References
 
 # Repository Scanning with DeepScan
 
-URL: https://docs.dryrun.security/docs/deepscan.html
+URL: https://docs.dryrun.security/deepscan
 
 DeepScan analyzes your entire codebase, not just recent pull requests, to find vulnerabilities that accumulate over time.
 
@@ -356,7 +356,7 @@ The Five Behavioral Axes
 
 # PR Scanning
 
-URL: https://docs.dryrun.security/docs/pr-scanning.html
+URL: https://docs.dryrun.security/pr-scanning
 
 Understand how DryRun Security automatically analyzes your pull requests for security vulnerabilities.
 
@@ -543,7 +543,7 @@ PR scanning can detect a broad set of vulnerability categories. For the complete
 
 # Secrets Scanning
 
-URL: https://docs.dryrun.security/docs/secrets-scanning.html
+URL: https://docs.dryrun.security/secrets-scanning
 
 How DryRun Security detects hardcoded credentials, API keys, tokens, and other secrets in your codebase.
 
@@ -571,7 +571,7 @@ The Secrets Analyzer detects a wide range of credential types, including:
 
 # IaC Scanning
 
-URL: https://docs.dryrun.security/docs/iac-scanning.html
+URL: https://docs.dryrun.security/iac-scanning
 
 DryRun Security scans Terraform configurations for security misconfigurations and insecure defaults in pull requests.
 
@@ -598,7 +598,7 @@ IaC findings are reported the same way as other DryRun Security results: as comm
 
 # SCA
 
-URL: https://docs.dryrun.security/docs/sca.html
+URL: https://docs.dryrun.security/sca
 
 Dependency scanning and supply chain risk detection - find vulnerable third-party packages before they reach production.
 
@@ -636,7 +636,7 @@ DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Mat
 
 # Auto Fix
 
-URL: https://docs.dryrun.security/docs/auto-fix.html
+URL: https://docs.dryrun.security/auto-fix
 
 Automated remediation guidance and fix verification for security findings.
 
@@ -672,7 +672,7 @@ Once connected, the AI coding tool can read DryRun Security findings and automat
 
 # Language and Framework Support
 
-URL: https://docs.dryrun.security/docs/language-support.html
+URL: https://docs.dryrun.security/language-support
 
 Languages, frameworks, and package ecosystems supported across all DryRun Security scanning capabilities.
 
@@ -731,7 +731,7 @@ For SCA, the scanner identifies all manifest and lock files present in the repos
 
 # Vulnerability Coverage Matrix
 
-URL: https://docs.dryrun.security/docs/vulnerability-coverage-matrix.html
+URL: https://docs.dryrun.security/vulnerability-coverage-matrix
 
 All finding types detectable by DryRun Security across PR scanning, DeepScan, and SCA, with CWE mappings.
 
@@ -800,7 +800,7 @@ All Finding Types
 
 # Code Security Intelligence
 
-URL: https://docs.dryrun.security/docs/code-security-intelligence.html
+URL: https://docs.dryrun.security/code-security-intelligence
 
 DryRun Security builds an intelligence layer on top of vulnerability findings and scan data, enabling actionable security workflows across your codebase and development organization.
 
@@ -912,7 +912,7 @@ AppSec engineers and AI coding tools can also access the intelligence layer prog
 
 # PR Scanning Configuration
 
-URL: https://docs.dryrun.security/docs/pr-scanning-configuration.html
+URL: https://docs.dryrun.security/pr-scanning-configuration
 
 Customize DryRun Security behavior per repository - enable agents, attach policies, configure blocking, and set up notifications.
 
@@ -998,7 +998,7 @@ The Policy Enforcement Agent can run up to 7 code policies per repository.
 
 # Custom Code Policies
 
-URL: https://docs.dryrun.security/docs/custom-code-policies.html
+URL: https://docs.dryrun.security/custom-code-policies
 
 Create custom security rules in plain English using Custom Code Policies.
 
@@ -1071,7 +1071,7 @@ The guidance field contains the instructions that the LLM will deliver to your d
 
 # Repository Context
 
-URL: https://docs.dryrun.security/docs/repository-context.html
+URL: https://docs.dryrun.security/repository-context
 
 Provide repository context with AGENTS.md to improve DryRun Security analysis accuracy.
 
@@ -1130,7 +1130,7 @@ this application.
 
 # Risk Register
 
-URL: https://docs.dryrun.security/docs/risk-register.html
+URL: https://docs.dryrun.security/risk-register
 
 One view to see, search, and act on all security risk across your organization.
 
@@ -1180,7 +1180,7 @@ Each row has a checkbox for bulk selection, and findings are paginated (e.g., "S
 
 # Finding Tuning with Feedback
 
-URL: https://docs.dryrun.security/docs/finding-tuning.html
+URL: https://docs.dryrun.security/finding-tuning
 
 Tune security findings and reduce false positives with feedback from developers and AppSec engineers.
 
@@ -1265,7 +1265,7 @@ When a finding is valid but mitigating circumstances exist: Sometimes your team 
 
 # PR Blocking
 
-URL: https://docs.dryrun.security/docs/pr-blocking.html
+URL: https://docs.dryrun.security/pr-blocking
 
 Configure DryRun Security to block pull requests when critical vulnerabilities are detected.
 
@@ -1332,7 +1332,7 @@ Require DryRun Security status checks to pass before merging.
 
 # Compliance & GRC
 
-URL: https://docs.dryrun.security/docs/compliance-grc.html
+URL: https://docs.dryrun.security/compliance-grc
 
 Compliance reporting, audit readiness, and SBOM generation.
 
@@ -1424,7 +1424,7 @@ SBOM and AI-BOM data produced by DryRun Security can be provided directly to aud
 
 # Permissions
 
-URL: https://docs.dryrun.security/docs/permissions.html
+URL: https://docs.dryrun.security/permissions
 
 Understand the two-role permission model in DryRun Security and how SCM platform roles map to Admin and Developer access.
 
@@ -1484,7 +1484,7 @@ An account administrator can request that a developer be promoted to Admin withi
 
 # MCP
 
-URL: https://docs.dryrun.security/docs/mcp.html
+URL: https://docs.dryrun.security/mcp
 
 Connect AI assistants to DryRun Security insights using the Model Context Protocol for natural language queries about your security data.
 
@@ -1575,7 +1575,7 @@ If you encounter any issues, reach out at hi@dryrun.security.
 
 # DryRun API
 
-URL: https://docs.dryrun.security/docs/dryrun-api.html
+URL: https://docs.dryrun.security/dryrun-api
 
 Programmatic access to DryRun Security findings, scans, configurations, and insights via the Simple API.
 
@@ -2377,7 +2377,7 @@ If you have questions about authentication, account access, or expected response
 
 # Slack Integration
 
-URL: https://docs.dryrun.security/docs/slack-integration.html
+URL: https://docs.dryrun.security/slack-integration
 
 Receive DryRun Security alerts and notifications in Slack.
 
@@ -2450,7 +2450,7 @@ Changes in the repository that match the integration's risk level will now trigg
 
 # Webhook Integration
 
-URL: https://docs.dryrun.security/docs/webhook-integration.html
+URL: https://docs.dryrun.security/webhook-integration
 
 Receive a POST request to any HTTP endpoint when DryRun Security detects a finding on a pull request.
 
@@ -2521,7 +2521,7 @@ DryRun Security sends an HTTP POST with a JSON body to your endpoint when a find
 
 # Jira Integration
 
-URL: https://docs.dryrun.security/docs/jira-integration.html
+URL: https://docs.dryrun.security/jira-integration
 
 Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.
 
@@ -2665,7 +2665,7 @@ project = {PROJECT_KEY} AND labels = &quot;{finding.id}&quot; AND statusCategory
 
 # API Access Keys
 
-URL: https://docs.dryrun.security/docs/api-access-keys.html
+URL: https://docs.dryrun.security/api-access-keys
 
 Create and manage API access keys for programmatic access to DryRun Security.
 
@@ -2705,7 +2705,7 @@ API keys are subject to rate limits to ensure platform stability. Current limits
 
 # AI Coding Integration
 
-URL: https://docs.dryrun.security/docs/ai-coding-integration.html
+URL: https://docs.dryrun.security/ai-coding-integration
 
 Integrate DryRun Security with AI coding tools, IDEs, and AI agents.
 
@@ -2940,7 +2940,7 @@ Related Pages
 
 # DryRun Skill
 
-URL: https://docs.dryrun.security/docs/dryrun-skill.html
+URL: https://docs.dryrun.security/dryrun-skill
 
 Automate security vulnerability remediation using AI coding tools with the DryRun Security skill.
 

@@ -50,7 +50,7 @@
   <li><strong>Secrets Analyzer</strong></li>
   <li><strong>Server-Side Request Forgery Analyzer</strong></li>
   <li><strong>SQL Injection Analyzer</strong></li>
-  <li>Any <a href="./custom-code-policies.html">custom code policies</a> created by your team</li>
+  <li>Any <a href="./custom-code-policies">custom code policies</a> created by your team</li>
 </ul>
 
 <p>All findings are filtered to the changed regions of the pull request. Pre-existing issues in unchanged code are excluded from the results so developers can focus on what they introduced.</p>
@@ -80,9 +80,9 @@
   </tbody>
 </table>
 
-<p>When findings are detected, inline comments are posted directly on the affected lines of code with a description of the vulnerability and remediation guidance. For details on enforcing merge gates with check statuses, see <a href="./pr-blocking.html">PR Blocking</a>.</p>
+<p>When findings are detected, inline comments are posted directly on the affected lines of code with a description of the vulnerability and remediation guidance. For details on enforcing merge gates with check statuses, see <a href="./pr-blocking">PR Blocking</a>.</p>
 
-<p>If you are seeing noisy or irrelevant findings, you can <a href="./finding-tuning.html">tune your findings</a> to reduce noise and focus on the issues that matter most to your team.</p>
+<p>If you are seeing noisy or irrelevant findings, you can <a href="./finding-tuning">tune your findings</a> to reduce noise and focus on the issues that matter most to your team.</p>
 
 <h2 id="configuration">Configuration</h2>
 
@@ -132,11 +132,11 @@
 
 <p>Configurations follow an inheritance model: the <code>default</code> configuration applies to all repositories, and repository-specific configurations override it. This lets you set organization-wide baselines while customizing behavior for individual repositories or teams.</p>
 
-<p>See <a href="./pr-scanning-configuration.html">PR Scanning Configuration</a> for a full walkthrough of creating and managing configurations.</p>
+<p>See <a href="./pr-scanning-configuration">PR Scanning Configuration</a> for a full walkthrough of creating and managing configurations.</p>
 
 <h2 id="pr-scanning-vs-deepscan">How PR Scanning Differs From DeepScan</h2>
 
-<p>DryRun Security offers two scanning modes. PR Scanning analyzes changes as they arrive in pull requests. <a href="./deepscan.html">DeepScan</a> performs a full-repository analysis to find vulnerabilities in existing code. The two modes are complementary:</p>
+<p>DryRun Security offers two scanning modes. PR Scanning analyzes changes as they arrive in pull requests. <a href="./deepscan">DeepScan</a> performs a full-repository analysis to find vulnerabilities in existing code. The two modes are complementary:</p>
 
 <table>
   <thead>
@@ -182,9 +182,9 @@
 
 <h2 id="supported-languages">Supported Languages</h2>
 
-<p>PR scanning supports the same languages and frameworks as DeepScan. For the full list, see <a href="./language-support.html">Language and Framework Support</a>.</p>
+<p>PR scanning supports the same languages and frameworks as DeepScan. For the full list, see <a href="./language-support">Language and Framework Support</a>.</p>
 
 <h2 id="vulnerability-categories">Vulnerability Categories</h2>
 
-<p>PR scanning can detect a broad set of vulnerability categories. For the complete system-wide reference, see the <a href="./vulnerability-coverage-matrix.html">Vulnerability Coverage Matrix</a>.</p>
+<p>PR scanning can detect a broad set of vulnerability categories. For the complete system-wide reference, see the <a href="./vulnerability-coverage-matrix">Vulnerability Coverage Matrix</a>.</p>
 </div>

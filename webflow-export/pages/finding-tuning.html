@@ -46,7 +46,7 @@
   </tbody>
 </table>
 
-<p>False Positive and Won&rsquo;t Fix / Nitpick dismissals feed into the <a href="./code-security-intelligence.html">Code Security Knowledge Graph</a>, building a model of your codebase&rsquo;s specific patterns and risk profile. Scan accuracy improves continuously as your team triages findings.</p>
+<p>False Positive and Won&rsquo;t Fix / Nitpick dismissals feed into the <a href="./code-security-intelligence">Code Security Knowledge Graph</a>, building a model of your codebase&rsquo;s specific patterns and risk profile. Scan accuracy improves continuously as your team triages findings.</p>
 
 <h2 id="from-the-pr">From the PR</h2>
 
@@ -60,13 +60,13 @@
 
 <p>When a developer submits a dismissal, DryRun Security removes the finding from the active list, regenerates the PR summary comment, logs the decision for the audit trail, and feeds the signal back into the system.</p>
 
-<p>If a finding is incorrectly blocking a merge via <a href="./pr-blocking.html">branch protection rules</a>, developers can dismiss it directly in the PR thread. DryRun Security automatically removes the block without requiring AppSec intervention. The dismissal is logged so AppSec can review it afterward.</p>
+<p>If a finding is incorrectly blocking a merge via <a href="./pr-blocking">branch protection rules</a>, developers can dismiss it directly in the PR thread. DryRun Security automatically removes the block without requiring AppSec intervention. The dismissal is logged so AppSec can review it afterward.</p>
 
 <figure class="docs-screenshot"><img src="assets/images/risk-register/05-scm-feedback.jpg" alt="SCM feedback workflow" loading="lazy"></figure>
 
 <h2 id="from-the-risk-register">From the Risk Register</h2>
 
-<p>AppSec engineers manage dismissals from the <a href="./risk-register.html">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Dismiss</strong> to choose a status and optionally add context.</p>
+<p>AppSec engineers manage dismissals from the <a href="./risk-register">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Dismiss</strong> to choose a status and optionally add context.</p>
 
 <p>From the Risk Register, AppSec teams can also:</p>
 <ul>
@@ -84,6 +84,6 @@
 <p>View dismissed findings in the Risk Register using the <strong>Dismissed</strong> filter. Each entry shows the dismissal status, reason, who dismissed it, and when. Use the <strong>Restore</strong> button to return a finding to the active queue if the dismissal needs to be revisited.</p>
 
 <div class="callout callout-warning">
-<p><strong>When a finding is valid but mitigating circumstances exist:</strong> Sometimes your team knows DryRun Security is right about a finding, but another layer of protection already addresses it. Rather than marking it as a false positive, the right resolution is to update your AGENTS.md with the context that explains why. This tells DryRun Security about the mitigating control so it does not raise the same class of issue again, without misrepresenting the finding as invalid. See <a href="./repository-context.html">Repository Context</a> for details.</p>
+<p><strong>When a finding is valid but mitigating circumstances exist:</strong> Sometimes your team knows DryRun Security is right about a finding, but another layer of protection already addresses it. Rather than marking it as a false positive, the right resolution is to update your AGENTS.md with the context that explains why. This tells DryRun Security about the mitigating control so it does not raise the same class of issue again, without misrepresenting the finding as invalid. See <a href="./repository-context">Repository Context</a> for details.</p>
 </div>
 </div>

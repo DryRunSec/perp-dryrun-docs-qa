@@ -13,9 +13,21 @@ build = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(build)
 
 ROOT = Path(__file__).parent.parent
-DOCS_DIR = ROOT / "docs"
+DOCS_DIR = ROOT
 CSS_PATH = ROOT / "style.css"
 INDEX_PATH = ROOT / "index.html"
+
+
+def _doc_html_files():
+    """All generated doc HTML files at site root (excludes any stray docs/ subdir)."""
+    return [p for p in ROOT.glob("*.html")]
+
+
+def _page_path(slug):
+    """Path to a generated page. documentation -> index.html; others -> SLUG.html at root."""
+    if slug == "documentation":
+        return ROOT / "index.html"
+    return ROOT / f"{slug}.html"
 
 
 class TestDataIntegrity:
@@ -96,7 +108,7 @@ class TestGeneratedFiles:
 
     def test_all_doc_pages_exist(self):
         for slug in build.PAGES:
-            page = DOCS_DIR / f"{slug}.html"
+            page = _page_path(slug)
             assert page.exists(), f"Missing doc page: {page}"
 
     def test_sitemap_exists(self):
@@ -106,21 +118,21 @@ class TestGeneratedFiles:
         assert (ROOT / "robots.txt").exists()
 
     def test_doc_pages_have_doctype(self):
-        for html_file in DOCS_DIR.glob("*.html"):
+        for html_file in _doc_html_files():
             content = html_file.read_text()
             assert content.strip().startswith("<!DOCTYPE html"), (
                 f"{html_file.name} missing DOCTYPE"
             )
 
     def test_doc_pages_have_favicon(self):
-        for html_file in DOCS_DIR.glob("*.html"):
+        for html_file in _doc_html_files():
             content = html_file.read_text()
             assert 'favicon.ico' in content, (
                 f"{html_file.name} missing favicon reference"
             )
 
     def test_doc_pages_have_header(self):
-        for html_file in DOCS_DIR.glob("*.html"):
+        for html_file in _doc_html_files():
             content = html_file.read_text()
             assert 'site-header' in content, (
                 f"{html_file.name} missing header"
@@ -130,14 +142,14 @@ class TestGeneratedFiles:
         pass  # Footer has been intentionally removed from the docs site
 
     def test_doc_pages_have_sidebar(self):
-        for html_file in DOCS_DIR.glob("*.html"):
+        for html_file in _doc_html_files():
             content = html_file.read_text()
             assert 'sidebar' in content, (
                 f"{html_file.name} missing sidebar"
             )
 
     def test_doc_pages_have_toc(self):
-        for html_file in DOCS_DIR.glob("*.html"):
+        for html_file in _doc_html_files():
             content = html_file.read_text()
             assert 'toc-sidebar' in content, (
                 f"{html_file.name} missing TOC sidebar"
@@ -209,14 +221,14 @@ class TestRelativePaths:
             )
 
     def test_doc_pages_use_relative_css(self):
-        for html_file in DOCS_DIR.glob("*.html"):
+        for html_file in _doc_html_files():
             content = html_file.read_text()
-            assert '../style.css' in content, (
-                f"{html_file.name} should reference ../style.css"
+            assert './style.css' in content, (
+                f"{html_file.name} should reference ./style.css"
             )
 
     def test_doc_pages_have_inline_logo_svg(self):
-        for html_file in DOCS_DIR.glob("*.html"):
+        for html_file in _doc_html_files():
             content = html_file.read_text()
             assert 'class="logo logo-light-mode" viewBox="0 0 450 119"' in content, (
                 f"{html_file.name} should contain inline logo SVG"
@@ -354,7 +366,7 @@ class TestSidebarNavigation:
         for slug in build.PAGES:
             if slug in nav_hidden:
                 continue  # hidden pages don't have an active sidebar link
-            page_file = DOCS_DIR / f"{slug}.html"
+            page_file = _page_path(slug)
             content = page_file.read_text()
             assert 'class="active"' in content, (
                 f"{slug}.html has no active sidebar link"
@@ -366,13 +378,13 @@ class TestSidebarNavigation:
         for section in build.SECTIONS:
             all_slugs.extend(section["pages"])
 
-        first_page = DOCS_DIR / f"{all_slugs[0]}.html"
+        first_page = _page_path(all_slugs[0])
         first_content = first_page.read_text()
         assert 'class="prev-next-link prev-link"' not in first_content, (
             f"First page '{all_slugs[0]}' should not have a previous link"
         )
 
-        last_page = DOCS_DIR / f"{all_slugs[-1]}.html"
+        last_page = _page_path(all_slugs[-1])
         last_content = last_page.read_text()
         assert 'class="prev-next-link next-link"' not in last_content, (
             f"Last page '{all_slugs[-1]}' should not have a next link"
