@@ -3976,9 +3976,11 @@ def generate_search_index() -> str:
         content_html = page.get('content', '')
         content_with_ids = inject_heading_ids(content_html)
         plain_text = _strip_html(content_html)
+        url = '/' if slug == 'documentation' else f'/{slug}'
         # Page-level entry (no anchor)
         index.append({
             's': slug,
+            'u': url,
             't': page.get('title', slug),
             'n': page.get('section', ''),
             'd': page.get('description', ''),
@@ -3991,6 +3993,7 @@ def generate_search_index() -> str:
                 continue
             index.append({
                 's': slug,
+                'u': url,
                 't': heading,
                 'n': page.get('section', ''),
                 'd': '',
