@@ -19,8 +19,9 @@ INDEX_PATH = ROOT / "index.html"
 
 
 def _doc_html_files():
-    """All generated doc HTML files at site root (excludes any stray docs/ subdir)."""
-    return [p for p in ROOT.glob("*.html")]
+    """All generated doc HTML files at site root (excludes any stray docs/ subdir and redirect stubs)."""
+    redirect_names = {f"{old}.html" for old, _ in getattr(build, "REDIRECTS", [])}
+    return [p for p in ROOT.glob("*.html") if p.name not in redirect_names]
 
 
 def _page_path(slug):
@@ -239,7 +240,10 @@ class TestRelativePaths:
         assert 'style.css' in content, "index.html should reference style.css"
 
     def test_external_links_have_target_blank(self):
+        redirect_names = {f"{old}.html" for old, _ in getattr(build, "REDIRECTS", [])}
         for html_file in ROOT.glob("**/*.html"):
+            if html_file.name in redirect_names:
+                continue
             content = html_file.read_text()
             for match in re.finditer(r'<a\s+([^>]*href="https?://[^"]*"[^>]*)>', content):
                 attrs = match.group(1)
@@ -551,4 +555,50 @@ class TestSearchIndex:
         for entry in index:
             assert entry['b'] and entry['b'].strip(), (
                 f"Entry for slug '{entry['s']}' has empty body/content ('b')"
+            )
+
+
+class TestRedirects:
+    """Verify static redirect pages for renamed slugs."""
+
+    def test_redirects_defined(self):
+        assert hasattr(build, "REDIRECTS"), "build.py must expose a REDIRECTS list"
+        assert isinstance(build.REDIRECTS, list)
+        assert len(build.REDIRECTS) >= 1
+
+    def test_coverage_matrix_redirect_present(self):
+        assert ("coverage-matrix-vulnerability-categories",
+                "vulnerability-coverage-matrix") in build.REDIRECTS
+
+    def test_redirect_files_exist(self):
+        for old_slug, _ in build.REDIRECTS:
+            path = ROOT / f"{old_slug}.html"
+            assert path.exists(), f"Missing redirect page: {path}"
+
+    def test_redirect_targets_exist(self):
+        for _, new_slug in build.REDIRECTS:
+            target = ROOT / f"{new_slug}.html"
+            assert target.exists(), f"Redirect target page missing: {target}"
+
+    def test_redirect_page_has_meta_refresh_and_canonical(self):
+        for old_slug, new_slug in build.REDIRECTS:
+            content = (ROOT / f"{old_slug}.html").read_text()
+            target_url = f"https://docs.dryrun.security/{new_slug}"
+            assert f'http-equiv="refresh"' in content, (
+                f"{old_slug}.html missing meta refresh"
+            )
+            assert f'content="0; url={target_url}"' in content, (
+                f"{old_slug}.html meta refresh does not target {target_url}"
+            )
+            assert f'rel="canonical" href="{target_url}"' in content, (
+                f"{old_slug}.html missing canonical link to {target_url}"
+            )
+            assert f"window.location.replace(\"{target_url}\")" in content, (
+                f"{old_slug}.html missing JS fallback redirect"
+            )
+            assert "This page has moved." in content, (
+                f"{old_slug}.html missing human-readable moved message"
+            )
+            assert f'href="{target_url}"' in content, (
+                f"{old_slug}.html missing anchor link to new URL"
             )

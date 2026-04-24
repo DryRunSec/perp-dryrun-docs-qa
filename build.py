@@ -64,6 +64,15 @@ def inject_heading_ids(html_content: str) -> str:
 # ---------------------------------------------------------------------------
 
 
+# Static redirects for renamed pages. Each tuple is (old_slug, new_slug).
+# A minimal HTML file is emitted at `{old_slug}.html` that meta-refreshes and
+# JS-redirects visitors to `/{new_slug}`, and sets a canonical link so search
+# engines update their index.
+REDIRECTS = [
+    ('coverage-matrix-vulnerability-categories', 'vulnerability-coverage-matrix'),
+]
+
+
 SECTIONS = [
     {
         'name': 'Getting Started',
@@ -3921,6 +3930,37 @@ Sitemap: https://docs.dryrun.security/sitemap.xml
 '''
 
 
+def render_redirect(old_slug: str, new_slug: str,
+                    base_url: str = 'https://docs.dryrun.security') -> str:
+    """Generate a minimal HTML redirect page for a renamed slug."""
+    target = f'{base_url}/{new_slug}'
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Page moved</title>
+<meta http-equiv="refresh" content="0; url={esc(target)}">
+<link rel="canonical" href="{esc(target)}">
+<meta name="robots" content="noindex">
+<script>window.location.replace({json.dumps(target)});</script>
+</head>
+<body>
+<p>This page has moved. <a href="{esc(target)}">Click here if you are not redirected.</a></p>
+</body>
+</html>
+'''
+
+
+def render_redirects(output_dir: Path,
+                     base_url: str = 'https://docs.dryrun.security') -> None:
+    """Write a static redirect HTML file for every (old_slug, new_slug) in REDIRECTS."""
+    for old_slug, new_slug in REDIRECTS:
+        html_content = render_redirect(old_slug, new_slug, base_url=base_url)
+        out_path = output_dir / f'{old_slug}.html'
+        out_path.write_text(html_content, encoding='utf-8')
+        print(f'  Generated: {old_slug}.html (redirect -> /{new_slug})')
+
+
 # ---------------------------------------------------------------------------
 # Search index generation
 # ---------------------------------------------------------------------------
@@ -4261,6 +4301,9 @@ def build(output_dir: str = None) -> None:
             out_name = f'{slug}.html'
         out_path.write_text(html_content, encoding='utf-8')
         print(f'  Generated: {out_name}')
+
+    # Static redirects for renamed pages
+    render_redirects(output_dir)
 
     # Sitemap
     (output_dir / 'sitemap.xml').write_text(render_sitemap(), encoding='utf-8')
