@@ -476,3 +476,79 @@ class TestUIQualityCSS:
         """Index page should have keyboard shortcut hint on search."""
         index = INDEX_PATH.read_text()
         assert 'sidebar-search-kbd' in index, "Index should have keyboard shortcut hint on search"
+
+
+class TestSearchIndex:
+    """Verify generate_search_index() output matches the flat URL structure.
+
+    Entries must use /{slug} URLs (or / for the documentation landing page),
+    never the legacy /docs/{slug}.html pattern.
+    """
+
+    @staticmethod
+    def _load_index():
+        import json
+        return json.loads(build.generate_search_index())
+
+    def test_search_index_has_all_pages(self):
+        index = self._load_index()
+        page_entries = [e for e in index if 'a' not in e]
+        page_slugs = {e['s'] for e in page_entries}
+        for slug in build.ORDERED_PAGES:
+            assert slug in page_slugs, (
+                f"Search index missing page-level entry for slug '{slug}'"
+            )
+
+    def test_search_index_documentation_url(self):
+        index = self._load_index()
+        doc_entries = [e for e in index if e['s'] == 'documentation']
+        assert doc_entries, "No search index entries for 'documentation' slug"
+        for entry in doc_entries:
+            assert entry['url'] == '/', (
+                f"'documentation' entry url should be '/', got {entry['url']!r}"
+            )
+
+    def test_search_index_slug_urls(self):
+        index = self._load_index()
+        for entry in index:
+            slug = entry['s']
+            if slug == 'documentation':
+                continue
+            expected = f'/{slug}'
+            assert entry['url'] == expected, (
+                f"Entry for slug '{slug}' has url {entry['url']!r}, expected {expected!r}"
+            )
+
+    def test_search_index_no_old_url_patterns(self):
+        index = self._load_index()
+        for entry in index:
+            url = entry['url']
+            assert '/docs/' not in url, (
+                f"Entry for slug '{entry['s']}' uses legacy /docs/ prefix: {url!r}"
+            )
+            assert not url.endswith('.html'), (
+                f"Entry for slug '{entry['s']}' still uses .html extension: {url!r}"
+            )
+
+    def test_search_index_required_fields(self):
+        index = self._load_index()
+        required = {'s', 't', 'n', 'd', 'b', 'url'}
+        for entry in index:
+            missing = required - set(entry.keys())
+            assert not missing, (
+                f"Entry for slug '{entry.get('s')}' missing fields: {missing}"
+            )
+
+    def test_search_index_titles_not_empty(self):
+        index = self._load_index()
+        for entry in index:
+            assert entry['t'] and entry['t'].strip(), (
+                f"Entry for slug '{entry['s']}' has empty title"
+            )
+
+    def test_search_index_content_not_empty(self):
+        index = self._load_index()
+        for entry in index:
+            assert entry['b'] and entry['b'].strip(), (
+                f"Entry for slug '{entry['s']}' has empty body/content ('b')"
+            )

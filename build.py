@@ -3985,6 +3985,7 @@ def generate_search_index() -> str:
             'n': page.get('section', ''),
             'd': page.get('description', ''),
             'b': plain_text,
+            'url': url,
         })
         # Section-level entries with anchors
         for anchor, heading, body_html in _extract_sections(content_with_ids):
@@ -3999,6 +4000,7 @@ def generate_search_index() -> str:
                 'd': '',
                 'b': section_text,
                 'a': anchor,
+                'url': url,
             })
     return json.dumps(index, separators=(',', ':'))
 

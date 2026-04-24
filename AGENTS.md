@@ -17,6 +17,22 @@ python3 -m pytest tests/ -v
 npx playwright test
 ```
 
+### Required checks before every PR
+
+Every change — no exceptions — must run and pass the full pytest suite before
+a PR is opened or updated:
+
+```bash
+python3 build.py
+python3 -m pytest tests/test_build.py -q
+```
+
+All tests (including the `TestSearchIndex` search index tests) must pass. The
+search index tests specifically verify that every page URL in the generated
+search index uses the flat URL structure (`/{slug}`, with the `documentation`
+slug mapped to `/`) and never the legacy `/docs/{slug}.html` pattern. Do not
+open a PR if any test fails.
+
 ## Architecture
 
 - `build.py` - Single-file static site generator; defines all page content as Python data structures and generates HTML
