@@ -172,9 +172,9 @@
     const SNIPPET_RADIUS = 60;
     let activeIdx = -1;
 
-    // Determine link prefix: root (index.html) uses ./docs/, doc pages use ./
-    const isRoot = !window.location.pathname.match(/\/docs\//);
-    const linkPrefix = isRoot ? './docs/' : './';
+    // All pages live at site root under a flat URL structure:
+    //   documentation -> '/', all others -> '/{slug}'.
+    // Each search index entry carries its URL in `u`.
 
     // Build a snippet around the first match of query in text
     function buildSnippet(text, query) {
@@ -244,7 +244,7 @@
       for (var j = 0; j < results.length; j++) {
         var r = results[j];
         var anchor = r.entry.a ? '#' + r.entry.a : '';
-        html += '<a class="search-result-item" href="' + linkPrefix + r.entry.s + '.html' + anchor + '"'
+        html += '<a class="search-result-item" href="' + r.entry.u + anchor + '"'
           + ' data-idx="' + j + '">'
           + '<span class="search-result-title">' + escHtml(r.entry.t) + '</span>'
           + '<span class="search-result-section">' + escHtml(r.entry.n) + '</span>'
