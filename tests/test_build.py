@@ -24,6 +24,19 @@ def _doc_html_files():
     return [p for p in ROOT.glob("*.html") if p.name not in redirect_names]
 
 
+def _is_redirect_html(path):
+    """Return True if `path` is a generated redirect stub (root-level renamed-slug
+    redirect, or anything under the legacy `docs/` directory)."""
+    redirect_names = {f"{old}.html" for old, _ in getattr(build, "REDIRECTS", [])}
+    if path.name in redirect_names and path.parent == ROOT:
+        return True
+    try:
+        path.relative_to(ROOT / "docs")
+        return True
+    except ValueError:
+        return False
+
+
 def _page_path(slug):
     """Path to a generated page. documentation -> index.html; others -> SLUG.html at root."""
     if slug == "documentation":
@@ -240,9 +253,8 @@ class TestRelativePaths:
         assert 'style.css' in content, "index.html should reference style.css"
 
     def test_external_links_have_target_blank(self):
-        redirect_names = {f"{old}.html" for old, _ in getattr(build, "REDIRECTS", [])}
         for html_file in ROOT.glob("**/*.html"):
-            if html_file.name in redirect_names:
+            if _is_redirect_html(html_file):
                 continue
             content = html_file.read_text()
             for match in re.finditer(r'<a\s+([^>]*href="https?://[^"]*"[^>]*)>', content):
@@ -602,3 +614,109 @@ class TestRedirects:
             assert f'href="{target_url}"' in content, (
                 f"{old_slug}.html missing anchor link to new URL"
             )
+
+
+class TestLegacyDocsRedirects:
+    """Verify every page has a legacy /docs/<slug> redirect to the canonical URL.
+
+    Google indexed pages under the old `/docs/<slug>` path before the site was
+    flattened. Each current page must have a redirect file at both
+    `docs/<slug>.html` and `docs/<slug>/index.html` that points to the page's
+    current canonical URL (`/` for documentation, `/<slug>` for everything else).
+    Renamed slugs from REDIRECTS also get a /docs/<old_slug> redirect.
+    """
+
+    @staticmethod
+    def _legacy_slugs():
+        slugs = set(build.ORDERED_PAGES)
+        slugs.update(old for old, _ in build.REDIRECTS)
+        return slugs
+
+    @staticmethod
+    def _canonical_url(slug):
+        if slug == "documentation":
+            return "https://docs.dryrun.security/"
+        # Renamed slugs redirect to the new slug; current slugs redirect to themselves.
+        for old, new in build.REDIRECTS:
+            if slug == old:
+                return f"https://docs.dryrun.security/{new}"
+        return f"https://docs.dryrun.security/{slug}"
+
+    def test_legacy_docs_redirect_exists_for_every_page(self):
+        for slug in build.ORDERED_PAGES:
+            flat = ROOT / "docs" / f"{slug}.html"
+            dir_index = ROOT / "docs" / slug / "index.html"
+            assert flat.exists(), (
+                f"Missing legacy redirect file: docs/{slug}.html"
+            )
+            assert dir_index.exists(), (
+                f"Missing legacy redirect file: docs/{slug}/index.html"
+            )
+
+    def test_legacy_docs_redirect_exists_for_renamed_slugs(self):
+        for old_slug, _ in build.REDIRECTS:
+            flat = ROOT / "docs" / f"{old_slug}.html"
+            dir_index = ROOT / "docs" / old_slug / "index.html"
+            assert flat.exists(), (
+                f"Missing legacy redirect file for renamed slug: docs/{old_slug}.html"
+            )
+            assert dir_index.exists(), (
+                f"Missing legacy redirect file for renamed slug: docs/{old_slug}/index.html"
+            )
+
+    def test_legacy_docs_redirect_targets_canonical_url(self):
+        for slug in self._legacy_slugs():
+            target_url = self._canonical_url(slug)
+            for path in (ROOT / "docs" / f"{slug}.html",
+                         ROOT / "docs" / slug / "index.html"):
+                content = path.read_text()
+                assert f'http-equiv="refresh"' in content, (
+                    f"{path.relative_to(ROOT)} missing meta refresh"
+                )
+                assert f'content="0; url={target_url}"' in content, (
+                    f"{path.relative_to(ROOT)} meta refresh does not target {target_url}"
+                )
+                assert f'rel="canonical" href="{target_url}"' in content, (
+                    f"{path.relative_to(ROOT)} missing canonical link to {target_url}"
+                )
+                assert f'window.location.replace("{target_url}")' in content, (
+                    f"{path.relative_to(ROOT)} missing JS fallback redirect"
+                )
+                assert "This page has moved." in content, (
+                    f"{path.relative_to(ROOT)} missing human-readable moved message"
+                )
+                assert f'href="{target_url}"' in content, (
+                    f"{path.relative_to(ROOT)} missing anchor link to canonical URL"
+                )
+
+    def test_legacy_docs_redirect_marks_noindex(self):
+        for slug in self._legacy_slugs():
+            for path in (ROOT / "docs" / f"{slug}.html",
+                         ROOT / "docs" / slug / "index.html"):
+                content = path.read_text()
+                assert 'name="robots" content="noindex"' in content, (
+                    f"{path.relative_to(ROOT)} should mark itself noindex so search "
+                    f"engines drop the legacy URL"
+                )
+
+    def test_documentation_legacy_redirect_points_to_root(self):
+        for path in (ROOT / "docs" / "documentation.html",
+                     ROOT / "docs" / "documentation" / "index.html"):
+            content = path.read_text()
+            assert 'content="0; url=https://docs.dryrun.security/"' in content, (
+                f"{path.relative_to(ROOT)} should redirect to site root, not /documentation"
+            )
+
+    def test_no_legacy_redirect_for_unknown_slug(self):
+        """The docs/ directory should only contain redirects for known slugs."""
+        legacy = self._legacy_slugs()
+        for path in (ROOT / "docs").glob("*.html"):
+            slug = path.stem
+            assert slug in legacy, (
+                f"Unexpected redirect file docs/{path.name} for unknown slug {slug!r}"
+            )
+        for path in (ROOT / "docs").iterdir():
+            if path.is_dir():
+                assert path.name in legacy, (
+                    f"Unexpected redirect dir docs/{path.name}/ for unknown slug"
+                )

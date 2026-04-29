@@ -1277,23 +1277,25 @@ How It Works
 
 When PR Blocking is enabled, DryRun Security reports its scan results as a required status check on each pull request. If findings meet or exceed the configured severity threshold, the check is marked as failed, preventing the PR from being merged until the issues are resolved.
 
-  GitHub: DryRun Security integrates with GitHub's required status checks. Configure the DryRun Security check as required in your branch protection rules.
-  GitLab: DryRun Security integrates with GitLab's merge request approval rules to block merges when findings are present.
+Blocking can be configured at two levels:
+
+  PR Blocking Enabled (configuration level): When toggled on, any analyzer included in the configuration that produces a finding at or above the configured severity threshold triggers a failing blocking status for your SCM to enforce.
+  Blocking (individual analyzer level): When toggled on for a specific analyzer, that analyzer blocks the PR on any finding it produces, regardless of severity or criticality.
 
 Configuring PR Blocking
 
-  Navigate to the DryRun Security dashboard.
+  Open the configuration for the repository you want to protect.
   Go to Settings for the repository you want to configure.
   Under PR Blocking, enable the blocking toggle.
-  Set the severity threshold - findings at or above this level will block the PR. Options include:
+  Set the severity threshold. Findings at or above this level will block the PR. Options include:
     
-      Critical - Only block on critical severity findings.
-      High - Block on high and critical findings.
-      Medium - Block on medium, high, and critical findings.
-      Low - Block on all findings.
+      Critical: Only block on critical severity findings.
+      High: Block on high and critical findings.
+      Medium: Block on medium, high, and critical findings.
+      Low: Block on all findings.
     
   
-  Configure your SCM's branch protection to require the DryRun Security status check.
+  Configure your SCM's branch protection or merge request rules to require the DryRun Security status check.
 
 Override Workflow
 
@@ -1303,9 +1305,9 @@ In cases where a blocked PR needs to be merged despite findings (for example, an
   Repository administrators can bypass branch protection rules when necessary.
   All overrides are logged in the Risk Register for audit purposes.
 
-Configure Blocking with Branch Protection
+Configure Blocking with GitHub Branch Protection
 
-The recommended approach is to configure a severity threshold at the configuration level. Any finding at or above that threshold will trigger the blocking flow across all agents. See Configuring PR Blocking above.
+The recommended approach is to configure a severity threshold at the configuration level. Any finding at or above that threshold will trigger the blocking flow across all agents.
 
 For teams that prefer per-policy or per-analyzer blocking, that is still supported. After enabling Blocking on a specific policy or analyzer, follow these steps:
 
