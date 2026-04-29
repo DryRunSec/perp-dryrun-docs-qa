@@ -67,7 +67,10 @@ def inject_heading_ids(html_content: str) -> str:
 # Static redirects for renamed pages. Each tuple is (old_slug, new_slug).
 # A minimal HTML file is emitted at `{old_slug}.html` that meta-refreshes and
 # JS-redirects visitors to `/{new_slug}`, and sets a canonical link so search
-# engines update their index.
+# engines update their index. In addition, render_redirects() automatically
+# emits `docs/<slug>` redirects for every current page (and every old_slug
+# in this list) to handle the legacy `/docs/<slug>` URLs that Google indexed
+# before the site was flattened to `/<slug>`.
 REDIRECTS = [
     ('coverage-matrix-vulnerability-categories', 'vulnerability-coverage-matrix'),
 ]
@@ -3930,10 +3933,13 @@ Sitemap: https://docs.dryrun.security/sitemap.xml
 '''
 
 
-def render_redirect(old_slug: str, new_slug: str,
+def render_redirect(target_path: str,
                     base_url: str = 'https://docs.dryrun.security') -> str:
-    """Generate a minimal HTML redirect page for a renamed slug."""
-    target = f'{base_url}/{new_slug}'
+    """Generate a minimal HTML redirect page that points to base_url + target_path.
+
+    target_path should start with '/' (e.g. '/quick-start' or '/').
+    """
+    target = f'{base_url}{target_path}'
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3951,14 +3957,68 @@ def render_redirect(old_slug: str, new_slug: str,
 '''
 
 
+def _canonical_path_for_slug(slug: str) -> str:
+    """Return the canonical site path for a page slug under the flat URL structure."""
+    if slug == 'documentation':
+        return '/'
+    return f'/{slug}'
+
+
 def render_redirects(output_dir: Path,
                      base_url: str = 'https://docs.dryrun.security') -> None:
-    """Write a static redirect HTML file for every (old_slug, new_slug) in REDIRECTS."""
+    """Write static redirect HTML files for legacy URLs.
+
+    Emits two categories of redirects:
+
+    1. Renamed-slug redirects from the REDIRECTS list. These live at the
+       site root (`{old_slug}.html`) and point to `/{new_slug}`. Used for
+       pages whose slug changed, e.g. coverage-matrix-vulnerability-categories
+       -> vulnerability-coverage-matrix.
+
+    2. Legacy `/docs/<slug>` redirects for every current page. The site
+       previously served pages under `/docs/{slug}.html`, and Google indexed
+       those URLs. We emit both `docs/{slug}.html` and `docs/{slug}/index.html`
+       so requests for either `/docs/<slug>.html` or `/docs/<slug>` resolve
+       to a redirect page that points to the current canonical URL
+       (`/` for documentation, `/{slug}` for everything else).
+
+       Renamed slugs from REDIRECTS are also redirected from their old
+       `/docs/<old_slug>` URL straight to the new canonical URL.
+    """
+    # 1. Renamed-slug redirects at the site root.
     for old_slug, new_slug in REDIRECTS:
-        html_content = render_redirect(old_slug, new_slug, base_url=base_url)
+        target_path = _canonical_path_for_slug(new_slug)
+        html_content = render_redirect(target_path, base_url=base_url)
         out_path = output_dir / f'{old_slug}.html'
         out_path.write_text(html_content, encoding='utf-8')
-        print(f'  Generated: {old_slug}.html (redirect -> /{new_slug})')
+        print(f'  Generated: {old_slug}.html (redirect -> {target_path})')
+
+    # 2. Legacy /docs/<slug> redirects for every current page plus renamed slugs.
+    docs_dir = output_dir / 'docs'
+    docs_dir.mkdir(exist_ok=True)
+
+    legacy_slug_targets = {}
+    for slug in ORDERED_PAGES:
+        legacy_slug_targets[slug] = _canonical_path_for_slug(slug)
+    # Old slugs from renames also get a /docs/<old_slug> -> /<new_slug> redirect.
+    for old_slug, new_slug in REDIRECTS:
+        legacy_slug_targets.setdefault(old_slug, _canonical_path_for_slug(new_slug))
+
+    for legacy_slug, target_path in legacy_slug_targets.items():
+        html_content = render_redirect(target_path, base_url=base_url)
+
+        # docs/<slug>.html covers requests for the legacy /docs/<slug>.html URL.
+        flat_path = docs_dir / f'{legacy_slug}.html'
+        flat_path.write_text(html_content, encoding='utf-8')
+
+        # docs/<slug>/index.html covers requests for /docs/<slug> (no extension)
+        # under GitHub Pages' directory-index behavior.
+        slug_dir = docs_dir / legacy_slug
+        slug_dir.mkdir(exist_ok=True)
+        (slug_dir / 'index.html').write_text(html_content, encoding='utf-8')
+
+        print(f'  Generated: docs/{legacy_slug}.html and docs/{legacy_slug}/index.html '
+              f'(redirect -> {target_path})')
 
 
 # ---------------------------------------------------------------------------
