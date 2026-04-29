@@ -1509,26 +1509,30 @@ PAGES['pr-blocking'] = {
 
 <p>When PR Blocking is enabled, DryRun Security reports its scan results as a required status check on each pull request. If findings meet or exceed the configured severity threshold, the check is marked as failed, preventing the PR from being merged until the issues are resolved.</p>
 
+<p>Blocking can be configured at two levels:</p>
+
 <ul>
-  <li><strong>GitHub:</strong> DryRun Security integrates with GitHub's required status checks. Configure the DryRun Security check as required in your branch protection rules.</li>
-  <li><strong>GitLab:</strong> DryRun Security integrates with GitLab's merge request approval rules to block merges when findings are present.</li>
+  <li><strong>PR Blocking Enabled</strong> (configuration level): When toggled on, any analyzer included in the configuration that produces a finding at or above the configured severity threshold triggers a failing blocking status for your SCM to enforce.</li>
+  <li><strong>Blocking</strong> (individual analyzer level): When toggled on for a specific analyzer, that analyzer blocks the PR on any finding it produces, regardless of severity or criticality.</li>
 </ul>
+
+<figure class="docs-screenshot"><img src="{asset_prefix}assets/images/configurations/18-pr-blocking-toggles.png" alt="Configuration showing the PR Blocking Enabled toggle and per-analyzer Blocking toggles" loading="lazy"></figure>
 
 <h2 id="configuring-blocking">Configuring PR Blocking</h2>
 
 <ol>
-  <li>Navigate to the <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">DryRun Security dashboard</a>.</li>
+  <li>Open the configuration for the repository you want to protect.</li>
   <li>Go to <strong>Settings</strong> for the repository you want to configure.</li>
   <li>Under <strong>PR Blocking</strong>, enable the blocking toggle.</li>
-  <li>Set the <strong>severity threshold</strong> - findings at or above this level will block the PR. Options include:
+  <li>Set the <strong>severity threshold</strong>. Findings at or above this level will block the PR. Options include:
     <ul>
-      <li><strong>Critical</strong> - Only block on critical severity findings.</li>
-      <li><strong>High</strong> - Block on high and critical findings.</li>
-      <li><strong>Medium</strong> - Block on medium, high, and critical findings.</li>
-      <li><strong>Low</strong> - Block on all findings.</li>
+      <li><strong>Critical</strong>: Only block on critical severity findings.</li>
+      <li><strong>High</strong>: Block on high and critical findings.</li>
+      <li><strong>Medium</strong>: Block on medium, high, and critical findings.</li>
+      <li><strong>Low</strong>: Block on all findings.</li>
     </ul>
   </li>
-  <li>Configure your SCM's branch protection to require the DryRun Security status check.</li>
+  <li>Configure your SCM's branch protection or merge request rules to require the DryRun Security status check.</li>
 </ol>
 
 <h2 id="override-workflow">Override Workflow</h2>
@@ -1541,9 +1545,9 @@ PAGES['pr-blocking'] = {
   <li>All overrides are logged in the <a href="./risk-register">Risk Register</a> for audit purposes.</li>
 </ul>
 
-<h2 id="configure-blocking">Configure Blocking with Branch Protection</h2>
+<h2 id="configure-blocking">Configure Blocking with GitHub Branch Protection</h2>
 
-<p>The recommended approach is to configure a severity threshold at the configuration level. Any finding at or above that threshold will trigger the blocking flow across all agents. See <a href="#configuring-pr-blocking">Configuring PR Blocking</a> above.</p>
+<p>The recommended approach is to configure a severity threshold at the configuration level. Any finding at or above that threshold will trigger the blocking flow across all agents.</p>
 
 <p>For teams that prefer per-policy or per-analyzer blocking, that is still supported. After enabling <strong>Blocking</strong> on a specific policy or analyzer, follow these steps:</p>
 
