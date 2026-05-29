@@ -1,63 +1,41 @@
 <div class="drs-doc-content">
-<h2 id="what-is-the-dryrun-skill">What Is the DryRun Skill</h2>
+<h2 id="overview">Overview</h2>
 
-<p>An AI skill is a set of instructions that tells your AI coding tool how to behave in a specific context. The DryRun Security skill instructs your AI coding tool to check PR comments after each push or commit, pull in finding details from DryRun Security, and fix the identified vulnerabilities in your codebase.</p>
+<p>AI coding tools are fast, but they operate in a silo. Left to their defaults, they may skip pull requests, ignore organizational best practices, and even when a PR is opened, they will not check for security findings unless explicitly told to. The DryRun Security skill closes that gap, giving the AI the context it needs to follow proper PR workflow and treat security findings as a required step in the process.</p>
 
-<p>The skill works with all supported AI coding tools: Claude Code, Codex, Cursor, Windsurf, and VS Code.</p>
+<p>Works with Claude Code, Codex, Cursor, Windsurf, and VS Code.</p>
 
-<h2 id="what-the-skill-does">What the Skill Does</h2>
+<h2 id="what-the-skill-does">What the DryRun Security Skill Does</h2>
 
-<p>When the skill is active, your AI coding tool:</p>
+<p>The DryRun Security skill equips your AI coding tool with the context it needs to author, review, and remediate code securely. It guides the AI through three steps: opening changes as a pull request so DryRun Security can scan them, waiting for and surfacing any findings, and applying well-informed fixes when vulnerabilities are found.</p>
 
-<ol>
-  <li>Monitors PR comments for DryRun Security finding notifications</li>
-  <li>Pulls the full finding details from DryRun Security, including the vulnerability type, location, and context</li>
-  <li>Analyzes the finding in the context of your codebase</li>
-  <li>Generates and applies a fix</li>
-</ol>
+<blockquote>
+<p><strong>Note:</strong> For most AI coding tools this workflow is packaged as a single skill. For Claude Code, it is split across two skills - one covering Author and Review, one covering Remediate. The workflow and experience are the same either way.</p>
+</blockquote>
 
-<h3 id="operating-modes">Operating Modes</h3>
+<h3 id="author">Author</h3>
 
-<ul>
-  <li><strong>Automatic mode</strong>: The skill instructs the AI coding tool to find DryRun Security finding details and apply fixes automatically, without waiting for developer input. Best for teams that want zero-friction remediation.</li>
-  <li><strong>Human-in-the-loop mode</strong>: The skill can be configured to pause before applying a fix and require developer approval. Best for teams that want visibility and control over every change before it is committed.</li>
-</ul>
+<p>The skill instructs the AI coding tool to open a pull request rather than push changes directly to the main branch. This is what makes DryRun Security scanning possible. DryRun Security analyzes pull requests in real time. If code is pushed directly to main, there is no pull request to scan and no opportunity to catch vulnerabilities before they land.</p>
 
-<p>The operating mode is controlled by how the skill is configured in your project. Both modes use the same installation process.</p>
+<h3 id="review">Review</h3>
+
+<p>The skill gives the AI coding tool awareness that DryRun Security will scan the open pull request and post findings as a comment in GitHub or GitLab. After the PR is opened, the AI polls for that comment, waits for findings to be posted, and presents each one to the developer. After every commit to the branch, the AI re-polls for new findings and presents them, keeping the developer informed throughout the lifecycle of the PR.</p>
+
+<h3 id="remediate">Remediate</h3>
+
+<p>When the developer wants to fix a finding, the skill gives the AI coding tool additional context to work from: how DryRun Security identified the vulnerability, background on the vulnerability class, OWASP guidance, and relevant framework documentation. This context helps the AI produce a fix that is accurate, minimal, and appropriate for the codebase.</p>
+
+<h2 id="example-prompts">Example Prompts</h2>
+
+<p>To start the Author and Review workflow, describe your change and include a prompt to open a pull request. The skill takes over from there:</p>
+
+<pre><code>[Describe the change you want]. When ready, open a pull request.</code></pre>
+
+<p>To invoke Remediate, paste the DryRun Security finding directly. The skill extracts the vulnerability details and applies a contextual fix:</p>
+
+<pre><code>Fix this DryRun Security finding: [paste the finding comment]</code></pre>
 
 <h2 id="installation">Installation</h2>
 
-<p>Install the skill for your tool using the command below. Run the command from your project root.</p>
-
-<h3 id="cursor">Cursor</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>curl -o .cursorrules https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/.cursorrules</code></pre>
-
-<h3 id="codex">Codex</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>curl -o AGENTS.md https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/RULES.md</code></pre>
-
-<h3 id="claude-code">Claude Code</h3>
-
-<p>Run these two commands inside Claude Code:</p>
-
-<pre><code>/plugin marketplace add DryRunSecurity/external-plugin-marketplace</code></pre>
-
-<pre><code>/plugin install dryrun-remediation@dryrunsecurity</code></pre>
-
-<h3 id="windsurf">Windsurf</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>curl -o .windsurfrules https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/.windsurfrules</code></pre>
-
-<h3 id="vs-code">VS Code</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>mkdir -p .github &amp;&amp; curl -o .github/copilot-instructions.md https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/copilot-instructions.md</code></pre>
+<p>Install instructions for each tool are available in the DryRun Security dashboard under <strong>Settings &gt; Integrations</strong>.</p>
 </div>

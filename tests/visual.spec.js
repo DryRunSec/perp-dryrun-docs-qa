@@ -460,7 +460,7 @@ test.describe('Content Coverage', () => {
   });
 
   test('AI agent security page exists and loads', async ({ page }) => {
-    await page.goto('/docs/ai-coding-integration.html');
+    await page.goto('/docs/dryrun-skill.html');
     await page.waitForLoadState('domcontentloaded');
     await expect(page.locator('.page-heading')).toBeVisible();
   });

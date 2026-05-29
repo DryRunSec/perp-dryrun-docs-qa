@@ -38,23 +38,83 @@ def extract_toc(html_content: str):
     for match in pattern.finditer(html_content):
         level = match.group(1).lower()
         anchor = match.group(2)
-        label = re.sub(r'<[^>]+>', '', match.group(3)).strip()
+        inner = match.group(3)
+        # Remove the injected anchor link before extracting the visible label.
+        inner = re.sub(
+            r'<a\b[^>]*class=["\'][^"\']*\banchor-link\b[^"\']*["\'][^>]*>.*?</a>',
+            '',
+            inner,
+            flags=re.IGNORECASE | re.DOTALL,
+        )
+        label = re.sub(r'<[^>]+>', '', inner).strip()
         label = html.unescape(label)  # decode entities like &amp; before re-encoding
         items.append({'level': level, 'anchor': anchor, 'label': label})
     return items
 
 
-def inject_heading_ids(html_content: str) -> str:
-    """Inject id attributes into h2/h3 tags that lack them."""
+def add_heading_anchors(html_content: str) -> str:
+    """Inject id attributes and visible anchor links into every h2/h3 tag.
+
+    For each heading, generate a slug from its (HTML-stripped) text, set
+    id="<slug>" on the tag (preserving any existing attributes that are not
+    id), and append an anchor link inside the heading pointing at the same
+    slug. Duplicate slugs on the same page are disambiguated with -2, -3, etc.
+    """
+    seen: dict = {}
+
     def replacer(m):
         tag = m.group(1)
-        attrs = m.group(2)
+        attrs = m.group(2) or ''
         inner = m.group(3)
-        if 'id=' in attrs.lower():
+        label = re.sub(r'<[^>]+>', '', inner).strip()
+        base_slug = slugify_heading(label)
+        if not base_slug:
+            return m.group(0)
+        count = seen.get(base_slug, 0) + 1
+        seen[base_slug] = count
+        slug = base_slug if count == 1 else f'{base_slug}-{count}'
+
+        existing_id = re.search(r'\bid\s*=\s*["\']([^"\']+)["\']', attrs, re.IGNORECASE)
+        if existing_id:
+            slug = existing_id.group(1)
+            new_attrs = attrs
+        else:
+            new_attrs = f'{attrs} id="{slug}"'
+
+        anchor = (
+            f' <a class="anchor-link" href="#{slug}" '
+            f'aria-label="Link to this section">#</a>'
+        )
+        return f'<{tag}{new_attrs}>{inner}{anchor}</{tag}>'
+
+    pattern = re.compile(r'<(h[23])([^>]*)>(.*?)</\1>', re.IGNORECASE | re.DOTALL)
+    return pattern.sub(replacer, html_content)
+
+
+def inject_heading_ids(html_content: str) -> str:
+    """Inject id attributes into h2/h3 tags without adding visible anchor links.
+
+    Used for non-page contexts (search index, Webflow export) where we want
+    stable anchors but not the visible `#` link character.
+    """
+    seen: dict = {}
+
+    def replacer(m):
+        tag = m.group(1)
+        attrs = m.group(2) or ''
+        inner = m.group(3)
+        existing_id = re.search(r'\bid\s*=\s*["\']([^"\']+)["\']', attrs, re.IGNORECASE)
+        if existing_id:
             return m.group(0)
         label = re.sub(r'<[^>]+>', '', inner).strip()
-        slug = slugify_heading(label)
+        base_slug = slugify_heading(label)
+        if not base_slug:
+            return m.group(0)
+        count = seen.get(base_slug, 0) + 1
+        seen[base_slug] = count
+        slug = base_slug if count == 1 else f'{base_slug}-{count}'
         return f'<{tag}{attrs} id="{slug}">{inner}</{tag}>'
+
     pattern = re.compile(r'<(h[23])([^>]*)>(.*?)</\1>', re.IGNORECASE | re.DOTALL)
     return pattern.sub(replacer, html_content)
 
@@ -73,6 +133,7 @@ def inject_heading_ids(html_content: str) -> str:
 # before the site was flattened to `/<slug>`.
 REDIRECTS = [
     ('coverage-matrix-vulnerability-categories', 'vulnerability-coverage-matrix'),
+    ('ai-coding-integration', 'dryrun-skill'),
 ]
 
 
@@ -96,8 +157,7 @@ SECTIONS = [
     {
         'name': 'Integrations',
         'slug': 'integrations',
-        'pages': ['slack-integration', 'webhook-integration', 'jira-integration', 'api-access-keys', 'ai-coding-integration', 'dryrun-skill'],
-        'nav_hidden': ['ai-coding-integration', 'dryrun-skill'],
+        'pages': ['slack-integration', 'webhook-integration', 'jira-integration', 'api-access-keys', 'dryrun-skill'],
     },
 ]
 
@@ -827,6 +887,7 @@ PAGES['auto-fix'] = {
   <li><strong>Claude Code</strong></li>
   <li><strong>Codex</strong></li>
   <li><strong>Cursor</strong></li>
+  <li><strong>GitHub Copilot</strong></li>
   <li><strong>Windsurf</strong></li>
   <li><strong>VS Code</strong></li>
 </ul>
@@ -836,7 +897,7 @@ PAGES['auto-fix'] = {
 <ol>
   <li>Creating an API key from the DryRun Security dashboard (see <a href="./api-access-keys">API Access Keys</a>)</li>
   <li>Connecting your AI coding tool to the DryRun Security <a href="./mcp">MCP (Model Context Protocol) server</a></li>
-  <li>Installing the DryRun Security remediation skill: visit the <strong>Integrations</strong> page in the DryRun Security UI for instructions</li>
+  <li>Installing the DryRun Security remediation skill: see the <a href="./dryrun-skill">DryRun Skill</a> page for instructions</li>
 </ol>
 
 <p>Once connected, the AI coding tool can read DryRun Security findings and automatically generate fixes in the context of your codebase.</p>
@@ -1286,22 +1347,53 @@ PAGES['custom-code-policies'] = {
 
 PAGES['repository-context'] = {
     'title': 'Repository Context',
-    'description': 'Provide repository context with AGENTS.md to improve DryRun Security analysis accuracy.',
+    'description': 'Repository context lets teams share application-specific knowledge with DryRun Security\'s agents - covering architecture decisions, accepted patterns, and security controls that exist outside the code itself.',
     'section': 'Platform',
     'content': '''
+<p>DryRun Security supports two ways to add repository context: a context managed in the dashboard, or an <code>AGENTS.md</code> file committed directly to the repo. Both serve the same purpose - giving DryRun Security's agents a deeper understanding of how your application works so analysis is as relevant as possible to your specific codebase.</p>
+
+<h2 id="context-in-the-dashboard">Context in the Dashboard</h2>
+
+<p>The DryRun Security dashboard includes a <strong>Context</strong> section where you can create and manage context without committing anything to the repository. A context is a settings file that captures the security-relevant details of your application - similar to the Security Review Guidelines section of an <code>AGENTS.md</code> - and can be applied to one or many repositories at once through a configuration.</p>
+
+<p>Once a context is saved, it can be applied to a <a href="./pr-scanning-configuration">configuration</a>.</p>
+
+<p>To create a context:</p>
+<ol>
+  <li>Log in to the DryRun Security dashboard at <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">app.dryrun.security</a></li>
+  <li>Select <strong>Context</strong> from the left-hand navigation</li>
+  <li>Create a new context, give it a name, and add your repository context</li>
+  <li>Once saved, apply it to a configuration under <strong>Settings &gt; Configurations</strong> - or follow the prompt to go there directly from the Context section</li>
+</ol>
+
+<h2 id="agents-md">AGENTS.md</h2>
+
 <p><a href="https://agents.md/" target="_blank" rel="noopener noreferrer">AGENTS.md</a> is a format supported by the <a href="https://aaif.io/" target="_blank" rel="noopener noreferrer">Agentic AI Foundation</a>, a Linux Foundation Project. The file is intended to be "a predictable place to provide the context and instructions to help AI coding agents work on your project."</p>
 
 <p>DryRun Security supports <code>AGENTS.md</code> for both core analyzer products: the Code Review Agent and the DeepScan Agent. DryRun Security's agents will look for and review this file to apply the additional context it provides during analysis.</p>
 
+<p>Some teams prefer <code>AGENTS.md</code> over the dashboard context because it keeps context management in the repository itself. Developers can review and update it alongside the code, without needing to log in to the DryRun Security dashboard.</p>
+
 <p><strong>Note:</strong> The Code Review Agent checks for AGENTS.md in the root. The DeepScan Agent can discover both root and nested AGENTS.md files.</p>
+
+<p>To best leverage this, add a <strong>Security Review Guidelines</strong> section to your <code>AGENTS.md</code> with any context related to design assumptions, areas of particular security interest, or other relevant points for an agentic security reviewer.</p>
+
+<h2 id="when-to-use-context">When to Use Context</h2>
+
+<p>Repository context works best when DryRun Security needs more information about your application to assess findings accurately. If a class of finding keeps appearing because DryRun Security is not aware of a specific pattern, architectural decision, or security control in your codebase, adding context is the right fix. It teaches the system how your application works so that every future scan benefits from that understanding - rather than managing each instance of that finding one at a time.</p>
+
+<p>Good candidates for a context update:</p>
+<ul>
+  <li>A vulnerability class that keeps surfacing because of a known, accepted pattern in your codebase (e.g., intentionally public routes, TLS handled upstream)</li>
+  <li>Authorization or authentication behavior that does not follow standard patterns but is correct by design</li>
+  <li>Security controls that exist outside the code and are not visible to a scanner (e.g., WAF rules, middleware, infrastructure-level protections)</li>
+</ul>
+
+<p>If DryRun Security already has the right context but a specific finding is incorrect or not relevant to your team, that is outside the scope of repository context. The <a href="./finding-tuning">finding tuning</a> page covers how to mark findings as false positives.</p>
 
 <h2 id="what-to-include">What to Include</h2>
 
-<p>You can use <code>AGENTS.md</code> to describe your application structure, test and build instructions for coding agents, integration definitions, and more. That same information can also provide valuable context to DryRun Security's agents.</p>
-
-<p>To best leverage this feature, add a <strong>Security Review Guidelines</strong> section to your <code>AGENTS.md</code> with any additional context related to design assumptions, areas of particular security interest, or other relevant points helpful for an agentic security reviewer.</p>
-
-<p>Context ideas for Security Agents:</p>
+<p>Both methods support the same types of context. The following are useful starting points for a Security Review Guidelines section:</p>
 <ul>
   <li>Structure of a monolith, and how authorization works between components</li>
   <li>Collections of routes or controllers that do not follow typical authorization patterns by design</li>
@@ -1784,7 +1876,7 @@ PAGES['mcp'] = {
   </tbody>
 </table>
 
-<p>For step-by-step setup instructions for each tool, go to <strong>Settings &gt; Integrations</strong> in the DryRun Security dashboard, or see <a href="./ai-coding-integration">AI Coding Integration</a>.</p>
+<p>For step-by-step setup instructions for each tool, go to <strong>Settings &gt; Integrations</strong> in the DryRun Security dashboard, or see <a href="./dryrun-skill">DryRun Skill</a>.</p>
 
 <h2 id="authentication">Authentication</h2>
 
@@ -2577,6 +2669,60 @@ PAGES['dryrun-api'] = {
 
 <details class="api-endpoint">
   <summary class="api-endpoint-summary">
+    <span class="method-patch">PATCH</span>
+    <code>/v1/accounts/{account_id}/configurations/{id}</code>
+    <span class="api-endpoint-desc">Partially update a configuration.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Apply a partial update to an existing configuration. Only the fields provided in the request body are updated.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>id</td><td>path</td><td>yes</td><td>string</td><td>Configuration ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request Body</h4>
+    <pre><code>{
+  "configuration": {
+    "name": "string",
+    "configuration": {
+      "comment": "disabled",
+      "show_scan_confirmation": false,
+      "risk_threshold": 0,
+      "analyzers": {},
+      "code_policies": [
+        {
+          "id": null,
+          "enabled": null,
+          "silent": null,
+          "blocking": null
+        }
+      ],
+      "notifications": {
+        "enabled": false,
+        "deduplicate": false,
+        "integrationNames": [null]
+      }
+    }
+  }
+}</code></pre>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - configuration updated</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X PATCH \\
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{"configuration": {"configuration": {"risk_threshold": 5}}}' \\
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations/{id}"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
     <span class="method-delete">DELETE</span>
     <code>/v1/accounts/{account_id}/configurations/{id}</code>
     <span class="api-endpoint-desc">Delete a configuration.</span>
@@ -3076,338 +3222,50 @@ PAGES['api-access-keys'] = {
 ''',
 }
 
-PAGES['ai-coding-integration'] = {
-    'title': 'AI Coding Integration',
-    'description': 'Integrate DryRun Security with AI coding tools, IDEs, and AI agents.',
-    'section': 'Integrations',
-    'content': '''
-<h2 id="ai-coding-tools">AI Coding Tool Integrations</h2>
-
-<h2 id="security-in-your-editor">Security in Your Editor</h2>
-
-<p>The earlier in the development process a vulnerability is caught, the cheaper it is to fix. DryRun Security's IDE integration brings security analysis into the development environment itself - the place where developers spend most of their time writing and reviewing code.</p>
-
-<p>Rather than waiting for a PR to be opened to receive security feedback, developers with the IDE integration can get security context inline as they work - understanding the security implications of the code they're writing and the codebase they're modifying without leaving their editor.</p>
-
-<h2 id="ai-coding-integrations">AI Coding Integrations</h2>
-
-<p>DryRun Security integrates with the most popular AI coding tools. Each integration is available from the <strong>Settings &gt; Integrations</strong> page in the DryRun Security dashboard. Every AI coding integration provides two connection options:</p>
-
-<ul>
-  <li><strong>Connect</strong> - Connects the DryRun Insights MCP to the tool, giving its AI assistant access to your organization's security data for context-aware code analysis</li>
-  <li><strong>Add Skill</strong> - Installs the DryRun remediation skill/plugin, enabling the tool to discover and fix security findings directly</li>
-</ul>
-
-<h3 id="supported-tools">Supported AI Coding Tools</h3>
-
-<table>
-  <thead>
-    <tr><th>Tool</th><th>Description</th></tr>
-  </thead>
-  <tbody>
-    <tr><td><strong>Cursor</strong></td><td>Connect DryRun Insights MCP to Cursor IDE for AI-powered code analysis</td></tr>
-    <tr><td><strong>Codex</strong></td><td>Integrate DryRun Insights MCP with OpenAI Codex for enhanced code review</td></tr>
-    <tr><td><strong>Claude Code</strong></td><td>Use DryRun Insights MCP with Claude Code for security-aware coding assistance</td></tr>
-    <tr><td><strong>Windsurf</strong></td><td>Integrate DryRun Insights MCP with Windsurf IDE for AI-assisted code review</td></tr>
-    <tr><td><strong>VS Code</strong></td><td>Connect DryRun Insights MCP to Visual Studio Code for AI-powered security analysis</td></tr>
-  </tbody>
-</table>
-
-<h3 id="connect-flow">Connecting an AI Coding Tool</h3>
-
-<p>Clicking <strong>Connect</strong> on a tool card provides the setup command or configuration for that tool. For example, connecting Claude Code provides this command:</p>
-
-<pre><code>claude mcp add --transport http dryrun-security   https://insights-mcp.dryrun.security/api/insights/mcp   --header "Authorization: Bearer &lt;dryrunsec_token&gt;"</code></pre>
-
-<p>Replace <code>&lt;dryrunsec_token&gt;</code> with your API token from <strong>Settings &gt; Access Keys</strong>. See <a href="./dryrun-api">API Usage Guide</a> for how to generate an access key.</p>
-
-<h3 id="add-skill-flow">Adding the Remediation Skill</h3>
-
-<p>Clicking <strong>Add Skill</strong> installs the DryRun remediation plugin into your coding tool. For example, in Claude Code:</p>
-
-<pre><code>/plugin marketplace add DryRunSecurity/external-plugin-marketplace
-/plugin install dryrun-remediation@dryrunsecurity</code></pre>
-
-<p>Once the skill is installed, the AI assistant can discover security findings from DryRun Security and generate fixes directly within your coding session.</p>
-
-<h2 id="desktop-integrations">Desktop Integrations</h2>
-
-<p>For desktop AI applications that support MCP, DryRun Security offers dedicated integration cards:</p>
-
-<ul>
-  <li><strong>Claude Desktop</strong> - Connect the DryRun Insights MCP to Claude Desktop for security-aware conversations about your codebase</li>
-</ul>
-
-<p>See <a href="./mcp">MCP Integration</a> for detailed configuration instructions for all supported clients.</p>
-
-<h2 id="ai-native-ide">AI-Native IDE Workflows</h2>
-
-<p>For teams using AI coding assistants, the DryRun Security integration is particularly valuable. It allows the AI assistant to query DryRun Security's security intelligence as part of code generation - helping AI assistants write more secure code by understanding what vulnerabilities have been found in the codebase and what security patterns are in use.</p>
-
-<p>This is especially relevant as teams adopt <code>AGENTS.md</code> to guide AI coding agents. See <a href="./repository-context">AGENTS.md</a> for how to configure security guidelines that AI agents and DryRun Security both use.</p>
-
-
-<h2 id="ai-tool-integrations">AI Tool Integrations</h2>
-
-<h2 id="ai-generated-code-coverage">AI-Generated Code Coverage</h2>
-
-<p>DryRun Security reviews all code in every pull request, regardless of whether it was written by a human or generated by an AI coding tool. No special configuration or setup is needed - if the code reaches a PR, DryRun analyzes it with the same <a href="./code-security-intelligence">Contextual Security Analysis</a> applied to all changes.</p>
-
-<p>This is important because AI coding assistants are generating an increasing share of production code, and AI-generated code carries its own patterns of security risk.</p>
-
-<h2 id="compatible-tools">Compatible AI Coding Tools</h2>
-
-<p>DryRun Security works with any tool that produces code submitted through a pull request or merge request:</p>
-
-<ul>
-  <li><strong>GitHub Copilot</strong> - inline code suggestions and chat-based generation</li>
-  <li><strong>Cursor</strong> - AI-native code editor with multi-file generation</li>
-  <li><strong>Windsurf</strong> - AI coding assistant</li>
-  <li><strong>OpenAI Codex</strong> - code generation API and CLI</li>
-  <li><strong>Claude Code</strong> - Anthropic's coding assistant</li>
-  <li><strong>Amazon CodeWhisperer</strong> - AWS coding companion</li>
-  <li><strong>Any other tool</strong> that generates code committed to a Git repository</li>
-</ul>
-
-<p>Because DryRun operates at the SCM level (analyzing PRs), compatibility with new AI tools is automatic. There is no integration required on the AI tool side.</p>
-
-<h2 id="common-ai-patterns">Common AI-Generated Code Risks</h2>
-
-<p>AI coding tools tend to produce specific patterns of security issues that DryRun's analyzers are particularly effective at catching:</p>
-
-<ul>
-  <li><strong>Missing input validation</strong> - AI-generated endpoints that accept and use user input without sanitization</li>
-  <li><strong>Hardcoded credentials</strong> - example API keys and tokens that should have been replaced with environment variables</li>
-  <li><strong>Incomplete authorization</strong> - CRUD operations generated without access control checks</li>
-  <li><strong>Outdated patterns</strong> - AI models trained on older code that uses deprecated or insecure APIs</li>
-  <li><strong>Copy-paste vulnerabilities</strong> - code generated from training data that contains known vulnerability patterns</li>
-</ul>
-
-<h2 id="visibility-into-ai-changes">Visibility into AI-Generated Changes</h2>
-
-<p>DryRun Security's <a href="./ai-coding-integration">AI Coding Visibility</a> feature provides observability into how AI tools are being used across your codebase - which repositories have the most AI-generated code, what types of changes are being made, and where security findings correlate with AI-generated contributions.</p>
-
-<h2 id="mcp-workflows">MCP for Agentic Workflows</h2>
-
-<p>For teams using AI coding agents that operate autonomously (creating PRs, making multi-file changes), DryRun Security's <a href="./mcp">MCP integration</a> enables the agent to query security status, check findings, and respond to security feedback programmatically. This creates a closed loop where AI agents can fix their own security issues before a human reviews the PR.</p>
-
-<h2 id="related-pages-ai-tools">Related Pages</h2>
-
-<ul>
-  <li><a href="./ai-coding-integration">Securing AI-Generated Code</a> - DryRun's approach to AI code security</li>
-  <li><a href="./ai-coding-integration">AI Coding Visibility</a> - observability into AI-generated changes</li>
-  <li><a href="./ai-coding-integration">Malicious Agent Detection</a> - detecting adversarial AI behavior</li>
-  <li><a href="./mcp">MCP Integration</a> - programmatic access for AI agents</li>
-</ul>
-
-
-<h2 id="securing-ai-code">Securing AI-Generated Code</h2>
-
-<h2 id="the-ai-code-security-challenge">The AI Code Security Challenge</h2>
-
-<p>AI coding assistants - GitHub Copilot, Cursor, Claude Code, and similar tools - have dramatically changed how software is written. Developers using these tools can produce working code faster than ever before. But AI-generated code introduces a new and underappreciated security challenge: AI models can produce code that is functionally correct and syntactically sound while containing security vulnerabilities that the developer who accepted the suggestion didn't introduce and may not recognize.</p>
-
-<p>Traditional code review processes assume the developer is responsible for the code they write. AI-generated code muddies this: the developer accepted a suggestion but didn't reason through every security implication of the code that was generated. The responsibility is shared - and the security tooling needs to account for this new dynamic.</p>
-
-<h2 id="how-dryrun-handles-ai-generated-code">How DryRun Security Handles AI-Generated Code</h2>
-
-<p>DryRun Security applies additional analytical scrutiny to code that exhibits characteristics of AI generation. This isn't about penalizing AI-assisted development - it's about recognizing that AI-generated code patterns, particularly around security-sensitive operations, warrant extra care in review.</p>
-
-<p>AI coding assistants sometimes:</p>
-<ul>
-  <li>Generate code that uses deprecated or insecure API patterns that were common in their training data</li>
-  <li>Produce authentication and authorization logic that is structurally plausible but subtly flawed</li>
-  <li>Include hardcoded credentials or placeholder values that developers inadvertently ship</li>
-  <li>Generate SQL queries or shell commands that are vulnerable to injection in the specific context of the application</li>
-</ul>
-
-<p>DryRun Security's contextual analysis is particularly effective at catching these issues because it evaluates AI-generated code in the same way it evaluates human-written code: with full understanding of the surrounding context, data flows, and security-relevant patterns.</p>
-
-<h2 id="organizational-visibility">Organizational Visibility</h2>
-
-<p>Beyond per-PR security analysis, DryRun Security provides visibility into AI coding activity across your organization - tracking where AI-generated code is being introduced and what security implications it carries. See <a href="./ai-coding-integration">AI Coding Visibility</a> for details.</p>
-
-
-<h2 id="ai-coding-visibility">AI Coding Visibility</h2>
-
-<h2 id="understanding-ai-in-your-codebase">Understanding AI in Your Codebase</h2>
-
-<p>When AI coding assistants are widely adopted across an engineering organization, a natural question emerges: how much of our codebase was written by AI, and does that matter for security? The answer to the second question is increasingly yes - and answering the first requires dedicated tooling.</p>
-
-<p>DryRun Security's AI Coding Visibility capability gives security teams and engineering leadership an organizational view of AI coding activity: where AI-generated code is being introduced, at what rate, in which repositories and by which teams, and what the security characteristics of that code are.</p>
-
-<h2 id="what-ai-coding-visibility-tracks">What AI Coding Visibility Tracks</h2>
-
-<p>AI Coding Visibility provides insight across several dimensions:</p>
-
-<ul>
-  <li><strong>AI code volume</strong> - What percentage of new code being committed exhibits characteristics of AI generation? How is this changing over time as AI adoption grows or changes in your organization?</li>
-  <li><strong>Distribution across repositories</strong> - Are some teams or projects using AI coding assistants more than others? Are security findings concentrated in AI-heavy repositories?</li>
-  <li><strong>Finding rates by code origin</strong> - Do AI-generated code sections have systematically different security finding rates compared to human-written code? Understanding this helps calibrate review processes and training investments.</li>
-  <li><strong>Agent activity patterns</strong> - In environments using autonomous AI coding agents (not just suggestion-based assistants), visibility into what the agents are doing, what files they're modifying, and what patterns emerge in their changes.</li>
-</ul>
-
-<h2 id="security-implications">Security Implications for Security Teams</h2>
-
-<p>This visibility serves several practical security use cases:</p>
-
-<ul>
-  <li><strong>Risk concentration</strong> - Identify whether certain areas of the codebase or certain development patterns are producing disproportionate security risk from AI-generated code.</li>
-  <li><strong>Audit trail</strong> - For regulated industries, maintaining a record of AI involvement in code production is increasingly an audit requirement.</li>
-  <li><strong>Supply chain transparency</strong> - AI-BOM generation (see <a href="../compliance-grc.html">SBOM Generation</a>) provides a formal record of AI involvement in software production for compliance purposes.</li>
-  <li><strong>Policy enforcement</strong> - Custom Code Policies can be configured specifically for AI-generated code sections, enforcing stricter review criteria where AI involvement is detected.</li>
-</ul>
-
-
-<h2 id="malicious-agent-detection">Malicious Agent Detection</h2>
-
-<h2 id="the-malicious-agent-threat">The Malicious Agent Threat</h2>
-
-<p>As AI coding agents become more capable and more autonomous, they introduce a novel threat vector: an AI agent that has been compromised, manipulated via prompt injection, or is operating outside its intended parameters can introduce malicious code directly into a codebase. Unlike a human developer inserting malicious code, a compromised AI agent can do so at scale, across multiple repositories, in ways that may be difficult to distinguish from legitimate AI-assisted development.</p>
-
-<p>This is not a theoretical concern. Prompt injection attacks against coding agents have been demonstrated in research settings, and as AI agents gain broader permissions in development environments, the potential impact of such attacks grows.</p>
-
-<h2 id="what-dryrun-detects">What DryRun Security Detects</h2>
-
-<p>DryRun Security's malicious agent detection capability is designed to identify code changes that exhibit patterns consistent with malicious intent, regardless of whether they originate from a human or an AI agent:</p>
-
-<ul>
-  <li><strong>Backdoor patterns</strong> - Code that creates covert access mechanisms, such as hardcoded credential bypass paths, undocumented administrative endpoints, or logic that behaves differently based on hidden trigger conditions.</li>
-  <li><strong>Data exfiltration patterns</strong> - Code that transmits data to unexpected external endpoints or stores data in ways inconsistent with the application's intended behavior.</li>
-  <li><strong>Permission escalation</strong> - Changes that expand the permissions available to the application beyond what its function requires.</li>
-  <li><strong>Obfuscated logic</strong> - Code structured to obscure its intent - unusual encoding, unnecessarily complex indirection, or logic that accomplishes a simple operation through unnecessarily convoluted means.</li>
-</ul>
-
-<h2 id="behavioral-context">Behavioral Context</h2>
-
-<p>Malicious agent detection is strengthened by DryRun Security's git behavioral analysis capability. Code changes arriving through unusual patterns - outside normal working hours, from unexpected contributors, making atypical modifications to security-sensitive files - are evaluated with elevated scrutiny. Behavioral anomalies don't trigger automatic findings, but they raise the signal strength of other analysis.</p>
-
-<h2 id="defense-in-depth">Defense in Depth</h2>
-
-<p>Malicious agent detection is one layer in a defense-in-depth approach to AI coding security. Combined with Custom Code Policies that enforce organizational coding standards, the Secrets Analyzer detecting credential introduction, and the code security knowledge graph tracking behavioral patterns over time, DryRun Security provides comprehensive coverage against AI-specific security risks in the development pipeline.</p>
-
-
-<h2 id="ai-red-teaming">AI Red Teaming</h2>
-
-<h2 id="threat-landscape">The AI Development Threat Landscape</h2>
-
-<p>AI-assisted development introduces new categories of security risk that traditional tools are not designed to detect. When AI agents write code, review code, or interact with development infrastructure, they create attack surfaces that adversaries can exploit through prompt injection, supply chain manipulation, and behavioral subversion.</p>
-
-<h2 id="attack-vectors">AI-Specific Attack Vectors</h2>
-
-<p>DryRun Security's AI Agent Security capabilities address several categories of threats:</p>
-
-<ul>
-  <li><strong>Prompt injection via code</strong> - malicious instructions embedded in code comments, documentation, or dependency files that manipulate AI coding assistants into generating insecure code</li>
-  <li><strong>Malicious agent skills</strong> - AI agents with tool access (file system, network, shell) that can be manipulated into performing unintended actions. See <a href="./ai-coding-integration">Malicious Agent Detection</a> for details</li>
-  <li><strong>Training data poisoning</strong> - AI models generating code patterns derived from intentionally vulnerable training examples</li>
-  <li><strong>Supply chain attacks via AI</strong> - adversaries using AI-generated PRs to introduce subtle backdoors that pass human review</li>
-</ul>
-
-<h2 id="behavioral-analysis">Behavioral Analysis</h2>
-
-<p>DryRun Security applies <a href="./code-security-intelligence">Git Behavioral Analysis</a> to detect anomalous patterns in AI-generated contributions. This includes:</p>
-
-<ul>
-  <li>Unusual commit patterns - timing, frequency, or volume that deviates from established baselines</li>
-  <li>Code style anomalies - changes that do not match the repository's established patterns</li>
-  <li>Scope creep - AI-generated changes that modify files or systems outside the stated scope of a task</li>
-  <li>Privilege escalation attempts - changes to authorization, permissions, or access control that were not part of the original request</li>
-</ul>
-
-<h2 id="continuous-monitoring">Continuous Monitoring</h2>
-
-<p>Rather than point-in-time assessments, DryRun Security provides continuous monitoring of AI-assisted development activity. Every PR - whether authored by a human, an AI assistant, or an autonomous agent - receives the same depth of security analysis. This means adversarial patterns are detected at the moment they appear, not during a periodic review.</p>
-
-<h2 id="threat-modeling-support">Threat Modeling Support</h2>
-
-<p>DryRun Security's <a href="./code-security-intelligence">intelligence index</a> capabilities support threat modeling exercises by answering questions like:</p>
-
-<ul>
-  <li>"Which repositories have the most AI-generated code changes this month?"</li>
-  <li>"What new API endpoints were introduced by AI-generated PRs?"</li>
-  <li>"Show findings correlated with AI-generated commits across all repos"</li>
-</ul>
-
-<p>This data helps security teams prioritize review efforts and identify repositories where AI-generated code may need additional scrutiny.</p>
-
-<h2 id="related-pages">Related Pages</h2>
-
-<ul>
-  <li><a href="./ai-coding-integration">Malicious Agent Detection</a> - detecting adversarial AI agent behavior</li>
-  <li><a href="./code-security-intelligence">Git Behavioral Analysis</a> - anomaly detection in commit patterns</li>
-  <li><a href="./ai-coding-integration">AI Coding Visibility</a> - observability into AI-generated changes</li>
-  <li><a href="./ai-coding-integration">Securing AI-Generated Code</a> - security analysis for AI-written code</li>
-</ul>
-''',
-}
-
 PAGES['dryrun-skill'] = {
     'title': 'DryRun Skill',
-    'description': 'Automate security vulnerability remediation using AI coding tools with the DryRun Security skill.',
+    'description': 'The DryRun Security skill gives your AI coding tool the context it needs to author, review, and remediate code securely.',
     'section': 'Integrations',
     'content': '''
-<h2 id="what-is-the-dryrun-skill">What Is the DryRun Skill</h2>
+<h2 id="overview">Overview</h2>
 
-<p>An AI skill is a set of instructions that tells your AI coding tool how to behave in a specific context. The DryRun Security skill instructs your AI coding tool to check PR comments after each push or commit, pull in finding details from DryRun Security, and fix the identified vulnerabilities in your codebase.</p>
+<p>AI coding tools are fast, but they operate in a silo. Left to their defaults, they may skip pull requests, ignore organizational best practices, and even when a PR is opened, they will not check for security findings unless explicitly told to. The DryRun Security skill closes that gap, giving the AI the context it needs to follow proper PR workflow and treat security findings as a required step in the process.</p>
 
-<p>The skill works with all supported AI coding tools: Claude Code, Codex, Cursor, Windsurf, and VS Code.</p>
+<p>Works with Claude Code, Codex, Cursor, Windsurf, and VS Code.</p>
 
-<h2 id="what-the-skill-does">What the Skill Does</h2>
+<h2 id="what-the-skill-does">What the DryRun Security Skill Does</h2>
 
-<p>When the skill is active, your AI coding tool:</p>
+<p>The DryRun Security skill equips your AI coding tool with the context it needs to author, review, and remediate code securely. It guides the AI through three steps: opening changes as a pull request so DryRun Security can scan them, waiting for and surfacing any findings, and applying well-informed fixes when vulnerabilities are found.</p>
 
-<ol>
-  <li>Monitors PR comments for DryRun Security finding notifications</li>
-  <li>Pulls the full finding details from DryRun Security, including the vulnerability type, location, and context</li>
-  <li>Analyzes the finding in the context of your codebase</li>
-  <li>Generates and applies a fix</li>
-</ol>
+<blockquote>
+<p><strong>Note:</strong> For most AI coding tools this workflow is packaged as a single skill. For Claude Code, it is split across two skills - one covering Author and Review, one covering Remediate. The workflow and experience are the same either way.</p>
+</blockquote>
 
-<h3 id="operating-modes">Operating Modes</h3>
+<h3 id="author">Author</h3>
 
-<ul>
-  <li><strong>Automatic mode</strong>: The skill instructs the AI coding tool to find DryRun Security finding details and apply fixes automatically, without waiting for developer input. Best for teams that want zero-friction remediation.</li>
-  <li><strong>Human-in-the-loop mode</strong>: The skill can be configured to pause before applying a fix and require developer approval. Best for teams that want visibility and control over every change before it is committed.</li>
-</ul>
+<p>The skill instructs the AI coding tool to open a pull request rather than push changes directly to the main branch. This is what makes DryRun Security scanning possible. DryRun Security analyzes pull requests in real time. If code is pushed directly to main, there is no pull request to scan and no opportunity to catch vulnerabilities before they land.</p>
 
-<p>The operating mode is controlled by how the skill is configured in your project. Both modes use the same installation process.</p>
+<h3 id="review">Review</h3>
+
+<p>The skill gives the AI coding tool awareness that DryRun Security will scan the open pull request and post findings as a comment in GitHub or GitLab. After the PR is opened, the AI polls for that comment, waits for findings to be posted, and presents each one to the developer. After every commit to the branch, the AI re-polls for new findings and presents them, keeping the developer informed throughout the lifecycle of the PR.</p>
+
+<h3 id="remediate">Remediate</h3>
+
+<p>When the developer wants to fix a finding, the skill gives the AI coding tool additional context to work from: how DryRun Security identified the vulnerability, background on the vulnerability class, OWASP guidance, and relevant framework documentation. This context helps the AI produce a fix that is accurate, minimal, and appropriate for the codebase.</p>
+
+<h2 id="example-prompts">Example Prompts</h2>
+
+<p>To start the Author and Review workflow, describe your change and include a prompt to open a pull request. The skill takes over from there:</p>
+
+<pre><code>[Describe the change you want]. When ready, open a pull request.</code></pre>
+
+<p>To invoke Remediate, paste the DryRun Security finding directly. The skill extracts the vulnerability details and applies a contextual fix:</p>
+
+<pre><code>Fix this DryRun Security finding: [paste the finding comment]</code></pre>
 
 <h2 id="installation">Installation</h2>
 
-<p>Install the skill for your tool using the command below. Run the command from your project root.</p>
-
-<h3 id="cursor">Cursor</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>curl -o .cursorrules https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/.cursorrules</code></pre>
-
-<h3 id="codex">Codex</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>curl -o AGENTS.md https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/RULES.md</code></pre>
-
-<h3 id="claude-code">Claude Code</h3>
-
-<p>Run these two commands inside Claude Code:</p>
-
-<pre><code>/plugin marketplace add DryRunSecurity/external-plugin-marketplace</code></pre>
-
-<pre><code>/plugin install dryrun-remediation@dryrunsecurity</code></pre>
-
-<h3 id="windsurf">Windsurf</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>curl -o .windsurfrules https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/.windsurfrules</code></pre>
-
-<h3 id="vs-code">VS Code</h3>
-
-<p>Run in your project root:</p>
-
-<pre><code>mkdir -p .github &amp;&amp; curl -o .github/copilot-instructions.md https://raw.githubusercontent.com/DryRunSecurity/external-plugin-marketplace/main/standalone/copilot-instructions.md</code></pre>
+<p>Install instructions for each tool are available in the DryRun Security dashboard under <strong>Settings &gt; Integrations</strong>.</p>
 ''',
 }
 
@@ -3560,7 +3418,7 @@ def render_doc_page(slug: str, page: dict, asset_prefix: str = './',
     section_name = page.get('section', get_section_for_slug(slug))
     raw_content = page['content'].strip()
     raw_content = raw_content.replace('{asset_prefix}', asset_prefix)
-    content_with_ids = inject_heading_ids(raw_content)
+    content_with_ids = add_heading_anchors(raw_content)
     toc_items = extract_toc(content_with_ids)
 
     base_url = 'https://docs.dryrun.security'
@@ -3800,8 +3658,8 @@ def render_index_page() -> str:
             <a href="{esc(dp)}api-access-keys.html">
               <span>API Access Keys<span class="res-desc">Manage API keys for integrations</span></span>
             </a>
-            <a href="{esc(dp)}ai-coding-integration.html">
-              <span>AI Coding Integration<span class="res-desc">Integrate with AI coding tools and agents</span></span>
+            <a href="{esc(dp)}dryrun-skill.html">
+              <span>DryRun Skill<span class="res-desc">Integrate with AI coding tools and agents</span></span>
             </a>
           </div>
         </div>

@@ -16,7 +16,7 @@
 - [Code Security Intelligence](https://docs.dryrun.security/code-security-intelligence): DryRun Security builds an intelligence layer on top of vulnerability findings and scan data, enabling actionable security workflows across your codebase and development organization.
 - [PR Scanning Configuration](https://docs.dryrun.security/pr-scanning-configuration): Customize DryRun Security behavior per repository - enable agents, attach policies, configure blocking, and set up notifications.
 - [Custom Code Policies](https://docs.dryrun.security/custom-code-policies): Create custom security rules in plain English using Custom Code Policies.
-- [Repository Context](https://docs.dryrun.security/repository-context): Provide repository context with AGENTS.md to improve DryRun Security analysis accuracy.
+- [Repository Context](https://docs.dryrun.security/repository-context): Repository context lets teams share application-specific knowledge with DryRun Security's agents - covering architecture decisions, accepted patterns, and security controls that exist outside the code itself.
 - [Risk Register](https://docs.dryrun.security/risk-register): One view to see, search, and act on all security risk across your organization.
 - [Finding Tuning with Feedback](https://docs.dryrun.security/finding-tuning): Tune security findings and reduce false positives with feedback from developers and AppSec engineers.
 - [PR Blocking](https://docs.dryrun.security/pr-blocking): Configure DryRun Security to block pull requests when critical vulnerabilities are detected.
@@ -28,5 +28,4 @@
 - [Webhook Integration](https://docs.dryrun.security/webhook-integration): Receive a POST request to any HTTP endpoint when DryRun Security detects a finding on a pull request.
 - [Jira Integration](https://docs.dryrun.security/jira-integration): Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.
 - [API Access Keys](https://docs.dryrun.security/api-access-keys): Create and manage API access keys for programmatic access to DryRun Security.
-- [AI Coding Integration](https://docs.dryrun.security/ai-coding-integration): Integrate DryRun Security with AI coding tools, IDEs, and AI agents.
-- [DryRun Skill](https://docs.dryrun.security/dryrun-skill): Automate security vulnerability remediation using AI coding tools with the DryRun Security skill.
+- [DryRun Skill](https://docs.dryrun.security/dryrun-skill): The DryRun Security skill gives your AI coding tool the context it needs to author, review, and remediate code securely.

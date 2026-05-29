@@ -1,17 +1,48 @@
 <div class="drs-doc-content">
+<p>DryRun Security supports two ways to add repository context: a context managed in the dashboard, or an <code>AGENTS.md</code> file committed directly to the repo. Both serve the same purpose - giving DryRun Security's agents a deeper understanding of how your application works so analysis is as relevant as possible to your specific codebase.</p>
+
+<h2 id="context-in-the-dashboard">Context in the Dashboard</h2>
+
+<p>The DryRun Security dashboard includes a <strong>Context</strong> section where you can create and manage context without committing anything to the repository. A context is a settings file that captures the security-relevant details of your application - similar to the Security Review Guidelines section of an <code>AGENTS.md</code> - and can be applied to one or many repositories at once through a configuration.</p>
+
+<p>Once a context is saved, it can be applied to a <a href="./pr-scanning-configuration">configuration</a>.</p>
+
+<p>To create a context:</p>
+<ol>
+  <li>Log in to the DryRun Security dashboard at <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">app.dryrun.security</a></li>
+  <li>Select <strong>Context</strong> from the left-hand navigation</li>
+  <li>Create a new context, give it a name, and add your repository context</li>
+  <li>Once saved, apply it to a configuration under <strong>Settings &gt; Configurations</strong> - or follow the prompt to go there directly from the Context section</li>
+</ol>
+
+<h2 id="agents-md">AGENTS.md</h2>
+
 <p><a href="https://agents.md/" target="_blank" rel="noopener noreferrer">AGENTS.md</a> is a format supported by the <a href="https://aaif.io/" target="_blank" rel="noopener noreferrer">Agentic AI Foundation</a>, a Linux Foundation Project. The file is intended to be "a predictable place to provide the context and instructions to help AI coding agents work on your project."</p>
 
 <p>DryRun Security supports <code>AGENTS.md</code> for both core analyzer products: the Code Review Agent and the DeepScan Agent. DryRun Security's agents will look for and review this file to apply the additional context it provides during analysis.</p>
 
+<p>Some teams prefer <code>AGENTS.md</code> over the dashboard context because it keeps context management in the repository itself. Developers can review and update it alongside the code, without needing to log in to the DryRun Security dashboard.</p>
+
 <p><strong>Note:</strong> The Code Review Agent checks for AGENTS.md in the root. The DeepScan Agent can discover both root and nested AGENTS.md files.</p>
+
+<p>To best leverage this, add a <strong>Security Review Guidelines</strong> section to your <code>AGENTS.md</code> with any context related to design assumptions, areas of particular security interest, or other relevant points for an agentic security reviewer.</p>
+
+<h2 id="when-to-use-context">When to Use Context</h2>
+
+<p>Repository context works best when DryRun Security needs more information about your application to assess findings accurately. If a class of finding keeps appearing because DryRun Security is not aware of a specific pattern, architectural decision, or security control in your codebase, adding context is the right fix. It teaches the system how your application works so that every future scan benefits from that understanding - rather than managing each instance of that finding one at a time.</p>
+
+<p>Good candidates for a context update:</p>
+<ul>
+  <li>A vulnerability class that keeps surfacing because of a known, accepted pattern in your codebase (e.g., intentionally public routes, TLS handled upstream)</li>
+  <li>Authorization or authentication behavior that does not follow standard patterns but is correct by design</li>
+  <li>Security controls that exist outside the code and are not visible to a scanner (e.g., WAF rules, middleware, infrastructure-level protections)</li>
+</ul>
+
+<p>If DryRun Security already has the right context but a specific finding is incorrect or not relevant to your team, that is outside the scope of repository context. The <a href="./finding-tuning">finding tuning</a> page covers how to mark findings as false positives.</p>
 
 <h2 id="what-to-include">What to Include</h2>
 
-<p>You can use <code>AGENTS.md</code> to describe your application structure, test and build instructions for coding agents, integration definitions, and more. That same information can also provide valuable context to DryRun Security's agents.</p>
-
-<p>To best leverage this feature, add a <strong>Security Review Guidelines</strong> section to your <code>AGENTS.md</code> with any additional context related to design assumptions, areas of particular security interest, or other relevant points helpful for an agentic security reviewer.</p>
-
-<p>Context ideas for Security Agents:</p>
+<p>Both methods support the same types of context. The following are useful starting points for a Security Review Guidelines section:</p>
 <ul>
   <li>Structure of a monolith, and how authorization works between components</li>
   <li>Collections of routes or controllers that do not follow typical authorization patterns by design</li>

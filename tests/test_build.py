@@ -494,6 +494,100 @@ class TestUIQualityCSS:
         assert 'sidebar-search-kbd' in index, "Index should have keyboard shortcut hint on search"
 
 
+class TestHeadingAnchors:
+    """Verify h2/h3 headings on every generated page have linkable anchor IDs."""
+
+    HEADING_RE = re.compile(
+        r'<(h[23])\b([^>]*)>(.*?)</\1>',
+        re.IGNORECASE | re.DOTALL,
+    )
+    ID_RE = re.compile(r'\bid\s*=\s*["\']([^"\']+)["\']', re.IGNORECASE)
+    ANCHOR_LINK_RE = re.compile(
+        r'<a\b[^>]*class=["\'][^"\']*\banchor-link\b[^"\']*["\'][^>]*href=["\']#([^"\']+)["\']',
+        re.IGNORECASE,
+    )
+
+    def _doc_content_headings(self, html_text):
+        """Yield h2/h3 matches found inside the main .doc-content container."""
+        m = re.search(
+            r'<div class="doc-content">(.*?)</div>\s*<(?:nav|/main|footer)',
+            html_text,
+            re.DOTALL,
+        )
+        scope = m.group(1) if m else html_text
+        for match in self.HEADING_RE.finditer(scope):
+            yield match
+
+    def test_headings_have_anchor_ids(self):
+        """Every h2/h3 in the doc content must have an id attribute."""
+        for path in _doc_html_files():
+            html_text = path.read_text()
+            headings = list(self._doc_content_headings(html_text))
+            if not headings:
+                continue
+            for match in headings:
+                tag = match.group(1)
+                attrs = match.group(2)
+                id_match = self.ID_RE.search(attrs)
+                assert id_match, (
+                    f"{path.name}: <{tag}> missing id attribute: {match.group(0)[:120]}"
+                )
+                slug = id_match.group(1)
+                assert re.fullmatch(r'[a-z0-9-]+', slug), (
+                    f"{path.name}: heading id {slug!r} is not a valid slug"
+                )
+
+    def test_anchor_links_are_linkable(self):
+        """Every heading must contain an anchor link pointing to its own id."""
+        for path in _doc_html_files():
+            html_text = path.read_text()
+            headings = list(self._doc_content_headings(html_text))
+            if not headings:
+                continue
+            for match in headings:
+                tag = match.group(1)
+                attrs = match.group(2)
+                inner = match.group(3)
+                id_match = self.ID_RE.search(attrs)
+                assert id_match, f"{path.name}: <{tag}> missing id"
+                heading_id = id_match.group(1)
+                link_match = self.ANCHOR_LINK_RE.search(inner)
+                assert link_match, (
+                    f"{path.name}: <{tag} id={heading_id!r}> missing anchor-link "
+                    f"child: {match.group(0)[:160]}"
+                )
+                assert link_match.group(1) == heading_id, (
+                    f"{path.name}: anchor-link href #{link_match.group(1)} "
+                    f"does not match heading id #{heading_id}"
+                )
+
+    def test_duplicate_heading_text_gets_unique_ids(self):
+        """Duplicate heading text on the same page should produce unique slugs."""
+        sample = (
+            "<h2>Setup</h2>"
+            "<p>first</p>"
+            "<h3>Setup</h3>"
+            "<p>second</p>"
+            "<h2>Setup</h2>"
+        )
+        out = build.add_heading_anchors(sample)
+        ids = self.ID_RE.findall(out)
+        assert ids == ["setup", "setup-2", "setup-3"], (
+            f"Expected unique sequential ids, got {ids!r}"
+        )
+
+    def test_anchor_link_css_present(self):
+        """style.css should style .anchor-link with a hover-reveal pattern."""
+        css = CSS_PATH.read_text()
+        assert ".anchor-link" in css, "style.css missing .anchor-link rule"
+        assert re.search(r'h2:hover\s+\.anchor-link', css), (
+            "style.css should reveal .anchor-link on h2 hover"
+        )
+        assert re.search(r'h3:hover\s+\.anchor-link', css), (
+            "style.css should reveal .anchor-link on h3 hover"
+        )
+
+
 class TestSearchIndex:
     """Verify generate_search_index() output matches the flat URL structure.
 
