@@ -52,21 +52,71 @@
 
 <h2 id="payload-format">Payload Format</h2>
 
-<p>DryRun Security sends an HTTP POST with a JSON body to your endpoint when a finding is detected.</p>
+<p>DryRun Security sends an HTTP POST with a JSON body to your endpoint when a scan completes. The body includes PR context, scan metadata, and the full list of findings.</p>
 
 <pre><code>{
-  "event": "new_finding",
-  "timestamp": "2026-01-15T10:30:00Z",
-  "repository": "org/repo-name",
-  "pull_request": 42,
-  "finding": {
-    "id": "finding-uuid",
-    "severity": "high",
-    "category": "xss",
-    "title": "Cross-Site Scripting in user input handler",
-    "file": "src/handlers/input.py",
-    "line": 127,
-    "description": "User input is rendered without escaping..."
-  }
+    "dashboard_url": "https://app.dryrun.security/pull-requests/00000000-0000-0000-0000-000000000000",
+    "github_url": "https://github.com/org/repo/pull/123",
+    "risk_threshold": "high",
+    "org": "your-org",
+    "repo_name": "your-repo",
+    "repo_full_name": "your-org/your-repo",
+    "pr_number": 123,
+    "pr_title": "Add payment endpoint",
+    "pr_status": "open",
+    "branch": "feature/payments",
+    "commit_author": "developer",
+    "issue_status": "open",
+    "run_time": "2026-06-09T16:48:44.960558Z",
+    "results": [
+        {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "finding_type": "pullrequest",
+            "type": "Missing Authorization on Payment Endpoint",
+            "filename": "src/payments/handler.py",
+            "line_start": 42,
+            "line_end": 58,
+            "description": "The POST /payments endpoint does not verify the caller's identity...",
+            "risk": "high"
+        }
+    ]
 }</code></pre>
+
+<h3 id="top-level-fields">Top-level fields</h3>
+
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>dashboard_url</code></td><td>string</td><td>Link to the PR in the DryRun Security dashboard</td></tr>
+    <tr><td><code>github_url</code></td><td>string</td><td>Link to the pull request on GitHub or GitLab</td></tr>
+    <tr><td><code>risk_threshold</code></td><td>string</td><td>Highest risk level among all findings in this scan: <code>critical</code>, <code>high</code>, <code>medium</code>, or <code>low</code>. Returns <code>passing</code> when no findings meet the configured Risk Level threshold.</td></tr>
+    <tr><td><code>org</code></td><td>string</td><td>Organization name</td></tr>
+    <tr><td><code>repo_name</code></td><td>string</td><td>Repository name</td></tr>
+    <tr><td><code>repo_full_name</code></td><td>string</td><td>Full repository identifier in <code>org/repo</code> format</td></tr>
+    <tr><td><code>pr_number</code></td><td>integer</td><td>Pull request number</td></tr>
+    <tr><td><code>pr_title</code></td><td>string</td><td>Pull request title</td></tr>
+    <tr><td><code>pr_status</code></td><td>string</td><td>Pull request status: <code>open</code> or <code>closed</code></td></tr>
+    <tr><td><code>branch</code></td><td>string</td><td>Branch the pull request was opened from</td></tr>
+    <tr><td><code>commit_author</code></td><td>string</td><td>Author of the triggering commit</td></tr>
+    <tr><td><code>issue_status</code></td><td>string</td><td>Whether any open findings remain: <code>open</code> or <code>resolved</code></td></tr>
+    <tr><td><code>run_time</code></td><td>string (date-time)</td><td>Timestamp of when the scan completed</td></tr>
+    <tr><td><code>results</code></td><td>array</td><td>List of findings from this scan. Empty when no findings meet the configured Risk Level.</td></tr>
+  </tbody>
+</table>
+
+<h3 id="result-fields">Result fields</h3>
+
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>string (uuid)</td><td>Unique finding ID</td></tr>
+    <tr><td><code>finding_type</code></td><td>string</td><td>Source of the finding: <code>pullrequest</code>, <code>code_policy</code>, <code>deepscan</code>, or <code>sca</code></td></tr>
+    <tr><td><code>type</code></td><td>string</td><td>Finding name</td></tr>
+    <tr><td><code>filename</code></td><td>string</td><td>File where the finding was detected</td></tr>
+    <tr><td><code>line_start</code></td><td>integer</td><td>Starting line of the affected code</td></tr>
+    <tr><td><code>line_end</code></td><td>integer</td><td>Ending line of the affected code</td></tr>
+    <tr><td><code>description</code></td><td>string</td><td>Full finding description</td></tr>
+    <tr><td><code>risk</code></td><td>string</td><td>Risk level of this finding: <code>critical</code>, <code>high</code>, <code>medium</code>, or <code>low</code></td></tr>
+  </tbody>
+</table>
 </div>

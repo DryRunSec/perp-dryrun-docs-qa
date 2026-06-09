@@ -324,7 +324,8 @@ Filter the Risk Register by DeepScan to see all findings surfaced by DeepScan ac
 
 Option 2 - DeepScan Page
 
-From the DeepScan page, click on a previously scanned repository to see findings from the latest DeepScan. To review past scans, use the date picker at the top of the page and select the date of a previous scan. The &ldquo;View Details&rdquo; button shows app-specific summaries created by DeepScan, including auth methods, APIs, configurations, and other context discovered during the scan.
+From the DeepScan page, click on a previously scanned repository to see findings from the latest DeepScan. To review past scans, use the date picker at the top of the page and select the date of a previous scan.
+Clicking on an individual finding opens a pop-out module showing the finding detail, the DeepScan summary, and any artifact files associated with that finding. The &ldquo;View Details&rdquo; button shows app-specific summaries for the full scan, including auth methods, APIs, configurations, and other context discovered during the scan.
 
 Vulnerability Categories
 
@@ -829,6 +830,11 @@ The intelligence layer enables a range of security workflows. Each workflow draw
       Summarize the security status of features shipped this sprint for a release review
     
     
+      Resolved Risk
+      Pull requests from the last 30 days that were merged after an identified risk was resolved, with links to the PR and the resolution
+      Confirm that all findings identified in last sprint&rsquo;s merged PRs were addressed before a release
+    
+    
       Vulnerability Trends
       Trending vulnerability patterns and coverage data across repos over time, including OWASP Top 10 mapping
       Compare critical finding counts quarter over quarter to measure security program effectiveness
@@ -891,19 +897,20 @@ Example prompts:
   &ldquo;Generate an incident response summary for this vulnerability&rdquo;
   &ldquo;What AI coding tools are being used across our organization?&rdquo;
   &ldquo;Summarize the security posture of repo X&rdquo;
+  &ldquo;Which PRs in the last 30 days were merged after a risk was resolved?&rdquo;
 
 Because DryRun Security continuously scans every pull request and repository, these responses are grounded in real findings from your codebase, not generic checklists. They pull from live data, so the answers reflect your current state.
 
-Recurring Queries
+Saved Queries
 
-Users can create recurring queries, which are scheduled questions that DryRun Security runs against findings data on a regular cadence. For example:
+Users can create and save custom queries in the Insights page for questions they return to regularly. For example:
 
-  A daily report on new critical findings across all repositories
-  A weekly developer trend summary highlighting teams with the most new findings
-  A monthly risk overview comparing finding rates period over period
+  A report on new critical findings across all repositories
+  A developer trend summary highlighting teams with the most new findings
+  A risk overview comparing finding rates period over period
   A sprint-aligned feature ship summary for release reviews
 
-DryRun Security generates the reports automatically and delivers them on the configured schedule, keeping your team informed without manual effort.
+Saved queries stay available in the Insights page and can be run any time by selecting them from the query list.
 
 MCP Integration
 
@@ -1205,6 +1212,8 @@ The main findings table shows all findings with the following columns:
   
 
 Each row has a checkbox for bulk selection, and findings are paginated (e.g., "Showing 1-20 of 203 entries") with page navigation at the bottom.
+
+Clicking a finding row expands the inline detail view. This shows the full finding description alongside a code snippet at the exact location of the finding. For findings where DryRun Security has gathered support evidence, that context appears in the detail view alongside the finding. For DeepScan findings, the inline view includes application details surfaced during the scan, such as relevant framework context, data flows, and authentication patterns that informed the finding.
 
 ---
 
@@ -1530,6 +1539,7 @@ With the Insights MCP connected, your AI assistant can:
   Query findings for a specific pull request or file
   Ask natural language questions about your security posture (for example: "Have any new payment integrations been introduced in the last week?")
   Access Code Security Intelligence trends and agent stats
+  Surface pull requests from the last 30 days that were merged after an identified risk was resolved
   Track security posture changes over time
 
 For the full list of Code Security Intelligence capabilities, see Code Security Intelligence.
@@ -1831,6 +1841,7 @@ Findings
   
   
     List all findings across PR scans, DeepScans, SCA, and code policies for an account. By default, returns only findings from the latest scan. Results are sorted by newest first.
+    Each finding includes a state field indicating its current status: open (present in the latest scan and not triaged), dismissed (triaged with a category such as false positive or accepted risk), or resolved (no longer present in the latest scan). For triaged findings, the response also includes a triage object with the category (false_positive, wont_fix, accepted_risk, in_progress) and category_name.
     Parameters
     
       NameInRequiredTypeDescription
@@ -1850,6 +1861,26 @@ Findings
     
       200 - findings listed
     
+    Example response
+    {
+  "data": [
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "finding_type": "pullrequest",
+      "dashboard_url": "https://app.dryrun.security/risk-register/44444444-4444-4444-4444-444444444444",
+      "severity": "high",
+      "type": "Missing Authorization and IDOR in User Deletion",
+      "description": "The DELETE /users/{id} endpoint is registered without authentication or authorization middleware...",
+      "filename": "backend/main.go",
+      "line_start": 516,
+      "line_end": 553,
+      "repository_name": "some-demo-repo-name",
+      "state": "open",
+      "triage": null,
+      "created_at": "2026-03-03T00:00:00Z"
+    }
+  ]
+}
     Example (curl)
     curl \
   -H "Authorization: Bearer $DRYRUN_API_KEY" \
@@ -1992,6 +2023,55 @@ Deepscans
   
 
   
+    POST
+    /v1/accounts/{account_id}/repositories/{repository_id}/deepscans
+    Trigger a new DeepScan on a repository.
+  
+  
+    Trigger a full-repository DeepScan programmatically. Useful for integrating DeepScan into CI/CD pipelines, scheduled automation, or external workflows. All request body fields are optional. Omitting branch and commit_sha scans the repository&rsquo;s default branch at HEAD.
+    Parameters
+    
+      NameInRequiredTypeDescription
+      
+        account_idpathyesstringAccount ID
+        repository_idpathyesstringRepository ID
+      
+    
+    Request body
+    
+      FieldTypeRequiredDescription
+      
+        branchstringnoBranch to scan. Defaults to the repository&rsquo;s default branch.
+        commit_shastringnoSpecific commit SHA to scan.
+        full_scanbooleannoWhether to run a full scan. Defaults to true.
+      
+    
+    Responses
+    
+      202 - scan triggered
+      404 - repository not found
+      422 - API key has no associated user
+      429 - scan quota exceeded
+      502 - internal invocation error
+    
+    Teams running DeepScan through automation should handle 429 quota exceeded errors gracefully, as accounts have a limit on concurrent scans.
+    Example response
+    {
+  "data": {
+    "id": "11111111-1111-1111-1111-111111111111",
+    "repository_id": "22222222-2222-2222-2222-222222222222",
+    "status": "queued"
+  }
+}
+    Example (curl)
+    curl -X POST \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d &apos;{"branch": "main"}&apos; \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans"
+  
+
+  
     GET
     /v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/results
     List findings for a specific deepscan.
@@ -2044,6 +2124,72 @@ Deepscans
     curl \
   -H "Authorization: Bearer &lt;your-api-key&gt;" \
   "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sca_results"
+  
+
+SBOM
+
+  
+    GET
+    /v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sbom
+    Get the CycloneDX SBOM for a specific DeepScan run.
+  
+  
+    Retrieve SBOM metadata and a time-limited download URL for the CycloneDX SBOM generated during a DeepScan. The download_url is valid until download_url_expires_at and points directly to the SBOM file.
+    Parameters
+    
+      NameInRequiredTypeDescription
+      
+        account_idpathyesstringAccount ID
+        repository_idpathyesstringRepository ID
+        deepscan_idpathyesstringDeepScan ID
+      
+    
+    Responses
+    
+      200 - SBOM metadata and download URL
+      404 - DeepScan not found
+    
+    Response fields
+    
+      FieldTypeDescription
+      
+        deepscan_idstring (uuid)ID of the DeepScan that produced this SBOM
+        repository_idstring (uuid)Repository ID
+        branchstringBranch scanned (nullable)
+        commit_shastringCommit SHA at time of scan (nullable)
+        formatstringSBOM format, e.g. cyclonedx
+        component_countintegerTotal number of components in the SBOM
+        generated_atstring (date-time)When the SBOM was generated (nullable)
+        vulnerability_summaryobjectCounts of vulnerable components by severity: critical, high, medium, low, total
+        download_urlstring (uri)Time-limited URL to download the SBOM file
+        download_url_expires_atstring (date-time)Expiry time for the download URL
+      
+    
+    Example response
+    {
+  "data": {
+    "deepscan_id": "11111111-1111-1111-1111-111111111111",
+    "repository_id": "22222222-2222-2222-2222-222222222222",
+    "branch": "main",
+    "commit_sha": "abc123def456",
+    "format": "cyclonedx",
+    "component_count": 142,
+    "generated_at": "2026-06-01T00:00:00Z",
+    "vulnerability_summary": {
+      "critical": 1,
+      "high": 3,
+      "medium": 7,
+      "low": 4,
+      "total": 15
+    },
+    "download_url": "https://...",
+    "download_url_expires_at": "2026-06-01T01:00:00Z"
+  }
+}
+    Example (curl)
+    curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sbom"
   
 
 Configurations
@@ -2583,23 +2729,68 @@ If you have not created a webhook yet, click Add + on the Configurations page to
 
 Payload Format
 
-DryRun Security sends an HTTP POST with a JSON body to your endpoint when a finding is detected.
+DryRun Security sends an HTTP POST with a JSON body to your endpoint when a scan completes. The body includes PR context, scan metadata, and the full list of findings.
 
 {
-  "event": "new_finding",
-  "timestamp": "2026-01-15T10:30:00Z",
-  "repository": "org/repo-name",
-  "pull_request": 42,
-  "finding": {
-    "id": "finding-uuid",
-    "severity": "high",
-    "category": "xss",
-    "title": "Cross-Site Scripting in user input handler",
-    "file": "src/handlers/input.py",
-    "line": 127,
-    "description": "User input is rendered without escaping..."
-  }
+    "dashboard_url": "https://app.dryrun.security/pull-requests/00000000-0000-0000-0000-000000000000",
+    "github_url": "https://github.com/org/repo/pull/123",
+    "risk_threshold": "high",
+    "org": "your-org",
+    "repo_name": "your-repo",
+    "repo_full_name": "your-org/your-repo",
+    "pr_number": 123,
+    "pr_title": "Add payment endpoint",
+    "pr_status": "open",
+    "branch": "feature/payments",
+    "commit_author": "developer",
+    "issue_status": "open",
+    "run_time": "2026-06-09T16:48:44.960558Z",
+    "results": [
+        {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "finding_type": "pullrequest",
+            "type": "Missing Authorization on Payment Endpoint",
+            "filename": "src/payments/handler.py",
+            "line_start": 42,
+            "line_end": 58,
+            "description": "The POST /payments endpoint does not verify the caller's identity...",
+            "risk": "high"
+        }
+    ]
 }
+
+Top-level fields
+
+  FieldTypeDescription
+  
+    dashboard_urlstringLink to the PR in the DryRun Security dashboard
+    github_urlstringLink to the pull request on GitHub or GitLab
+    risk_thresholdstringHighest risk level among all findings in this scan: critical, high, medium, or low. Returns passing when no findings meet the configured Risk Level threshold.
+    orgstringOrganization name
+    repo_namestringRepository name
+    repo_full_namestringFull repository identifier in org/repo format
+    pr_numberintegerPull request number
+    pr_titlestringPull request title
+    pr_statusstringPull request status: open or closed
+    branchstringBranch the pull request was opened from
+    commit_authorstringAuthor of the triggering commit
+    issue_statusstringWhether any open findings remain: open or resolved
+    run_timestring (date-time)Timestamp of when the scan completed
+    resultsarrayList of findings from this scan. Empty when no findings meet the configured Risk Level.
+  
+
+Result fields
+
+  FieldTypeDescription
+  
+    idstring (uuid)Unique finding ID
+    finding_typestringSource of the finding: pullrequest, code_policy, deepscan, or sca
+    typestringFinding name
+    filenamestringFile where the finding was detected
+    line_startintegerStarting line of the affected code
+    line_endintegerEnding line of the affected code
+    descriptionstringFull finding description
+    riskstringRisk level of this finding: critical, high, medium, or low
 
 ---
 

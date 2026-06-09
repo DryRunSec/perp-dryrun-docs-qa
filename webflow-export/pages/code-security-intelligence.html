@@ -27,6 +27,11 @@
       <td>Summarize the security status of features shipped this sprint for a release review</td>
     </tr>
     <tr>
+      <td>Resolved Risk</td>
+      <td>Pull requests from the last 30 days that were merged after an identified risk was resolved, with links to the PR and the resolution</td>
+      <td>Confirm that all findings identified in last sprint&rsquo;s merged PRs were addressed before a release</td>
+    </tr>
+    <tr>
       <td>Vulnerability Trends</td>
       <td>Trending vulnerability patterns and coverage data across repos over time, including OWASP Top 10 mapping</td>
       <td>Compare critical finding counts quarter over quarter to measure security program effectiveness</td>
@@ -92,22 +97,23 @@
   <li>&ldquo;Generate an incident response summary for this vulnerability&rdquo;</li>
   <li>&ldquo;What AI coding tools are being used across our organization?&rdquo;</li>
   <li>&ldquo;Summarize the security posture of repo X&rdquo;</li>
+  <li>&ldquo;Which PRs in the last 30 days were merged after a risk was resolved?&rdquo;</li>
 </ul>
 
 <p>Because DryRun Security continuously scans every pull request and repository, these responses are grounded in real findings from your codebase, not generic checklists. They pull from live data, so the answers reflect your current state.</p>
 
-<h3 id="recurring-queries">Recurring Queries</h3>
+<h3 id="saved-queries">Saved Queries</h3>
 
-<p>Users can create recurring queries, which are scheduled questions that DryRun Security runs against findings data on a regular cadence. For example:</p>
+<p>Users can create and save custom queries in the Insights page for questions they return to regularly. For example:</p>
 
 <ul>
-  <li>A daily report on new critical findings across all repositories</li>
-  <li>A weekly developer trend summary highlighting teams with the most new findings</li>
-  <li>A monthly risk overview comparing finding rates period over period</li>
+  <li>A report on new critical findings across all repositories</li>
+  <li>A developer trend summary highlighting teams with the most new findings</li>
+  <li>A risk overview comparing finding rates period over period</li>
   <li>A sprint-aligned feature ship summary for release reviews</li>
 </ul>
 
-<p>DryRun Security generates the reports automatically and delivers them on the configured schedule, keeping your team informed without manual effort.</p>
+<p>Saved queries stay available in the Insights page and can be run any time by selecting them from the query list.</p>
 
 <h2 id="mcp-integration">MCP Integration</h2>
 
