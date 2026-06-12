@@ -1661,7 +1661,22 @@ PAGES['pr-blocking'] = {
   <li>Choose <strong>Add classic branch protection rule</strong>.</li>
   <li>Under <strong>Branch name pattern</strong>, type the name of the branch to protect (e.g., <code>main</code>).</li>
   <li>Select <strong>Require status checks to pass before merging</strong>.</li>
-  <li>In the search field, search for DryRun Security status checks to require. Choose <strong>Code Policies</strong> for Custom Code Policies, or the agent name (e.g., <strong>Secrets Analyzer</strong>) for Code Security Agents.</li>
+  <li>
+    <p>In the search field, search for the DryRun Security check you want to require. The following checks are available:</p>
+    <table>
+      <thead><tr><th>Check name</th><th>What it covers</th></tr></thead>
+      <tbody>
+        <tr><td>Cross-Site Scripting Analyzer</td><td>XSS vulnerabilities across rendering contexts</td></tr>
+        <tr><td>General Security Analyzer</td><td>Auth gaps, crypto issues, debug artifacts, and more</td></tr>
+        <tr><td>IDOR Analyzer</td><td>Broken object-level authorization</td></tr>
+        <tr><td>Mass Assignment</td><td>Unsafe model binding patterns</td></tr>
+        <tr><td>Secrets Analyzer</td><td>Committed credentials, API keys, and tokens</td></tr>
+        <tr><td>Server-Side Request Forgery Analyzer</td><td>SSRF via user-controlled outbound requests</td></tr>
+        <tr><td>SQL Injection Analyzer</td><td>Unsafe query composition</td></tr>
+        <tr><td>Code Policies</td><td>All custom code policies configured for your team</td></tr>
+      </tbody>
+    </table>
+  </li>
   <li>Click <strong>Create</strong>.</li>
 </ol>
 

@@ -1358,7 +1358,22 @@ Set Up a Classic Branch Protection Rule
   Choose Add classic branch protection rule.
   Under Branch name pattern, type the name of the branch to protect (e.g., main).
   Select Require status checks to pass before merging.
-  In the search field, search for DryRun Security status checks to require. Choose Code Policies for Custom Code Policies, or the agent name (e.g., Secrets Analyzer) for Code Security Agents.
+  
+    In the search field, search for the DryRun Security check you want to require. The following checks are available:
+    
+      Check nameWhat it covers
+      
+        Cross-Site Scripting AnalyzerXSS vulnerabilities across rendering contexts
+        General Security AnalyzerAuth gaps, crypto issues, debug artifacts, and more
+        IDOR AnalyzerBroken object-level authorization
+        Mass AssignmentUnsafe model binding patterns
+        Secrets AnalyzerCommitted credentials, API keys, and tokens
+        Server-Side Request Forgery AnalyzerSSRF via user-controlled outbound requests
+        SQL Injection AnalyzerUnsafe query composition
+        Code PoliciesAll custom code policies configured for your team
+      
+    
+  
   Click Create.
 
 When a Custom Code Policy has Blocking enabled, it appears as a single Check in GitHub under the name Code Policies. When a Code Security Agent has blocking enabled, it appears as a Check with the agent's name (e.g., Secrets Analyzer).
