@@ -68,6 +68,7 @@
 
 <p>AppSec engineers manage dismissals from the <a href="./risk-register">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Dismiss</strong> to choose a status and optionally add context.</p>
 
+<p>Dismissing a finding as False Positive or Won&rsquo;t Fix / Nitpick from the Risk Register also removes the associated failed SCM check on the pull request, clearing the block automatically. Accepted Risk, In Progress, and Resolved dismissals do not automatically clear the SCM check.</p>
 <p>From the Risk Register, AppSec teams can also:</p>
 <ul>
   <li>Override dismissals when a finding represents real risk that was incorrectly dismissed</li>

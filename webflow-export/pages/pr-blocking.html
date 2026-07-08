@@ -35,13 +35,11 @@
 
 <h2 id="override-workflow">Override Workflow</h2>
 
-<p>In cases where a blocked PR needs to be merged despite findings (for example, an accepted risk or false positive), authorized users can override the block:</p>
+<p>When a finding is dismissed as False Positive or Won&rsquo;t Fix / Nitpick, DryRun Security automatically clears the failing SCM check on the associated pull request. The block lifts as soon as the dismissal is processed, whether submitted from the PR thread or the Risk Register.</p>
 
-<ul>
-  <li>Use <a href="./finding-tuning">Finding Tuning with Feedback</a> to mark findings as accepted risk or false positive.</li>
-  <li>Repository administrators can bypass branch protection rules when necessary.</li>
-  <li>All overrides are logged in the <a href="./risk-register">Risk Register</a> for audit purposes.</li>
-</ul>
+<p>Dismissals marked as Accepted Risk, In Progress, or Resolved do not clear the SCM check. The pull request remains blocked until the finding is dismissed as False Positive or Won&rsquo;t Fix / Nitpick.</p>
+
+<p>All dismissal decisions are logged in the <a href="./risk-register">Risk Register</a> for audit purposes.</p>
 
 <h2 id="configure-blocking">Configure Blocking with GitHub Branch Protection</h2>
 

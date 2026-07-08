@@ -336,8 +336,8 @@ Repository Scanning with DeepScan,deepscan,"<h2 id=""what-is-deepscan"">What Is 
 
 <h3 id=""option-2-deepscan-page"">Option 2 - DeepScan Page</h3>
 
-<p>From the DeepScan page, click on a previously scanned repository to see findings from the latest DeepScan. To review past scans, use the date picker at the top of the page and select the date of a previous scan.</p>
-<p>Clicking on an individual finding opens a pop-out module showing the finding detail, the DeepScan summary, and any artifact files associated with that finding. The &ldquo;View Details&rdquo; button shows app-specific summaries for the full scan, including auth methods, APIs, configurations, and other context discovered during the scan.</p>
+<p>From the DeepScan page, click on a previously scanned repository to see findings from the latest scan. A severity summary at the top shows counts across Critical, High, Medium, and Low. Previous scans can be reviewed by date, and findings can be filtered by risk level, SCA, or dismissed status.</p>
+<p>Clicking on an individual finding opens a pop-out module with the finding detail, the DeepScan summary, and any artifact files. The Scan Details view provides the full scan report and includes a report download option.</p>
 
 <h2 id=""vulnerability-categories"">Vulnerability Categories</h2>
 
@@ -597,37 +597,66 @@ IaC Scanning,iac-scanning,"<h2 id=""overview"">Overview</h2>
 <h2 id=""how-findings-appear"">How Findings Appear</h2>
 
 <p>IaC findings are reported the same way as other DryRun Security results: as comments on pull requests and as entries in the <a href=""risk-register.html"">Risk Register</a> dashboard. Each finding includes the affected resource, a description of the risk, and guidance on remediation.</p>",DryRun Security scans Terraform configurations for security misconfigurations and insecure defaults in pull requests.,Scanning
-SCA,sca,"<h2 id=""how-it-works"">How It Works</h2>
+SCA,sca,"<h2 id=""what-is-sca"">What Is SCA</h2>
 
 <p>Software Composition Analysis (SCA) identifies the third-party libraries and open-source packages your application depends on and checks whether any carry known security vulnerabilities. The majority of code in any production service comes from the open-source ecosystem, making dependency risk one of the most important areas to monitor.</p>
 
-<p>DryRun Security analyzes your dependency manifests and lock files as part of <a href=""./deepscan"">DeepScan</a>, detecting when dependencies carry known vulnerabilities. Because this analysis covers the entire codebase, you get a comprehensive view of supply chain risk rather than only seeing what changed in a single commit.</p>
+<p>DryRun Security checks each dependency against known vulnerability databases, matching specific CVEs to affected version ranges across all major package ecosystems.</p>
 
-<p>Beyond simple CVE matching, DryRun Security evaluates how a vulnerable dependency is actually used in your code. A vulnerable function in a library you only use for unrelated functionality presents a different risk profile than one you call directly with user-supplied input. This context-aware assessment helps your team prioritize remediation based on actual exploitability rather than CVSS scores alone.</p>
+<h2 id=""how-scanning-works"">How Scanning Works</h2>
 
-<h2 id=""whats-checked"">What's Checked</h2>
+<p>DryRun Security runs SCA through two paths:</p>
+
+<p><strong>DeepScan</strong> - When a DeepScan is triggered from the dashboard, SCA runs as part of that scan, analyzing dependency manifests and lock files across the entire codebase at that point in time. This is the on-demand path for getting a current snapshot of supply chain risk whenever you need it.</p>
+
+<p><strong>Automatic background scanning</strong> - DryRun Security also scans active repositories automatically in the background to keep SCA findings current without requiring a manual trigger. Scan frequency is based on PR activity, so the most active repositories are kept up to date most often. See Scan Schedule below.</p>
+
+<h2 id=""scan-schedule"">Scan Schedule</h2>
+
+<p>Automatic SCA scans are scheduled based on repository PR activity over the last 30 days:</p>
+
+<table>
+  <thead><tr><th>Activity</th><th>Frequency</th></tr></thead>
+  <tbody>
+    <tr><td>High activity</td><td>Daily</td></tr>
+    <tr><td>Moderate activity</td><td>Weekly to bi-weekly</td></tr>
+    <tr><td>Low activity</td><td>Monthly</td></tr>
+    <tr><td>Inactive (fewer than 3 PRs in 30 days)</td><td>No automatic scan</td></tr>
+  </tbody>
+</table>
+
+<p>Repositories that fall below the activity threshold do not receive automatic scans. Run a DeepScan manually from the dashboard to get current SCA findings for an inactive repository.</p>
+
+<h2 id=""whats-checked"">What&rsquo;s Checked</h2>
 
 <p>DryRun Security scans package manifests and lock files across all major ecosystems:</p>
 
 <ul>
-  <li><strong>JavaScript / Node.js</strong> - <code>package.json</code>, <code>package-lock.json</code>, <code>yarn.lock</code></li>
-  <li><strong>Python</strong> - <code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code></li>
+  <li><strong>JavaScript / Node.js</strong> - <code>package-lock.json</code>, <code>yarn.lock</code></li>
+  <li><strong>Python</strong> - <code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code>, <code>uv.lock</code></li>
   <li><strong>Ruby</strong> - <code>Gemfile</code>, <code>Gemfile.lock</code></li>
-  <li><strong>Java / Kotlin</strong> - <code>pom.xml</code>, Gradle build files</li>
-  <li><strong>Go</strong> - <code>go.mod</code>, <code>go.sum</code></li>
-  <li><strong>Rust</strong> - <code>Cargo.toml</code>, <code>Cargo.lock</code></li>
-  <li><strong>.NET</strong> - <code>*.csproj</code>, <code>packages.config</code></li>
+  <li><strong>Java / Kotlin</strong> - <code>pom.xml</code>, <code>gradle.lockfile</code>, <code>buildscript-gradle.lockfile</code>, <code>gradle/verification-metadata.xml</code></li>
+  <li><strong>Go</strong> - <code>go.mod</code></li>
+  <li><strong>Rust</strong> - <code>Cargo.lock</code></li>
+  <li><strong>.NET</strong> - <code>*.csproj</code>, <code>deps.json</code>, <code>packages.config</code>, <code>packages.lock.json</code></li>
+  <li><strong>PHP</strong> - <code>composer.lock</code></li>
 </ul>
 
-<p>Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.</p>
+<p><strong>Note:</strong> For Gradle projects, SCA requires a committed dependency lock file. Standard Gradle build files (<code>build.gradle</code>, <code>settings.gradle</code>) are not used for dependency resolution. <code>gradle.lockfile</code> and <code>buildscript-gradle.lockfile</code> are supported at any directory level; <code>gradle/verification-metadata.xml</code> is only read from the repository root.</p>
 
-<p>SCA is performed as part of <a href=""./deepscan"">DeepScan</a>, identifying vulnerable dependencies across the entire codebase. This provides a comprehensive baseline of dependency risk across your repositories.</p>
+<h2 id=""viewing-findings"">Viewing Findings</h2>
 
-<h2 id=""how-to-view-findings"">How to View Findings</h2>
+<p>SCA findings are available in three places in the DryRun Security dashboard:</p>
 
-<p>All SCA findings from <a href=""./deepscan"">DeepScan</a> are tracked in the <a href=""./risk-register"">Risk Register</a> for centralized triage and prioritization. You can filter by the SCA agent type to isolate dependency-related risk from code-level findings.</p>
+<ul>
+  <li><strong>Risk Register</strong> - Filter by SCA agent type to see all dependency findings across repositories, alongside PR scan and DeepScan results.</li>
+  <li><strong>Repository pages</strong> - SCA findings for a specific repository are visible from that repository&rsquo;s detail page in the dashboard.</li>
+  <li><strong>DeepScan page</strong> - SCA findings from a DeepScan run are included in the results and can be filtered separately.</li>
+</ul>
 
-<p>DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Materials) generation. You can download a complete inventory of your software dependencies for compliance and audit purposes from the <a href=""./compliance-grc"">SBOM Generation</a> page.</p>",Dependency scanning and supply chain risk detection - find vulnerable third-party packages before they reach production.,Scanning
+<h2 id=""sbom"">SBOM</h2>
+
+<p>SCA findings feed into SBOM (Software Bill of Materials) generation. DryRun Security generates a complete inventory of your software dependencies from both DeepScan and automatic background scans, which can be downloaded for compliance and audit purposes via the <a href=""./dryrun-api"">DryRun Security API</a>.</p>",Dependency scanning and supply chain risk detection - find vulnerable third-party packages before they reach production.,Scanning
 Auto Fix,auto-fix,"<h2 id=""why-implement-auto-fix"">Why Implement Auto Fix</h2>
 
 <p>Automating security fixes delivers measurable value across your development organization:</p>
@@ -701,13 +730,14 @@ Language and Framework Support,language-support,"<p>DryRun Security supports a b
     </tr>
   </thead>
   <tbody>
-    <tr><td>JavaScript / Node.js</td><td><code>package.json</code>, <code>package-lock.json</code>, <code>yarn.lock</code></td></tr>
-    <tr><td>Python</td><td><code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code></td></tr>
+    <tr><td>JavaScript / Node.js</td><td><code>package-lock.json</code>, <code>yarn.lock</code></td></tr>
+    <tr><td>Python</td><td><code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code>, <code>uv.lock</code></td></tr>
     <tr><td>Ruby</td><td><code>Gemfile</code>, <code>Gemfile.lock</code></td></tr>
-    <tr><td>Java / Kotlin</td><td><code>pom.xml</code>, Gradle build files</td></tr>
-    <tr><td>Go</td><td><code>go.mod</code>, <code>go.sum</code></td></tr>
-    <tr><td>Rust</td><td><code>Cargo.toml</code>, <code>Cargo.lock</code></td></tr>
-    <tr><td>.NET</td><td><code>*.csproj</code>, <code>packages.config</code></td></tr>
+    <tr><td>Java / Kotlin</td><td><code>pom.xml</code>, <code>gradle.lockfile</code>, <code>buildscript-gradle.lockfile</code>, <code>gradle/verification-metadata.xml</code></td></tr>
+    <tr><td>Go</td><td><code>go.mod</code></td></tr>
+    <tr><td>Rust</td><td><code>Cargo.lock</code></td></tr>
+    <tr><td>.NET</td><td><code>*.csproj</code>, <code>deps.json</code>, <code>packages.config</code>, <code>packages.lock.json</code></td></tr>
+    <tr><td>PHP</td><td><code>composer.lock</code></td></tr>
   </tbody>
 </table>
 
@@ -1062,7 +1092,11 @@ Custom Code Policies,custom-code-policies,"<h2 id=""custom-code-policies"">Custo
 <h3 id=""guidance"">Guidance</h3>
 
 <p>The guidance field contains the instructions that the LLM will deliver to your development team when a vulnerability is identified by the code policy. This text appears as a comment in your SCM (GitHub, GitLab, etc.) on the relevant PR, so it should be written as actionable remediation instructions, telling developers exactly what to fix and how.</p>",Create custom security rules in plain English using Custom Code Policies.,Platform
-Repository Context,repository-context,"<p>DryRun Security supports two ways to add repository context: a context managed in the dashboard, or an <code>AGENTS.md</code> file committed directly to the repo. Both serve the same purpose - giving DryRun Security's agents a deeper understanding of how your application works so analysis is as relevant as possible to your specific codebase.</p>
+Repository Context,repository-context,"<p>DryRun Security automatically scans active repositories in the background to build and maintain repository context, keeping PR analysis working from up-to-date knowledge of your codebase without any configuration required.</p>
+
+<p>You can also add your own context to give DryRun Security's agents a deeper understanding of application-specific details that exist outside the code itself, covering architecture decisions, accepted patterns, and security controls. DryRun Security supports two ways to do this: a context managed in the dashboard, or an <code>AGENTS.md</code> file committed directly to the repo.</p>
+
+<p><strong>Note:</strong> Dashboard context and AGENTS.md do not apply to Code Policies. To add context to a Code Policy, use the Background field in the <a href=""./custom-code-policies"">Code Policy</a> configuration directly.</p>
 
 <h2 id=""context-in-the-dashboard"">Context in the Dashboard</h2>
 
@@ -1263,6 +1297,7 @@ Finding Tuning with Feedback,finding-tuning,"<p>Developers and AppSec engineers 
 
 <p>AppSec engineers manage dismissals from the <a href=""./risk-register"">Risk Register</a>, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click <strong>Dismiss</strong> to choose a status and optionally add context.</p>
 
+<p>Dismissing a finding as False Positive or Won&rsquo;t Fix / Nitpick from the Risk Register also removes the associated failed SCM check on the pull request, clearing the block automatically. Accepted Risk, In Progress, and Resolved dismissals do not automatically clear the SCM check.</p>
 <p>From the Risk Register, AppSec teams can also:</p>
 <ul>
   <li>Override dismissals when a finding represents real risk that was incorrectly dismissed</li>
@@ -1317,13 +1352,11 @@ PR Blocking,pr-blocking,"<h2 id=""overview"">Overview</h2>
 
 <h2 id=""override-workflow"">Override Workflow</h2>
 
-<p>In cases where a blocked PR needs to be merged despite findings (for example, an accepted risk or false positive), authorized users can override the block:</p>
+<p>When a finding is dismissed as False Positive or Won&rsquo;t Fix / Nitpick, DryRun Security automatically clears the failing SCM check on the associated pull request. The block lifts as soon as the dismissal is processed, whether submitted from the PR thread or the Risk Register.</p>
 
-<ul>
-  <li>Use <a href=""./finding-tuning"">Finding Tuning with Feedback</a> to mark findings as accepted risk or false positive.</li>
-  <li>Repository administrators can bypass branch protection rules when necessary.</li>
-  <li>All overrides are logged in the <a href=""./risk-register"">Risk Register</a> for audit purposes.</li>
-</ul>
+<p>Dismissals marked as Accepted Risk, In Progress, or Resolved do not clear the SCM check. The pull request remains blocked until the finding is dismissed as False Positive or Won&rsquo;t Fix / Nitpick.</p>
+
+<p>All dismissal decisions are logged in the <a href=""./risk-register"">Risk Register</a> for audit purposes.</p>
 
 <h2 id=""configure-blocking"">Configure Blocking with GitHub Branch Protection</h2>
 
@@ -1763,13 +1796,36 @@ DryRun API,dryrun-api,"<h2 id=""dryrun-simple-api"">DryRun Simple API</h2>
     <span class=""api-endpoint-desc"">List PR scans for a repository.</span>
   </summary>
   <div class=""api-endpoint-body"">
-    <p>List PR scans for a repository. Supports filtering by status, date, and pagination.</p>
+    <p>List PR scans for a repository. Supports filtering by PR number, date range, severity, result, and the user who initiated the scan.</p>
     <h4>Parameters</h4>
     <table>
       <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
       <tbody>
         <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
         <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+        <tr><td>pr_number</td><td>query</td><td>no</td><td>integer</td><td>Filter by pull request number</td></tr>
+        <tr><td>date_from</td><td>query</td><td>no</td><td>string (ISO 8601)</td><td>Return scans on or after this date</td></tr>
+        <tr><td>date_to</td><td>query</td><td>no</td><td>string (ISO 8601)</td><td>Return scans on or before this date</td></tr>
+        <tr><td>severity</td><td>query</td><td>no</td><td>string</td><td>Filter by highest severity finding: <code>critical</code>, <code>high</code>, <code>medium</code>, <code>low</code>, <code>none</code></td></tr>
+        <tr><td>result</td><td>query</td><td>no</td><td>string</td><td>Filter by scan result: <code>pass</code> or <code>fail</code></td></tr>
+        <tr><td>initiated_by</td><td>query</td><td>no</td><td>string</td><td>Filter by the username or email of the user who triggered the scan</td></tr>
+      </tbody>
+    </table>
+    <h4>Response Fields</h4>
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>scan_id</td><td>string</td><td>Unique identifier for the scan</td></tr>
+        <tr><td>dashboard_url</td><td>string</td><td>Link to the scan results in the DryRun Security dashboard</td></tr>
+        <tr><td>pr_number</td><td>integer</td><td>Pull request number</td></tr>
+        <tr><td>pr_title</td><td>string</td><td>Title of the pull request</td></tr>
+        <tr><td>pr_status</td><td>string</td><td>Current status of the pull request: <code>open</code>, <code>closed</code>, or <code>merged</code></td></tr>
+        <tr><td>scan_date</td><td>string (ISO 8601)</td><td>Date and time the scan was completed</td></tr>
+        <tr><td>initiated_by</td><td>string</td><td>Username or email of the user who triggered the scan</td></tr>
+        <tr><td>status</td><td>string</td><td>Scan status: <code>pass</code> or <code>fail</code></td></tr>
+        <tr><td>summary</td><td>string</td><td>Short plain-text summary of scan results</td></tr>
+        <tr><td>vulnerability_summary</td><td>object</td><td>Counts of findings by severity: <code>critical</code>, <code>high</code>, <code>medium</code>, <code>low</code></td></tr>
+        <tr><td>risk_threshold</td><td>string</td><td>The highest-severity finding that caused the scan to fail, if applicable</td></tr>
       </tbody>
     </table>
     <h4>Responses</h4>
@@ -1779,7 +1835,7 @@ DryRun API,dryrun-api,"<h2 id=""dryrun-simple-api"">DryRun Simple API</h2>
     <h4>Example (curl)</h4>
     <pre><code>curl \
   -H ""Authorization: Bearer $DRYRUN_API_KEY"" \
-  ""https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/scans""</code></pre>
+  ""https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/scans?pr_number=42""</code></pre>
   </div>
 </details>
 
@@ -1889,6 +1945,27 @@ DryRun API,dryrun-api,"<h2 id=""dryrun-simple-api"">DryRun Simple API</h2>
     }
   ]
 }</code></pre>
+    <h4>Response Fields</h4>
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>id</td><td>string</td><td>Finding ID, used with the triage endpoints</td></tr>
+    <tr><td>finding_type</td><td>string</td><td>Source of the finding: <code>deepscan</code>, <code>pullrequest</code>, <code>sca</code>, <code>code_policy</code></td></tr>
+    <tr><td>dashboard_url</td><td>string</td><td>Link to the finding in the DryRun Security dashboard</td></tr>
+    <tr><td>severity</td><td>string</td><td>Finding severity: <code>critical</code>, <code>high</code>, <code>medium</code>, <code>low</code></td></tr>
+    <tr><td>type</td><td>string</td><td>Finding type or title</td></tr>
+    <tr><td>label</td><td>string</td><td>Classifier label (e.g. <code>auth_bypass</code>, <code>sqli</code>, <code>idor</code>)</td></tr>
+    <tr><td>description</td><td>string</td><td>Finding description</td></tr>
+    <tr><td>filename</td><td>string</td><td>File path where the finding was detected</td></tr>
+    <tr><td>line_start</td><td>integer</td><td>Starting line number</td></tr>
+    <tr><td>line_end</td><td>integer</td><td>Ending line number</td></tr>
+    <tr><td>repository_name</td><td>string</td><td>Repository name</td></tr>
+    <tr><td>pr_number</td><td>integer</td><td>Pull request number (for <code>pullrequest</code> findings only)</td></tr>
+    <tr><td>created_at</td><td>string (ISO 8601)</td><td>When the finding was detected</td></tr>
+    <tr><td>state</td><td>string</td><td>Derived finding state: <code>open</code> (from latest scan, not triaged), <code>dismissed</code> (triaged), <code>resolved</code> (not in latest scan)</td></tr>
+    <tr><td>triage</td><td>object</td><td>Triage details if triaged, otherwise <code>null</code>. Includes <code>category</code> (<code>false_positive</code>, <code>wont_fix</code>, <code>accepted_risk</code>, <code>in_progress</code>) and <code>category_name</code>.</td></tr>
+  </tbody>
+</table>
     <h4>Example (curl)</h4>
     <pre><code>curl \
   -H ""Authorization: Bearer $DRYRUN_API_KEY"" \

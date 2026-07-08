@@ -324,8 +324,8 @@ Filter the Risk Register by DeepScan to see all findings surfaced by DeepScan ac
 
 Option 2 - DeepScan Page
 
-From the DeepScan page, click on a previously scanned repository to see findings from the latest DeepScan. To review past scans, use the date picker at the top of the page and select the date of a previous scan.
-Clicking on an individual finding opens a pop-out module showing the finding detail, the DeepScan summary, and any artifact files associated with that finding. The &ldquo;View Details&rdquo; button shows app-specific summaries for the full scan, including auth methods, APIs, configurations, and other context discovered during the scan.
+From the DeepScan page, click on a previously scanned repository to see findings from the latest scan. A severity summary at the top shows counts across Critical, High, Medium, and Low. Previous scans can be reviewed by date, and findings can be filtered by risk level, SCA, or dismissed status.
+Clicking on an individual finding opens a pop-out module with the finding detail, the DeepScan summary, and any artifact files. The Scan Details view provides the full scan report and includes a report download option.
 
 Vulnerability Categories
 
@@ -603,35 +603,60 @@ URL: https://docs.dryrun.security/sca
 
 Dependency scanning and supply chain risk detection - find vulnerable third-party packages before they reach production.
 
-How It Works
+What Is SCA
 
 Software Composition Analysis (SCA) identifies the third-party libraries and open-source packages your application depends on and checks whether any carry known security vulnerabilities. The majority of code in any production service comes from the open-source ecosystem, making dependency risk one of the most important areas to monitor.
 
-DryRun Security analyzes your dependency manifests and lock files as part of DeepScan, detecting when dependencies carry known vulnerabilities. Because this analysis covers the entire codebase, you get a comprehensive view of supply chain risk rather than only seeing what changed in a single commit.
+DryRun Security checks each dependency against known vulnerability databases, matching specific CVEs to affected version ranges across all major package ecosystems.
 
-Beyond simple CVE matching, DryRun Security evaluates how a vulnerable dependency is actually used in your code. A vulnerable function in a library you only use for unrelated functionality presents a different risk profile than one you call directly with user-supplied input. This context-aware assessment helps your team prioritize remediation based on actual exploitability rather than CVSS scores alone.
+How Scanning Works
 
-What's Checked
+DryRun Security runs SCA through two paths:
+
+DeepScan - When a DeepScan is triggered from the dashboard, SCA runs as part of that scan, analyzing dependency manifests and lock files across the entire codebase at that point in time. This is the on-demand path for getting a current snapshot of supply chain risk whenever you need it.
+
+Automatic background scanning - DryRun Security also scans active repositories automatically in the background to keep SCA findings current without requiring a manual trigger. Scan frequency is based on PR activity, so the most active repositories are kept up to date most often. See Scan Schedule below.
+
+Scan Schedule
+
+Automatic SCA scans are scheduled based on repository PR activity over the last 30 days:
+
+  ActivityFrequency
+  
+    High activityDaily
+    Moderate activityWeekly to bi-weekly
+    Low activityMonthly
+    Inactive (fewer than 3 PRs in 30 days)No automatic scan
+  
+
+Repositories that fall below the activity threshold do not receive automatic scans. Run a DeepScan manually from the dashboard to get current SCA findings for an inactive repository.
+
+What&rsquo;s Checked
 
 DryRun Security scans package manifests and lock files across all major ecosystems:
 
-  JavaScript / Node.js - package.json, package-lock.json, yarn.lock
-  Python - requirements.txt, Pipfile, pyproject.toml, poetry.lock
+  JavaScript / Node.js - package-lock.json, yarn.lock
+  Python - requirements.txt, Pipfile, pyproject.toml, poetry.lock, uv.lock
   Ruby - Gemfile, Gemfile.lock
-  Java / Kotlin - pom.xml, Gradle build files
-  Go - go.mod, go.sum
-  Rust - Cargo.toml, Cargo.lock
-  .NET - *.csproj, packages.config
+  Java / Kotlin - pom.xml, gradle.lockfile, buildscript-gradle.lockfile, gradle/verification-metadata.xml
+  Go - go.mod
+  Rust - Cargo.lock
+  .NET - *.csproj, deps.json, packages.config, packages.lock.json
+  PHP - composer.lock
 
-Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.
+Note: For Gradle projects, SCA requires a committed dependency lock file. Standard Gradle build files (build.gradle, settings.gradle) are not used for dependency resolution. gradle.lockfile and buildscript-gradle.lockfile are supported at any directory level; gradle/verification-metadata.xml is only read from the repository root.
 
-SCA is performed as part of DeepScan, identifying vulnerable dependencies across the entire codebase. This provides a comprehensive baseline of dependency risk across your repositories.
+Viewing Findings
 
-How to View Findings
+SCA findings are available in three places in the DryRun Security dashboard:
 
-All SCA findings from DeepScan are tracked in the Risk Register for centralized triage and prioritization. You can filter by the SCA agent type to isolate dependency-related risk from code-level findings.
+  Risk Register - Filter by SCA agent type to see all dependency findings across repositories, alongside PR scan and DeepScan results.
+  Repository pages - SCA findings for a specific repository are visible from that repository&rsquo;s detail page in the dashboard.
+  DeepScan page - SCA findings from a DeepScan run are included in the results and can be filtered separately.
 
-DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Materials) generation. You can download a complete inventory of your software dependencies for compliance and audit purposes from the SBOM Generation page.
+SBOM
+
+SCA findings feed into SBOM (Software Bill of Materials) generation. DryRun Security generates a complete inventory of your software dependencies from both DeepScan and automatic background scans, which can be downloaded for compliance and audit purposes via the DryRun Security API.
 
 ---
 
@@ -714,13 +739,14 @@ Software Composition Analysis (SCA) runs as part of DeepScan and scans package m
     
   
   
-    JavaScript / Node.jspackage.json, package-lock.json, yarn.lock
-    Pythonrequirements.txt, Pipfile, pyproject.toml, poetry.lock
+    JavaScript / Node.jspackage-lock.json, yarn.lock
+    Pythonrequirements.txt, Pipfile, pyproject.toml, poetry.lock, uv.lock
     RubyGemfile, Gemfile.lock
-    Java / Kotlinpom.xml, Gradle build files
-    Gogo.mod, go.sum
-    RustCargo.toml, Cargo.lock
-    .NET*.csproj, packages.config
+    Java / Kotlinpom.xml, gradle.lockfile, buildscript-gradle.lockfile, gradle/verification-metadata.xml
+    Gogo.mod
+    RustCargo.lock
+    .NET*.csproj, deps.json, packages.config, packages.lock.json
+    PHPcomposer.lock
   
 
 Automatic Language Detection
@@ -1083,7 +1109,11 @@ URL: https://docs.dryrun.security/repository-context
 
 Repository context lets teams share application-specific knowledge with DryRun Security's agents - covering architecture decisions, accepted patterns, and security controls that exist outside the code itself.
 
-DryRun Security supports two ways to add repository context: a context managed in the dashboard, or an AGENTS.md file committed directly to the repo. Both serve the same purpose - giving DryRun Security's agents a deeper understanding of how your application works so analysis is as relevant as possible to your specific codebase.
+DryRun Security automatically scans active repositories in the background to build and maintain repository context, keeping PR analysis working from up-to-date knowledge of your codebase without any configuration required.
+
+You can also add your own context to give DryRun Security's agents a deeper understanding of application-specific details that exist outside the code itself, covering architecture decisions, accepted patterns, and security controls. DryRun Security supports two ways to do this: a context managed in the dashboard, or an AGENTS.md file committed directly to the repo.
+
+Note: Dashboard context and AGENTS.md do not apply to Code Policies. To add context to a Code Policy, use the Background field in the Code Policy configuration directly.
 
 Context in the Dashboard
 
@@ -1288,6 +1318,7 @@ From the Risk Register
 
 AppSec engineers manage dismissals from the Risk Register, which provides a centralized view across all repositories and scan types. Select one or more findings using the checkboxes, then click Dismiss to choose a status and optionally add context.
 
+Dismissing a finding as False Positive or Won&rsquo;t Fix / Nitpick from the Risk Register also removes the associated failed SCM check on the pull request, clearing the block automatically. Accepted Risk, In Progress, and Resolved dismissals do not automatically clear the SCM check.
 From the Risk Register, AppSec teams can also:
 
   Override dismissals when a finding represents real risk that was incorrectly dismissed
@@ -1338,11 +1369,11 @@ Configuring PR Blocking
 
 Override Workflow
 
-In cases where a blocked PR needs to be merged despite findings (for example, an accepted risk or false positive), authorized users can override the block:
+When a finding is dismissed as False Positive or Won&rsquo;t Fix / Nitpick, DryRun Security automatically clears the failing SCM check on the associated pull request. The block lifts as soon as the dismissal is processed, whether submitted from the PR thread or the Risk Register.
 
-  Use Finding Tuning with Feedback to mark findings as accepted risk or false positive.
-  Repository administrators can bypass branch protection rules when necessary.
-  All overrides are logged in the Risk Register for audit purposes.
+Dismissals marked as Accepted Risk, In Progress, or Resolved do not clear the SCM check. The pull request remains blocked until the finding is dismissed as False Positive or Won&rsquo;t Fix / Nitpick.
+
+All dismissal decisions are logged in the Risk Register for audit purposes.
 
 Configure Blocking with GitHub Branch Protection
 
@@ -1777,13 +1808,36 @@ Scans
     List PR scans for a repository.
   
   
-    List PR scans for a repository. Supports filtering by status, date, and pagination.
+    List PR scans for a repository. Supports filtering by PR number, date range, severity, result, and the user who initiated the scan.
     Parameters
     
       NameInRequiredTypeDescription
       
         account_idpathyesstringAccount ID
         repository_idpathyesstringRepository ID
+        pr_numberquerynointegerFilter by pull request number
+        date_fromquerynostring (ISO 8601)Return scans on or after this date
+        date_toquerynostring (ISO 8601)Return scans on or before this date
+        severityquerynostringFilter by highest severity finding: critical, high, medium, low, none
+        resultquerynostringFilter by scan result: pass or fail
+        initiated_byquerynostringFilter by the username or email of the user who triggered the scan
+      
+    
+    Response Fields
+    
+      FieldTypeDescription
+      
+        scan_idstringUnique identifier for the scan
+        dashboard_urlstringLink to the scan results in the DryRun Security dashboard
+        pr_numberintegerPull request number
+        pr_titlestringTitle of the pull request
+        pr_statusstringCurrent status of the pull request: open, closed, or merged
+        scan_datestring (ISO 8601)Date and time the scan was completed
+        initiated_bystringUsername or email of the user who triggered the scan
+        statusstringScan status: pass or fail
+        summarystringShort plain-text summary of scan results
+        vulnerability_summaryobjectCounts of findings by severity: critical, high, medium, low
+        risk_thresholdstringThe highest-severity finding that caused the scan to fail, if applicable
       
     
     Responses
@@ -1793,7 +1847,7 @@ Scans
     Example (curl)
     curl \
   -H "Authorization: Bearer $DRYRUN_API_KEY" \
-  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/scans"
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/scans?pr_number=42"
   
 
   
@@ -1896,6 +1950,27 @@ Findings
     }
   ]
 }
+    Response Fields
+
+  FieldTypeDescription
+  
+    idstringFinding ID, used with the triage endpoints
+    finding_typestringSource of the finding: deepscan, pullrequest, sca, code_policy
+    dashboard_urlstringLink to the finding in the DryRun Security dashboard
+    severitystringFinding severity: critical, high, medium, low
+    typestringFinding type or title
+    labelstringClassifier label (e.g. auth_bypass, sqli, idor)
+    descriptionstringFinding description
+    filenamestringFile path where the finding was detected
+    line_startintegerStarting line number
+    line_endintegerEnding line number
+    repository_namestringRepository name
+    pr_numberintegerPull request number (for pullrequest findings only)
+    created_atstring (ISO 8601)When the finding was detected
+    statestringDerived finding state: open (from latest scan, not triaged), dismissed (triaged), resolved (not in latest scan)
+    triageobjectTriage details if triaged, otherwise null. Includes category (false_positive, wont_fix, accepted_risk, in_progress) and category_name.
+  
+
     Example (curl)
     curl \
   -H "Authorization: Bearer $DRYRUN_API_KEY" \

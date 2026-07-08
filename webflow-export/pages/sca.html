@@ -1,33 +1,62 @@
 <div class="drs-doc-content">
-<h2 id="how-it-works">How It Works</h2>
+<h2 id="what-is-sca">What Is SCA</h2>
 
 <p>Software Composition Analysis (SCA) identifies the third-party libraries and open-source packages your application depends on and checks whether any carry known security vulnerabilities. The majority of code in any production service comes from the open-source ecosystem, making dependency risk one of the most important areas to monitor.</p>
 
-<p>DryRun Security analyzes your dependency manifests and lock files as part of <a href="./deepscan">DeepScan</a>, detecting when dependencies carry known vulnerabilities. Because this analysis covers the entire codebase, you get a comprehensive view of supply chain risk rather than only seeing what changed in a single commit.</p>
+<p>DryRun Security checks each dependency against known vulnerability databases, matching specific CVEs to affected version ranges across all major package ecosystems.</p>
 
-<p>Beyond simple CVE matching, DryRun Security evaluates how a vulnerable dependency is actually used in your code. A vulnerable function in a library you only use for unrelated functionality presents a different risk profile than one you call directly with user-supplied input. This context-aware assessment helps your team prioritize remediation based on actual exploitability rather than CVSS scores alone.</p>
+<h2 id="how-scanning-works">How Scanning Works</h2>
 
-<h2 id="whats-checked">What's Checked</h2>
+<p>DryRun Security runs SCA through two paths:</p>
+
+<p><strong>DeepScan</strong> - When a DeepScan is triggered from the dashboard, SCA runs as part of that scan, analyzing dependency manifests and lock files across the entire codebase at that point in time. This is the on-demand path for getting a current snapshot of supply chain risk whenever you need it.</p>
+
+<p><strong>Automatic background scanning</strong> - DryRun Security also scans active repositories automatically in the background to keep SCA findings current without requiring a manual trigger. Scan frequency is based on PR activity, so the most active repositories are kept up to date most often. See Scan Schedule below.</p>
+
+<h2 id="scan-schedule">Scan Schedule</h2>
+
+<p>Automatic SCA scans are scheduled based on repository PR activity over the last 30 days:</p>
+
+<table>
+  <thead><tr><th>Activity</th><th>Frequency</th></tr></thead>
+  <tbody>
+    <tr><td>High activity</td><td>Daily</td></tr>
+    <tr><td>Moderate activity</td><td>Weekly to bi-weekly</td></tr>
+    <tr><td>Low activity</td><td>Monthly</td></tr>
+    <tr><td>Inactive (fewer than 3 PRs in 30 days)</td><td>No automatic scan</td></tr>
+  </tbody>
+</table>
+
+<p>Repositories that fall below the activity threshold do not receive automatic scans. Run a DeepScan manually from the dashboard to get current SCA findings for an inactive repository.</p>
+
+<h2 id="whats-checked">What&rsquo;s Checked</h2>
 
 <p>DryRun Security scans package manifests and lock files across all major ecosystems:</p>
 
 <ul>
-  <li><strong>JavaScript / Node.js</strong> - <code>package.json</code>, <code>package-lock.json</code>, <code>yarn.lock</code></li>
-  <li><strong>Python</strong> - <code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code></li>
+  <li><strong>JavaScript / Node.js</strong> - <code>package-lock.json</code>, <code>yarn.lock</code></li>
+  <li><strong>Python</strong> - <code>requirements.txt</code>, <code>Pipfile</code>, <code>pyproject.toml</code>, <code>poetry.lock</code>, <code>uv.lock</code></li>
   <li><strong>Ruby</strong> - <code>Gemfile</code>, <code>Gemfile.lock</code></li>
-  <li><strong>Java / Kotlin</strong> - <code>pom.xml</code>, Gradle build files</li>
-  <li><strong>Go</strong> - <code>go.mod</code>, <code>go.sum</code></li>
-  <li><strong>Rust</strong> - <code>Cargo.toml</code>, <code>Cargo.lock</code></li>
-  <li><strong>.NET</strong> - <code>*.csproj</code>, <code>packages.config</code></li>
+  <li><strong>Java / Kotlin</strong> - <code>pom.xml</code>, <code>gradle.lockfile</code>, <code>buildscript-gradle.lockfile</code>, <code>gradle/verification-metadata.xml</code></li>
+  <li><strong>Go</strong> - <code>go.mod</code></li>
+  <li><strong>Rust</strong> - <code>Cargo.lock</code></li>
+  <li><strong>.NET</strong> - <code>*.csproj</code>, <code>deps.json</code>, <code>packages.config</code>, <code>packages.lock.json</code></li>
+  <li><strong>PHP</strong> - <code>composer.lock</code></li>
 </ul>
 
-<p>Each dependency is checked against known vulnerability databases, matching specific CVEs to affected version ranges.</p>
+<p><strong>Note:</strong> For Gradle projects, SCA requires a committed dependency lock file. Standard Gradle build files (<code>build.gradle</code>, <code>settings.gradle</code>) are not used for dependency resolution. <code>gradle.lockfile</code> and <code>buildscript-gradle.lockfile</code> are supported at any directory level; <code>gradle/verification-metadata.xml</code> is only read from the repository root.</p>
 
-<p>SCA is performed as part of <a href="./deepscan">DeepScan</a>, identifying vulnerable dependencies across the entire codebase. This provides a comprehensive baseline of dependency risk across your repositories.</p>
+<h2 id="viewing-findings">Viewing Findings</h2>
 
-<h2 id="how-to-view-findings">How to View Findings</h2>
+<p>SCA findings are available in three places in the DryRun Security dashboard:</p>
 
-<p>All SCA findings from <a href="./deepscan">DeepScan</a> are tracked in the <a href="./risk-register">Risk Register</a> for centralized triage and prioritization. You can filter by the SCA agent type to isolate dependency-related risk from code-level findings.</p>
+<ul>
+  <li><strong>Risk Register</strong> - Filter by SCA agent type to see all dependency findings across repositories, alongside PR scan and DeepScan results.</li>
+  <li><strong>Repository pages</strong> - SCA findings for a specific repository are visible from that repository&rsquo;s detail page in the dashboard.</li>
+  <li><strong>DeepScan page</strong> - SCA findings from a DeepScan run are included in the results and can be filtered separately.</li>
+</ul>
 
-<p>DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Materials) generation. You can download a complete inventory of your software dependencies for compliance and audit purposes from the <a href="./compliance-grc">SBOM Generation</a> page.</p>
+<h2 id="sbom">SBOM</h2>
+
+<p>SCA findings feed into SBOM (Software Bill of Materials) generation. DryRun Security generates a complete inventory of your software dependencies from both DeepScan and automatic background scans, which can be downloaded for compliance and audit purposes via the <a href="./dryrun-api">DryRun Security API</a>.</p>
 </div>

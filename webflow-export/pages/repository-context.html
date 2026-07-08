@@ -1,5 +1,9 @@
 <div class="drs-doc-content">
-<p>DryRun Security supports two ways to add repository context: a context managed in the dashboard, or an <code>AGENTS.md</code> file committed directly to the repo. Both serve the same purpose - giving DryRun Security's agents a deeper understanding of how your application works so analysis is as relevant as possible to your specific codebase.</p>
+<p>DryRun Security automatically scans active repositories in the background to build and maintain repository context, keeping PR analysis working from up-to-date knowledge of your codebase without any configuration required.</p>
+
+<p>You can also add your own context to give DryRun Security's agents a deeper understanding of application-specific details that exist outside the code itself, covering architecture decisions, accepted patterns, and security controls. DryRun Security supports two ways to do this: a context managed in the dashboard, or an <code>AGENTS.md</code> file committed directly to the repo.</p>
+
+<p><strong>Note:</strong> Dashboard context and AGENTS.md do not apply to Code Policies. To add context to a Code Policy, use the Background field in the <a href="./custom-code-policies">Code Policy</a> configuration directly.</p>
 
 <h2 id="context-in-the-dashboard">Context in the Dashboard</h2>
 
