@@ -172,6 +172,11 @@ Supported Platforms
       GitHub Installation
     
     
+      GitHub
+      GitHub Enterprise Server (On-Premises)
+      GitHub Enterprise Server Installation
+    
+    
       GitLab
       GitLab.com (Cloud)
       GitLab Installation
@@ -217,6 +222,69 @@ Authorize and Install the DryRun Security GitHub Application
   
 
 Congratulations! Installation is complete. At this point DryRun Security will run checks on your repository as code is committed to Pull Requests.
+
+GitHub Enterprise Server Installation
+
+DryRun Security supports on-premises GitHub Enterprise Server (GHES) installations. Setup requires a brief coordination with the DryRun Security team before installation can proceed.
+
+Step 1 - Initial Setup
+
+To get started, email hi@dryrun.security with your Enterprise Profile URL (e.g., https://github.yourcompany.com/enterprises/your-enterprise).
+
+DryRun Security will verify that your GitHub Enterprise Server is reachable at the provided URL before installation can proceed. Once confirmed, DryRun Security will follow up with next steps.
+
+Note: If your instance is not yet publicly accessible to DryRun Security over HTTPS, reach out and we can discuss connectivity options for your environment before moving forward.
+
+Step 2 - Create the GitHub App
+
+DryRun Security will send you a link to begin installation. When you open it, you will see a Webhook Secret and a Create GitHub App button.
+
+  Copy the Webhook Secret shown on the page - you will need to paste it into the GitHub App during creation
+  Click Create GitHub App - this opens the GitHub App creation page in your GHES instance with DryRun Security's configuration pre-filled
+  Paste the Webhook Secret into the Webhook Secret field in the GitHub App creation form
+  
+    Click Create GitHub App on GitHub to complete the creation
+    Note: Depending on your GHES version, you may see a radio button at the bottom of the creation page to install this app for Any organization and any user. If present, select this option to ensure the app is available across your enterprise and not limited to the user creating it.
+  
+  Return to the DryRun Security setup page and click I've created my App - Continue to Step 2
+
+Step 3 - Enter App Credentials
+
+Step 2 of the DryRun Security setup asks for credentials from the GitHub App you just created. In your GHES GitHub App settings page:
+
+  Copy the App ID and Client ID shown at the top of the page
+  Click Generate a new client secret and copy the value
+  Scroll to the bottom of the settings page and click Generate a private key - this downloads a .pem file
+
+Return to the DryRun Security setup page and fill in the App ID, Client ID, and Client Secret fields, then upload the .pem file. Click Submit. Once complete, you can install DryRun Security on your repositories.
+
+Step 4 - Install on Repositories
+
+  
+    Navigate to https://app.dryrun.security and select your corporate organization from the org picker. The org picker may default to your personal GitHub account - make sure the correct enterprise organization is selected before proceeding.
+  
+  
+    Click the Install button.
+    
+  
+  
+    Click the Install button on the DryRunSecurity GitHub Application page.
+    
+  
+  
+    Choose the GitHub repositories DryRun Security will run by selecting All Repositories or Only selected repositories.
+    
+  
+  
+    After installation your account may be paused for up to 2 business days as we activate your account.
+    
+  
+  
+    Once your account has been activated, you'll see the Installation Complete message the next time you visit https://app.dryrun.security.
+    
+  
+
+Congratulations! Installation is complete. DryRun Security will run checks on your repositories as code is committed to Pull Requests.
 
 GitLab Installation
 

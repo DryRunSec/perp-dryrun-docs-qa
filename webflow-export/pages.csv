@@ -173,6 +173,11 @@ Quick Start,quick-start,"<h2 id=""getting-started"">Getting Started</h2>
       <td><a href=""#github-installation"">GitHub Installation</a></td>
     </tr>
     <tr>
+      <td>GitHub</td>
+      <td>GitHub Enterprise Server (On-Premises)</td>
+      <td><a href=""#ghes-installation"">GitHub Enterprise Server Installation</a></td>
+    </tr>
+    <tr>
       <td>GitLab</td>
       <td>GitLab.com (Cloud)</td>
       <td><a href=""#gitlab-installation"">GitLab Installation</a></td>
@@ -221,6 +226,75 @@ Quick Start,quick-start,"<h2 id=""getting-started"">Getting Started</h2>
 </ol>
 
 <p><strong>Congratulations!</strong> Installation is complete. At this point DryRun Security will run checks on your repository as code is committed to Pull Requests.</p>
+
+<h2 id=""ghes-installation"">GitHub Enterprise Server Installation</h2>
+
+<p>DryRun Security supports on-premises GitHub Enterprise Server (GHES) installations. Setup requires a brief coordination with the DryRun Security team before installation can proceed.</p>
+
+<h3 id=""step-1---initial-setup"">Step 1 - Initial Setup</h3>
+
+<p>To get started, email <a href=""mailto:hi@dryrun.security"">hi@dryrun.security</a> with your <strong>Enterprise Profile URL</strong> (e.g., <code>https://github.yourcompany.com/enterprises/your-enterprise</code>).</p>
+
+<p>DryRun Security will verify that your GitHub Enterprise Server is reachable at the provided URL before installation can proceed. Once confirmed, DryRun Security will follow up with next steps.</p>
+
+<p><strong>Note:</strong> If your instance is not yet publicly accessible to DryRun Security over HTTPS, reach out and we can discuss connectivity options for your environment before moving forward.</p>
+
+<h3 id=""step-2---create-the-github-app"">Step 2 - Create the GitHub App</h3>
+
+<p>DryRun Security will send you a link to begin installation. When you open it, you will see a Webhook Secret and a <strong>Create GitHub App</strong> button.</p>
+
+<ol>
+  <li>Copy the Webhook Secret shown on the page - you will need to paste it into the GitHub App during creation</li>
+  <li>Click <strong>Create GitHub App</strong> - this opens the GitHub App creation page in your GHES instance with DryRun Security's configuration pre-filled</li>
+  <li>Paste the Webhook Secret into the Webhook Secret field in the GitHub App creation form</li>
+  <li>
+    <p>Click <strong>Create GitHub App</strong> on GitHub to complete the creation</p>
+    <p><strong>Note:</strong> Depending on your GHES version, you may see a radio button at the bottom of the creation page to install this app for <strong>Any organization and any user</strong>. If present, select this option to ensure the app is available across your enterprise and not limited to the user creating it.</p>
+  </li>
+  <li>Return to the DryRun Security setup page and click <strong>I've created my App - Continue to Step 2</strong></li>
+</ol>
+
+<h3 id=""step-3---enter-app-credentials"">Step 3 - Enter App Credentials</h3>
+
+<p>Step 2 of the DryRun Security setup asks for credentials from the GitHub App you just created. In your GHES GitHub App settings page:</p>
+
+<ol>
+  <li>Copy the <strong>App ID</strong> and <strong>Client ID</strong> shown at the top of the page</li>
+  <li>Click <strong>Generate a new client secret</strong> and copy the value</li>
+  <li>Scroll to the bottom of the settings page and click <strong>Generate a private key</strong> - this downloads a <code>.pem</code> file</li>
+</ol>
+
+<p>Return to the DryRun Security setup page and fill in the App ID, Client ID, and Client Secret fields, then upload the <code>.pem</code> file. Click <strong>Submit</strong>. Once complete, you can install DryRun Security on your repositories.</p>
+
+<h3 id=""step-4---install-on-repositories"">Step 4 - Install on Repositories</h3>
+
+<ol>
+  <li>
+    <p>Navigate to <a href=""https://app.dryrun.security"" target=""_blank"" rel=""noopener noreferrer"">https://app.dryrun.security</a> and select your corporate organization from the org picker. The org picker may default to your personal GitHub account - make sure the correct enterprise organization is selected before proceeding.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Install</strong> button.</p>
+    <figure class=""docs-screenshot""><img src=""assets/images/install/04-install.png"" alt=""DryRun Security Install button"" loading=""lazy""></figure>
+  </li>
+  <li>
+    <p>Click the <strong>Install</strong> button on the DryRunSecurity GitHub Application page.</p>
+    <figure class=""docs-screenshot""><img src=""assets/images/install/03-github-install.png"" alt=""DryRun Security GitHub Application install"" loading=""lazy""></figure>
+  </li>
+  <li>
+    <p>Choose the GitHub repositories DryRun Security will run by selecting <strong>All Repositories</strong> or <strong>Only selected repositories</strong>.</p>
+    <figure class=""docs-screenshot""><img src=""assets/images/install/05-github-installation.png"" alt=""Select repositories for DryRun Security"" loading=""lazy""></figure>
+  </li>
+  <li>
+    <p>After installation your account may be paused for up to 2 business days as we activate your account.</p>
+    <figure class=""docs-screenshot""><img src=""assets/images/install/07-awaiting-activation.png"" alt=""DryRun Security awaiting account activation"" loading=""lazy""></figure>
+  </li>
+  <li>
+    <p>Once your account has been activated, you'll see the <strong>Installation Complete</strong> message the next time you visit <a href=""https://app.dryrun.security"" target=""_blank"" rel=""noopener noreferrer"">https://app.dryrun.security</a>.</p>
+    <figure class=""docs-screenshot""><img src=""assets/images/install/08-installation-complete.png"" alt=""DryRun Security installation complete"" loading=""lazy""></figure>
+  </li>
+</ol>
+
+<p><strong>Congratulations!</strong> Installation is complete. DryRun Security will run checks on your repositories as code is committed to Pull Requests.</p>
 
 <h2 id=""gitlab-installation"">GitLab Installation</h2>
 
