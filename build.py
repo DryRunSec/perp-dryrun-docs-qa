@@ -3661,7 +3661,7 @@ PAGES['dashboard'] = {
 
 <p>Six summary tiles appear across the top of the dashboard, giving an at-a-glance picture of activity and risk across the selected period.</p>
 
-<figure class="docs-screenshot"><img src="{asset_prefix}assets/images/dashboard/dashboard-overview.jpg" alt="DryRun Security Dashboard overview metrics tiles" loading="lazy"></figure>
+<figure class="docs-screenshot"><img src="{asset_prefix}assets/images/dashboard/dashboard-chart.jpg" alt="DryRun Security Dashboard overview" loading="lazy"></figure>
 
 <h3 id="prs-scanned">PRs Scanned</h3>
 
@@ -3693,8 +3693,6 @@ PAGES['dashboard'] = {
 
 <p>A stacked line chart tracking findings at each severity level - Critical, High, Medium, and Low - across the selected time window. Each line moves independently, so you can see whether risk is shifting between severity tiers over time, not just whether the total is going up or down.</p>
 
-<figure class="docs-screenshot"><img src="{asset_prefix}assets/images/dashboard/dashboard-chart.jpg" alt="DryRun Security Dashboard Findings Over Time chart by severity" loading="lazy"></figure>
-
 <h3 id="findings-by-repository">Findings by Repository</h3>
 
 <p>A ranked view of which repositories are generating the most findings. This helps security and platform teams understand where risk is concentrated and prioritize remediation effort across the portfolio.</p>
@@ -3710,6 +3708,8 @@ PAGES['dashboard'] = {
 <h3 id="developer-activity">Developer Activity</h3>
 
 <p>A per-developer breakdown showing PRs opened and the subset of those PRs merged with at least one unresolved finding. This view helps AppSec and engineering leads understand how security habits are distributed across the team and where additional guidance may be needed.</p>
+
+<figure class="docs-screenshot"><img src="{asset_prefix}assets/images/dashboard/dashboard-lower.jpg" alt="DryRun Security Dashboard charts - findings by repository, severity distribution, findings by class, and developer activity" loading="lazy"></figure>
 
 ''',
 }
