@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Secrets Scanning - DryRun Security Docs</title>
-  <meta name="description" content="How DryRun Security detects hardcoded credentials, API keys, tokens, and other secrets in your codebase.">
+  <title>Dashboard - DryRun Security Docs</title>
+  <meta name="description" content="The Security Dashboard provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.">
   <!-- OpenGraph -->
-  <meta property="og:title" content="Secrets Scanning - DryRun Security Docs">
-  <meta property="og:description" content="How DryRun Security detects hardcoded credentials, API keys, tokens, and other secrets in your codebase.">
+  <meta property="og:title" content="Dashboard - DryRun Security Docs">
+  <meta property="og:description" content="The Security Dashboard provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://docs.dryrun.security/secrets-scanning">
+  <meta property="og:url" content="https://docs.dryrun.security/dashboard">
   <meta property="og:image" content="https://docs.dryrun.security/assets/og-default.png">
   <meta property="og:site_name" content="DryRun Security Docs">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Secrets Scanning - DryRun Security Docs">
-  <meta name="twitter:description" content="How DryRun Security detects hardcoded credentials, API keys, tokens, and other secrets in your codebase.">
+  <meta name="twitter:title" content="Dashboard - DryRun Security Docs">
+  <meta name="twitter:description" content="The Security Dashboard provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.">
   <meta name="twitter:image" content="https://docs.dryrun.security/assets/og-default.png">
   <!-- Canonical & robots -->
-  <link rel="canonical" href="https://docs.dryrun.security/secrets-scanning">
+  <link rel="canonical" href="https://docs.dryrun.security/dashboard">
   <meta name="robots" content="index, follow">
   <meta name="author" content="DryRun Security">
   <link rel="icon" href="./assets/favicon.ico" type="image/png">
@@ -31,9 +31,9 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "name": "Secrets Scanning",
-    "description": "How DryRun Security detects hardcoded credentials, API keys, tokens, and other secrets in your codebase.",
-    "url": "https://docs.dryrun.security/secrets-scanning",
+    "name": "Dashboard",
+    "description": "The Security Dashboard provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.",
+    "url": "https://docs.dryrun.security/dashboard",
     "publisher": {
       "@type": "Organization",
       "name": "DryRun Security",
@@ -55,8 +55,8 @@
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "Secrets Scanning",
-        "item": "https://docs.dryrun.security/secrets-scanning"
+        "name": "Dashboard",
+        "item": "https://docs.dryrun.security/dashboard"
       }
     ]
   }
@@ -103,7 +103,7 @@
 <ul class="sidebar-links">
 <li><a href="./deepscan">Repository Scanning with DeepScan</a></li>
 <li><a href="./pr-scanning">PR Scanning</a></li>
-<li><a href="./secrets-scanning" class="active">Secrets Scanning</a></li>
+<li><a href="./secrets-scanning">Secrets Scanning</a></li>
 <li><a href="./iac-scanning">IaC Scanning</a></li>
 <li><a href="./sca">SCA</a></li>
 <li><a href="./auto-fix">Auto Fix</a></li>
@@ -148,46 +148,94 @@
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="document.querySelector('.sidebar').classList.remove('open');document.getElementById('sidebarOverlay').style.display='none'"></div>
     <main class="content-area">
       <div class="content-inner">
-        <div class="breadcrumb"><a href="./">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">Scanning</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Secrets Scanning</span></div>
+        <div class="breadcrumb"><a href="./">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">Platform</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Dashboard</span></div>
         <div class="page-heading-row">
-          <h1 class="page-heading">Secrets Scanning</h1>
+          <h1 class="page-heading">Dashboard</h1>
           <button class="btn-download-pdf" onclick="window.print()" title="Download as PDF"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 7.5 8 10l3.5-2.5"/><path d="M2.5 11v2a1 1 0 001 1h9a1 1 0 001-1v-2"/></svg><span>PDF</span></button>
         </div>
-        <p class="page-description">How DryRun Security detects hardcoded credentials, API keys, tokens, and other secrets in your codebase.</p>
+        <p class="page-description">The Security Dashboard provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.</p>
         <div class="doc-content">
-<h2 id="the-secrets-analyzer">The Secrets Analyzer <a class="anchor-link" href="#the-secrets-analyzer" aria-label="Link to this section">#</a></h2>
+<h2 id="overview">Overview <a class="anchor-link" href="#overview" aria-label="Link to this section">#</a></h2>
 
-<p>Hardcoded credentials are among the most common and most exploitable security vulnerabilities in modern software. API keys, database passwords, authentication tokens, and private keys committed to source code are routinely discovered by attackers scanning public repositories - and by insiders with unintended access to private ones.</p>
+<p>The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors. All metrics are scoped to a configurable time window - 24 hours, 7 days, 30 days, or 90 days - so security and engineering teams can evaluate both current state and longer-term trends.</p>
 
-<p>DryRun Security's <strong>Secrets Analyzer</strong> is a specialized agent that runs on every pull request, examining code changes for signs of embedded credentials. Unlike tools that rely solely on pattern matching, the Secrets Analyzer goes a critical step further: it attempts to <strong>validate detected secrets</strong> to determine whether they are real and currently active. This verification step is a key differentiator - rather than flooding teams with alerts for every string that resembles a credential, DryRun Security confirms which secrets pose a genuine risk by testing them against the services they are meant to authenticate with.</p>
+<h2 id="overview-metrics">Overview Metrics <a class="anchor-link" href="#overview-metrics" aria-label="Link to this section">#</a></h2>
 
-<p>The analyzer also operates contextually, evaluating whether a candidate secret is genuine based on its surrounding context, variable naming, usage patterns, and code structure. Combined with active validation, this approach dramatically reduces false positives while ensuring that truly dangerous credentials are caught before they reach production.</p>
+<p>Six summary tiles appear across the top of the dashboard, giving an at-a-glance picture of activity and risk across the selected period.</p>
 
-<h2 id="what-secrets-detection-covers">What Secrets Detection Covers <a class="anchor-link" href="#what-secrets-detection-covers" aria-label="Link to this section">#</a></h2>
+<figure class="docs-screenshot"><img src="./assets/images/dashboard/dashboard-overview.jpg" alt="DryRun Security Dashboard overview metrics tiles" loading="lazy"></figure>
 
-<p>The Secrets Analyzer detects a wide range of credential types, including:</p>
+<h3 id="prs-scanned">PRs Scanned <a class="anchor-link" href="#prs-scanned" aria-label="Link to this section">#</a></h3>
 
-<ul>
-  <li>API keys and access tokens for cloud providers (AWS, GCP, Azure) and third-party services</li>
-  <li>Database connection strings with embedded credentials</li>
-  <li>Private keys (RSA, EC, SSH)</li>
-  <li>Authentication tokens and session secrets</li>
-  <li>OAuth client secrets</li>
-  <li>Webhook secrets and signing keys</li>
-  <li>Generic high-entropy strings that exhibit the statistical properties of cryptographic secrets</li>
-</ul>
+<p>The total number of pull requests DryRun Security analyzed in the selected window. This is your coverage signal - every PR that entered review was evaluated for security issues across the repositories connected to your account.</p>
+
+<h3 id="total-findings">Total Findings <a class="anchor-link" href="#total-findings" aria-label="Link to this section">#</a></h3>
+
+<p>The cumulative number of security findings identified across all scanned PRs during the period. This represents the full volume of security signals your team is working through, spanning all severity levels and vulnerability classes.</p>
+
+<h3 id="merged-prs">Merged PRs <a class="anchor-link" href="#merged-prs" aria-label="Link to this section">#</a></h3>
+
+<p>The total number of PRs merged during the period. Read alongside PRs Scanned and Merged PRs w/ Risk, this provides a clear picture of code velocity relative to security outcomes.</p>
+
+<h3 id="merged-prs-with-risk">Merged PRs w/ Risk <a class="anchor-link" href="#merged-prs-with-risk" aria-label="Link to this section">#</a></h3>
+
+<p>PRs authored by a developer and merged while carrying at least one unresolved finding. This is a direct measure of residual risk entering your codebase. A low count relative to total merged PRs indicates your team is consistently resolving findings before code ships.</p>
+
+<h3 id="improvement-rate">Improvement Rate <a class="anchor-link" href="#improvement-rate" aria-label="Link to this section">#</a></h3>
+
+<p>The percentage of scanned PRs flagged as improved during the selected period. A PR is considered improved when a finding identified in one scan is no longer present in the next scan of that same PR - meaning the developer addressed it within the review cycle, before merge. A high improvement rate indicates findings are being caught and fixed at the point of introduction rather than carried forward.</p>
+
+<h3 id="hardcoded-credentials">Hardcoded Credentials <a class="anchor-link" href="#hardcoded-credentials" aria-label="Link to this section">#</a></h3>
+
+<p>A dedicated count of credential-related findings - API keys, tokens, secrets, and similar sensitive values - across all scanned PRs. Hardcoded credentials represent one of the highest-impact risks in any codebase and are surfaced separately so they remain visible regardless of overall finding volume.</p>
+
+<h2 id="charts">Charts <a class="anchor-link" href="#charts" aria-label="Link to this section">#</a></h2>
+
+<h3 id="findings-over-time">Findings Over Time <a class="anchor-link" href="#findings-over-time" aria-label="Link to this section">#</a></h3>
+
+<p>A stacked line chart tracking findings at each severity level - Critical, High, Medium, and Low - across the selected time window. Each line moves independently, so you can see whether risk is shifting between severity tiers over time, not just whether the total is going up or down.</p>
+
+<figure class="docs-screenshot"><img src="./assets/images/dashboard/dashboard-chart.jpg" alt="DryRun Security Dashboard Findings Over Time chart by severity" loading="lazy"></figure>
+
+<h3 id="findings-by-repository">Findings by Repository <a class="anchor-link" href="#findings-by-repository" aria-label="Link to this section">#</a></h3>
+
+<p>A ranked view of which repositories are generating the most findings. This helps security and platform teams understand where risk is concentrated and prioritize remediation effort across the portfolio.</p>
+
+<h3 id="severity-distribution">Severity Distribution <a class="anchor-link" href="#severity-distribution" aria-label="Link to this section">#</a></h3>
+
+<p>A breakdown of active findings by severity - Critical, High, Medium, and Low - with a count and percentage for each tier. The center of the chart shows the total. Use this to assess whether your open risk is weighted toward high-severity issues that need immediate attention or spread across lower-severity findings.</p>
+
+<h3 id="findings-by-class">Findings by Class <a class="anchor-link" href="#findings-by-class" aria-label="Link to this section">#</a></h3>
+
+<p>A ranked breakdown by vulnerability type - such as Hardcoded Credentials, Cross-Site Scripting, SQL Injection, and others. Recurring patterns within a class often point to a shared dependency, an architectural pattern, or a training gap, making this view useful for identifying systemic issues beyond individual findings.</p>
+
+<h3 id="developer-activity">Developer Activity <a class="anchor-link" href="#developer-activity" aria-label="Link to this section">#</a></h3>
+
+<p>A per-developer breakdown showing PRs opened and the subset of those PRs merged with at least one unresolved finding. This view helps AppSec and engineering leads understand how security habits are distributed across the team and where additional guidance may be needed.</p>
         </div>
 <nav class="prev-next">
-<a href="./pr-scanning" class="prev-next-link prev-link"><span class="prev-next-label">← Previous</span><span class="prev-next-title">PR Scanning</span></a>
-<a href="./iac-scanning" class="prev-next-link next-link"><span class="prev-next-label">Next →</span><span class="prev-next-title">IaC Scanning</span></a>
+<a href="./dryrun-api" class="prev-next-link prev-link"><span class="prev-next-label">← Previous</span><span class="prev-next-title">DryRun API</span></a>
+<a href="./slack-integration" class="prev-next-link next-link"><span class="prev-next-label">Next →</span><span class="prev-next-title">Slack Integration</span></a>
 </nav>
       </div>
     </main>
 <aside class="toc-sidebar">
 <p class="toc-title">On this page</p>
 <ul class="toc-list">
-<li class="toc-h2"><a href="#the-secrets-analyzer">The Secrets Analyzer</a></li>
-<li class="toc-h2"><a href="#what-secrets-detection-covers">What Secrets Detection Covers</a></li>
+<li class="toc-h2"><a href="#overview">Overview</a></li>
+<li class="toc-h2"><a href="#overview-metrics">Overview Metrics</a></li>
+<li class="toc-h3"><a href="#prs-scanned">PRs Scanned</a></li>
+<li class="toc-h3"><a href="#total-findings">Total Findings</a></li>
+<li class="toc-h3"><a href="#merged-prs">Merged PRs</a></li>
+<li class="toc-h3"><a href="#merged-prs-with-risk">Merged PRs w/ Risk</a></li>
+<li class="toc-h3"><a href="#improvement-rate">Improvement Rate</a></li>
+<li class="toc-h3"><a href="#hardcoded-credentials">Hardcoded Credentials</a></li>
+<li class="toc-h2"><a href="#charts">Charts</a></li>
+<li class="toc-h3"><a href="#findings-over-time">Findings Over Time</a></li>
+<li class="toc-h3"><a href="#findings-by-repository">Findings by Repository</a></li>
+<li class="toc-h3"><a href="#severity-distribution">Severity Distribution</a></li>
+<li class="toc-h3"><a href="#findings-by-class">Findings by Class</a></li>
+<li class="toc-h3"><a href="#developer-activity">Developer Activity</a></li>
 </ul>
 </aside>
   </div>

@@ -24,6 +24,7 @@
 - [Permissions](https://docs.dryrun.security/permissions): Understand the two-role permission model in DryRun Security and how SCM platform roles map to Admin and Developer access.
 - [MCP](https://docs.dryrun.security/mcp): Connect AI assistants to DryRun Security insights using the Model Context Protocol for natural language queries about your security data.
 - [DryRun API](https://docs.dryrun.security/dryrun-api): Programmatic access to DryRun Security findings, scans, configurations, and insights via the Simple API.
+- [Dashboard](https://docs.dryrun.security/dashboard): The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.
 - [Slack Integration](https://docs.dryrun.security/slack-integration): Receive DryRun Security alerts and notifications in Slack.
 - [Webhook Integration](https://docs.dryrun.security/webhook-integration): Receive a POST request to any HTTP endpoint when DryRun Security detects a finding on a pull request.
 - [Jira Integration](https://docs.dryrun.security/jira-integration): Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.

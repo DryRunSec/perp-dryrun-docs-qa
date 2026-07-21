@@ -437,7 +437,7 @@ Results appear as a summary comment on the pull request, inline comments on spec
 
 Supported Platforms
 
-DryRun Security integrates natively with the two most widely used source code platforms:
+DryRun Security integrates natively with GitHub, GitLab, and GitHub Enterprise Server (GHES), covering both cloud-hosted and self-managed source code platforms:
 
   
     
@@ -459,6 +459,12 @@ DryRun Security integrates natively with the two most widely used source code pl
       Merge request opened or updated
       GitLab pipeline status
       Merge request discussion comments
+    
+    
+      GitHub Enterprise Server (GHES)
+      Pull request opened or synchronized
+      GitHub Checks API
+      PR review comments on affected lines
     
   
 
@@ -1075,7 +1081,7 @@ The top section of a configuration provides these controls:
 
   Select Repositories - A dropdown selector to choose which repositories use this configuration. Repositories can only belong to one configuration at a time; repositories already assigned to another configuration will be greyed out.
   Issue Comment Enabled - Toggle to enable or disable DryRun Security's PR/MR comment. When enabled, DryRun posts a summary comment on each pull request with findings. Comments are not sent to draft PRs; findings from draft PR scans are still visible in the Risk Register.
-  PR Blocking Enabled - Toggle to enable PR blocking globally for this configuration. When enabled, findings from configured agents and policies will create GitHub status checks that must pass before merging.
+  PR Blocking Enabled - Toggle to enable PR blocking globally for this configuration. When enabled, findings from configured agents and policies will create status checks on GitHub Cloud and GitHub Enterprise Server (GHES) that must pass before merging.
   Notifications Enabled - Toggle to enable notification delivery. When enabled, choose which integrations receive alerts (see Notifications for setup details).
   Severity-Based PR Blocking - Toggle to block PRs based on severity. When enabled, set a minimum severity threshold; any finding at or above that level will block the PR from being merged. See PR Blocking for threshold options.
   Show Comment for No Findings - Toggle to control whether DryRun posts a comment even when no security findings are detected. Toggle off for the familiar behavior where DryRun posts a comment only when scans produce findings. Toggle on to have DryRun post a comment on every PR scanned, useful for visibility and audit trails.
@@ -1445,6 +1451,8 @@ All dismissal decisions are logged in the Risk Register for audit purposes.
 
 Configure Blocking with GitHub Branch Protection
 
+These steps apply to both GitHub.com and GitHub Enterprise Server (GHES). The branch protection interface and workflow are identical on both, so GHES administrators can follow the same instructions.
+
 The recommended approach is to configure a severity threshold at the configuration level. Any finding at or above that threshold will trigger the blocking flow across all agents.
 
 For teams that prefer per-policy or per-analyzer blocking, that is still supported. After enabling Blocking on a specific policy or analyzer, follow these steps:
@@ -1586,6 +1594,8 @@ Understand the two-role permission model in DryRun Security and how SCM platform
 Overview
 
 DryRun Security uses your SCM platform (GitHub or GitLab) for authentication. Because DryRun already knows your SCM role at login, it maps that role directly to a DryRun permission level with no additional setup required.
+
+GitHub Enterprise Server (GHES) follows the same permission model as GitHub Cloud. Anywhere this page refers to GitHub, it applies equally to GHES.
 
 DryRun uses a two-role model: Admin and Developer. To give a user more access, you can either elevate their permissions in the SCM, or request an Admin Override (see the Admin Override section below).
 
@@ -2763,6 +2773,68 @@ If you have questions about authentication, account access, or expected response
 
 ---
 
+# Dashboard
+
+URL: https://docs.dryrun.security/dashboard
+
+The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.
+
+Overview
+
+The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors. All metrics are scoped to a configurable time window - 24 hours, 7 days, 30 days, or 90 days - so security and engineering teams can evaluate both current state and longer-term trends.
+
+Overview Metrics
+
+Six summary tiles appear across the top of the dashboard, giving an at-a-glance picture of activity and risk across the selected period.
+
+PRs Scanned
+
+The total number of pull requests DryRun Security analyzed in the selected window. This is your coverage signal - every PR that entered review was evaluated for security issues across the repositories connected to your account.
+
+Total Findings
+
+The cumulative number of security findings identified across all scanned PRs during the period. This represents the full volume of security signals your team is working through, spanning all severity levels and vulnerability classes.
+
+Merged PRs
+
+The total number of PRs merged during the period. Read alongside PRs Scanned and Merged PRs w/ Risk, this provides a clear picture of code velocity relative to security outcomes.
+
+Merged PRs w/ Risk
+
+PRs authored by a developer and merged while carrying at least one unresolved finding. This is a direct measure of residual risk entering your codebase. A low count relative to total merged PRs indicates your team is consistently resolving findings before code ships.
+
+Improvement Rate
+
+The percentage of scanned PRs flagged as improved during the selected period. A PR is considered improved when a finding identified in one scan is no longer present in the next scan of that same PR - meaning the developer addressed it within the review cycle, before merge. A high improvement rate indicates findings are being caught and fixed at the point of introduction rather than carried forward.
+
+Hardcoded Credentials
+
+A dedicated count of credential-related findings - API keys, tokens, secrets, and similar sensitive values - across all scanned PRs. Hardcoded credentials represent one of the highest-impact risks in any codebase and are surfaced separately so they remain visible regardless of overall finding volume.
+
+Charts
+
+Findings Over Time
+
+A stacked line chart tracking findings at each severity level - Critical, High, Medium, and Low - across the selected time window. Each line moves independently, so you can see whether risk is shifting between severity tiers over time, not just whether the total is going up or down.
+
+Findings by Repository
+
+A ranked view of which repositories are generating the most findings. This helps security and platform teams understand where risk is concentrated and prioritize remediation effort across the portfolio.
+
+Severity Distribution
+
+A breakdown of active findings by severity - Critical, High, Medium, and Low - with a count and percentage for each tier. The center of the chart shows the total. Use this to assess whether your open risk is weighted toward high-severity issues that need immediate attention or spread across lower-severity findings.
+
+Findings by Class
+
+A ranked breakdown by vulnerability type - such as Hardcoded Credentials, Cross-Site Scripting, SQL Injection, and others. Recurring patterns within a class often point to a shared dependency, an architectural pattern, or a training gap, making this view useful for identifying systemic issues beyond individual findings.
+
+Developer Activity
+
+A per-developer breakdown showing PRs opened and the subset of those PRs merged with at least one unresolved finding. This view helps AppSec and engineering leads understand how security habits are distributed across the team and where additional guidance may be needed.
+
+---
+
 # Slack Integration
 
 URL: https://docs.dryrun.security/slack-integration
@@ -2922,7 +2994,7 @@ Top-level fields
   FieldTypeDescription
   
     dashboard_urlstringLink to the PR in the DryRun Security dashboard
-    github_urlstringLink to the pull request on GitHub or GitLab
+    github_urlstringLink to the pull request in your SCM
     risk_thresholdstringHighest risk level among all findings in this scan: critical, high, medium, or low. Returns passing when no findings meet the configured Risk Level threshold.
     orgstringOrganization name
     repo_namestringRepository name
