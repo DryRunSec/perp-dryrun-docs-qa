@@ -372,9 +372,39 @@ PAGES['quick-start'] = {
   </tbody>
 </table>
 
+<h3 id="installation-requirements">Installation Requirements</h3>
+
+<p>Before installing DryRun Security, confirm the account performing the installation has the required permissions for your platform:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th>Who Can Install</th>
+      <th>Access Granted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GitHub</td>
+      <td>Organization admin, or Enterprise admin if an enterprise account is in use</td>
+      <td>GitHub App with read access to code and metadata, and read/write access to checks, issues, and pull requests</td>
+    </tr>
+    <tr>
+      <td>GitLab</td>
+      <td>System Administrator or Group Owner</td>
+      <td>API access via a scoped Group Access Token</td>
+    </tr>
+  </tbody>
+</table>
+
+<figure class="docs-screenshot docs-screenshot-sm"><img src="{asset_prefix}assets/images/install/09-github-app-permissions.png" alt="DryRun Security GitHub App permissions: read access to code and metadata, read and write access to checks, issues, and pull requests" loading="lazy"></figure>
+
 <h2 id="github-installation">GitHub Installation</h2>
 
 <h3 id="authorize-and-install">Authorize and Install the DryRun Security GitHub Application</h3>
+
+<p><strong>Note:</strong> You must be signed in as an organization admin (or an enterprise admin, if your organization is part of a GitHub Enterprise account) to install the GitHub App.</p>
 
 <ol>
   <li>
@@ -498,7 +528,7 @@ PAGES['quick-start'] = {
 
 <h3 id="create-a-group-access-token">Create a Group Access Token</h3>
 
-<p>This section describes creating a Group Access Token that will be used during the installation of DryRun Security.</p>
+<p>This section describes creating a Group Access Token that will be used during the installation of DryRun Security. Creating a Group Access Token requires <strong>System Administrator</strong> or <strong>Group Owner</strong> permissions.</p>
 
 <h4 id="generating-the-group-access-token">Generating the Group Access Token</h4>
 
