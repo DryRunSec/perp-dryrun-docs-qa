@@ -183,9 +183,35 @@ Supported Platforms
     
   
 
+Installation Requirements
+
+Before installing DryRun Security, confirm the account performing the installation has the required permissions for your platform:
+
+  
+    
+      Platform
+      Who Can Install
+      Access Granted
+    
+  
+  
+    
+      GitHub
+      Organization admin, or Enterprise admin if an enterprise account is in use
+      GitHub App with read access to code and metadata, and read/write access to checks, issues, and pull requests
+    
+    
+      GitLab
+      System Administrator or Group Owner
+      API access via a scoped Group Access Token
+    
+  
+
 GitHub Installation
 
 Authorize and Install the DryRun Security GitHub Application
+
+Note: You must be signed in as an organization admin (or an enterprise admin, if your organization is part of a GitHub Enterprise account) to install the GitHub App.
 
   
     Navigate to https://app.dryrun.security and click the Log in with GitHub button.
@@ -299,7 +325,7 @@ Once installed and activated, you&#x27;ll get immediate visibility into security
 
 Create a Group Access Token
 
-This section describes creating a Group Access Token that will be used during the installation of DryRun Security.
+This section describes creating a Group Access Token that will be used during the installation of DryRun Security. Creating a Group Access Token requires System Administrator or Group Owner permissions.
 
 Generating the Group Access Token
 
