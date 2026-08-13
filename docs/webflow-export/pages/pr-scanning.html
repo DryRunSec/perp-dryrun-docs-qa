@@ -1,0 +1,196 @@
+<div class="drs-doc-content">
+<h2 id="how-it-works">How It Works</h2>
+
+<p>DryRun Security analyzes code changes every time a pull request is opened or updated. Its security agents inspect the diff, evaluate the surrounding context, and report findings directly on the PR - before the code is merged. Each finding is evaluated for impact and exploitability and tagged with a severity: Critical, High, Medium, or Low. Scanning runs automatically with no manual steps required: open a PR and DryRun Security handles the rest.</p>
+
+<p>Results appear as a summary comment on the pull request, inline comments on specific lines, and a pass/fail check status that integrates with your branch protection rules. This keeps security feedback inside the developer workflow where it can be acted on immediately.</p>
+
+<h2 id="supported-platforms">Supported Platforms</h2>
+
+<p>DryRun Security integrates natively with GitHub, GitLab, and GitHub Enterprise Server (GHES), covering both cloud-hosted and self-managed source code platforms:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th>Trigger</th>
+      <th>Check Status</th>
+      <th>Inline Comments</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GitHub</td>
+      <td>Pull request opened or synchronized</td>
+      <td>GitHub Checks API</td>
+      <td>PR review comments on affected lines</td>
+    </tr>
+    <tr>
+      <td>GitLab</td>
+      <td>Merge request opened or updated</td>
+      <td>GitLab pipeline status</td>
+      <td>Merge request discussion comments</td>
+    </tr>
+    <tr>
+      <td>GitHub Enterprise Server (GHES)</td>
+      <td>Pull request opened or synchronized</td>
+      <td>GitHub Checks API</td>
+      <td>PR review comments on affected lines</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="what-gets-analyzed">What Gets Analyzed</h2>
+
+<p>When a pull request is opened, DryRun Security retrieves the diff along with relevant surrounding code context - imported modules, authentication middleware, framework conventions, and any configured security policies. Analysis is scoped to the changed regions and the code paths that flow through them.</p>
+
+<p>DryRun Security also reads the repository's <code>agents.md</code> file, if present. This allows teams to provide context and instructions that guide the security analysis - such as project-specific conventions, known safe patterns, or areas of particular concern.</p>
+
+<p>The following security agents run on every PR scan:</p>
+
+<ul>
+  <li><strong>Cross-Site Scripting Analyzer</strong></li>
+  <li><strong>General Security Analyzer</strong></li>
+  <li><strong>IDOR Analyzer</strong></li>
+  <li><strong>Mass Assignment</strong></li>
+  <li><strong>Secrets Analyzer</strong></li>
+  <li><strong>Server-Side Request Forgery Analyzer</strong></li>
+  <li><strong>SQL Injection Analyzer</strong></li>
+  <li>Any <a href="./custom-code-policies">custom code policies</a> created by your team</li>
+</ul>
+
+<p>All findings are filtered to the changed regions of the pull request. Pre-existing issues in unchanged code are excluded from the results so developers can focus on what they introduced.</p>
+
+<h2 id="check-status-and-feedback">Check Status & Feedback</h2>
+
+<p>DryRun Security reports results through two channels: a <strong>summary comment</strong> on the pull request with an overview of all findings, and individual <strong>check statuses</strong> that integrate with your branch protection rules.</p>
+
+<p>Each check corresponds to a specific security agent or policy. The check status reflects the outcome of that agent's analysis:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Status</th>
+      <th>Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Success</strong></td>
+      <td>No findings at or above the configured severity threshold. The PR is clear to merge.</td>
+    </tr>
+    <tr>
+      <td><strong>Failure</strong></td>
+      <td>One or more findings meet or exceed the blocking threshold. The PR cannot be merged until issues are resolved.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When findings are detected, inline comments are posted directly on the affected lines of code with a description of the vulnerability and remediation guidance. For details on enforcing merge gates with check statuses, see <a href="./pr-blocking">PR Blocking</a>.</p>
+
+<p>If you are seeing noisy or irrelevant findings, you can <a href="./finding-tuning">tune your findings</a> to reduce noise and focus on the issues that matter most to your team.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>PR scanning behavior is controlled through configurations in the DryRun Security dashboard. Each configuration can be applied to one or more repositories, and a <code>default</code> configuration covers any repository not assigned to a specific one.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Setting</th>
+      <th>Default</th>
+      <th>What It Controls</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Security Agents</td>
+      <td>All enabled</td>
+      <td>Which code security analyzers (XSS, SQLi, IDOR, Secrets, etc.) run on PRs</td>
+    </tr>
+    <tr>
+      <td>Custom Code Policies</td>
+      <td>None attached</td>
+      <td>Organization-specific rules written in plain English, enforced on every PR</td>
+    </tr>
+    <tr>
+      <td>PR Blocking</td>
+      <td>Disabled</td>
+      <td>Whether findings at a given severity fail the check status and prevent merge</td>
+    </tr>
+    <tr>
+      <td>Blocking Threshold</td>
+      <td>High</td>
+      <td>Minimum severity level (Critical, High, Medium, Low) that triggers a failed check</td>
+    </tr>
+    <tr>
+      <td>PR Issue Comments</td>
+      <td>Enabled</td>
+      <td>Whether DryRun Security posts a summary comment and inline findings on the PR</td>
+    </tr>
+    <tr>
+      <td>Notifications</td>
+      <td>Disabled</td>
+      <td>Alerts sent via Slack or webhook when findings are detected</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Configurations follow an inheritance model: the <code>default</code> configuration applies to all repositories, and repository-specific configurations override it. This lets you set organization-wide baselines while customizing behavior for individual repositories or teams.</p>
+
+<p>See <a href="./pr-scanning-configuration">PR Scanning Configuration</a> for a full walkthrough of creating and managing configurations.</p>
+
+<h2 id="pr-scanning-vs-deepscan">How PR Scanning Differs From DeepScan</h2>
+
+<p>DryRun Security offers two scanning modes. PR Scanning analyzes changes as they arrive in pull requests. <a href="./deepscan">DeepScan</a> performs a full-repository analysis to find vulnerabilities in existing code. The two modes are complementary:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>PR Scan</th>
+      <th>DeepScan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Scope</td>
+      <td>Changed files and surrounding context in the PR</td>
+      <td>Entire repository codebase</td>
+    </tr>
+    <tr>
+      <td>Trigger</td>
+      <td>Automatic on PR open or update</td>
+      <td>Manual or scheduled from the dashboard</td>
+    </tr>
+    <tr>
+      <td>Speed</td>
+      <td>Seconds to minutes, depending on diff size</td>
+      <td>Minutes to hours, depending on repo size</td>
+    </tr>
+    <tr>
+      <td>Differential Analysis</td>
+      <td>Yes - only new findings from the PR are reported</td>
+      <td>No - all findings in the codebase are reported</td>
+    </tr>
+    <tr>
+      <td>Results Location</td>
+      <td>PR comments, inline annotations, check statuses, and the DryRun Security dashboard</td>
+      <td>DryRun Security dashboard and Risk Register</td>
+    </tr>
+    <tr>
+      <td>Best For</td>
+      <td>Catching new vulnerabilities before merge</td>
+      <td>Baseline assessment, audits, and legacy code review</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="supported-languages">Supported Languages</h2>
+
+<p>PR scanning supports the same languages and frameworks as DeepScan. For the full list, see <a href="./language-support">Language and Framework Support</a>.</p>
+
+<h2 id="vulnerability-categories">Vulnerability Categories</h2>
+
+<p>PR scanning can detect a broad set of vulnerability categories. For the complete system-wide reference, see the <a href="./vulnerability-coverage-matrix">Vulnerability Coverage Matrix</a>.</p>
+</div>

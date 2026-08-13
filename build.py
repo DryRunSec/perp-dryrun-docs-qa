@@ -11,6 +11,7 @@ import html
 import io
 import json
 import re
+import shutil
 from pathlib import Path
 
 
@@ -124,13 +125,9 @@ def inject_heading_ids(html_content: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-# Static redirects for renamed pages. Each tuple is (old_slug, new_slug).
-# A minimal HTML file is emitted at `{old_slug}.html` that meta-refreshes and
-# JS-redirects visitors to `/{new_slug}`, and sets a canonical link so search
-# engines update their index. In addition, render_redirects() automatically
-# emits `docs/<slug>` redirects for every current page (and every old_slug
-# in this list) to handle the legacy `/docs/<slug>` URLs that Google indexed
-# before the site was flattened to `/<slug>`.
+# Former page slugs retained as (old_slug, new_slug) mappings. The QA build
+# does not publish flat redirect stubs because its GitHub Pages source is docs/
+# and each served HTML file must contain documentation content.
 REDIRECTS = [
     ('coverage-matrix-vulnerability-categories', 'vulnerability-coverage-matrix'),
     ('ai-coding-integration', 'dryrun-skill'),
@@ -4299,61 +4296,13 @@ def _canonical_path_for_slug(slug: str) -> str:
     return f'/{slug}'
 
 
-def render_redirects(output_dir: Path,
-                     base_url: str = 'https://docs.dryrun.security') -> None:
-    """Write static redirect HTML files for legacy URLs.
-
-    Emits two categories of redirects:
-
-    1. Renamed-slug redirects from the REDIRECTS list. These live at the
-       site root (`{old_slug}.html`) and point to `/{new_slug}`. Used for
-       pages whose slug changed, e.g. coverage-matrix-vulnerability-categories
-       -> vulnerability-coverage-matrix.
-
-    2. Legacy `/docs/<slug>` redirects for every current page. The site
-       previously served pages under `/docs/{slug}.html`, and Google indexed
-       those URLs. We emit both `docs/{slug}.html` and `docs/{slug}/index.html`
-       so requests for either `/docs/<slug>.html` or `/docs/<slug>` resolve
-       to a redirect page that points to the current canonical URL
-       (`/` for documentation, `/{slug}` for everything else).
-
-       Renamed slugs from REDIRECTS are also redirected from their old
-       `/docs/<old_slug>` URL straight to the new canonical URL.
-    """
-    # 1. Renamed-slug redirects at the site root.
-    for old_slug, new_slug in REDIRECTS:
-        target_path = _canonical_path_for_slug(new_slug)
-        html_content = render_redirect(target_path, base_url=base_url)
-        out_path = output_dir / f'{old_slug}.html'
-        out_path.write_text(html_content, encoding='utf-8')
-        print(f'  Generated: {old_slug}.html (redirect -> {target_path})')
-
-    # 2. Legacy /docs/<slug> redirects for every current page plus renamed slugs.
-    docs_dir = output_dir / 'docs'
-    docs_dir.mkdir(exist_ok=True)
-
-    legacy_slug_targets = {}
-    for slug in ORDERED_PAGES:
-        legacy_slug_targets[slug] = _canonical_path_for_slug(slug)
-    # Old slugs from renames also get a /docs/<old_slug> -> /<new_slug> redirect.
-    for old_slug, new_slug in REDIRECTS:
-        legacy_slug_targets.setdefault(old_slug, _canonical_path_for_slug(new_slug))
-
-    for legacy_slug, target_path in legacy_slug_targets.items():
-        html_content = render_redirect(target_path, base_url=base_url)
-
-        # docs/<slug>.html covers requests for the legacy /docs/<slug>.html URL.
-        flat_path = docs_dir / f'{legacy_slug}.html'
-        flat_path.write_text(html_content, encoding='utf-8')
-
-        # docs/<slug>/index.html covers requests for /docs/<slug> (no extension)
-        # under GitHub Pages' directory-index behavior.
-        slug_dir = docs_dir / legacy_slug
-        slug_dir.mkdir(exist_ok=True)
-        (slug_dir / 'index.html').write_text(html_content, encoding='utf-8')
-
-        print(f'  Generated: docs/{legacy_slug}.html and docs/{legacy_slug}/index.html '
-              f'(redirect -> {target_path})')
+def copy_static_files(source_dir: Path, output_dir: Path) -> None:
+    """Copy assets required by the GitHub Pages source directory."""
+    for filename in ('style.css', 'app.js'):
+        shutil.copy2(source_dir / filename, output_dir / filename)
+        print(f'  Generated: {filename}')
+    shutil.copytree(source_dir / 'assets', output_dir / 'assets', dirs_exist_ok=True)
+    print('  Generated: assets/')
 
 
 # ---------------------------------------------------------------------------
@@ -4672,15 +4621,21 @@ Images referenced in the content use relative paths. Before importing:
 # ---------------------------------------------------------------------------
 
 def build(output_dir: str = None) -> None:
+    source_dir = Path(__file__).parent
     if output_dir is None:
-        output_dir = Path(__file__).parent
+        output_dir = source_dir / 'docs'
     else:
         output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # GitHub Pages publishes docs/ for this repository, so keep every served
+    # file, including CSS, JavaScript, and images, in that directory.
+    copy_static_files(source_dir, output_dir)
 
     # Pre-generate the search index once for all pages
     search_index = generate_search_index()
 
-    # Generate doc pages at root; documentation slug becomes index.html
+    # Generate doc pages in docs/; documentation slug becomes docs/index.html.
     for slug in ORDERED_PAGES:
         page = PAGES.get(slug)
         if page is None:
@@ -4697,8 +4652,11 @@ def build(output_dir: str = None) -> None:
         out_path.write_text(html_content, encoding='utf-8')
         print(f'  Generated: {out_name}')
 
-    # Static redirects for renamed pages
-    render_redirects(output_dir)
+    # Remove flat redirect stubs so every published docs/*.html page is real
+    # documentation content. Existing directory-index redirects remain intact.
+    (output_dir / 'documentation.html').unlink(missing_ok=True)
+    for old_slug, _ in REDIRECTS:
+        (output_dir / f'{old_slug}.html').unlink(missing_ok=True)
 
     # Sitemap
     (output_dir / 'sitemap.xml').write_text(render_sitemap(), encoding='utf-8')

@@ -13,35 +13,30 @@ build = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(build)
 
 ROOT = Path(__file__).parent.parent
-DOCS_DIR = ROOT
-CSS_PATH = ROOT / "style.css"
-INDEX_PATH = ROOT / "index.html"
+DOCS_DIR = ROOT / "docs"
+CSS_PATH = DOCS_DIR / "style.css"
+INDEX_PATH = DOCS_DIR / "index.html"
 
 
 def _doc_html_files():
-    """All generated doc HTML files at site root (excludes any stray docs/ subdir and redirect stubs)."""
+    """All generated documentation pages in the GitHub Pages source directory."""
     redirect_names = {f"{old}.html" for old, _ in getattr(build, "REDIRECTS", [])}
-    return [p for p in ROOT.glob("*.html") if p.name not in redirect_names]
+    return [p for p in DOCS_DIR.glob("*.html") if p.name not in redirect_names]
 
 
 def _is_redirect_html(path):
-    """Return True if `path` is a generated redirect stub (root-level renamed-slug
-    redirect, or anything under the legacy `docs/` directory)."""
+    """Return True if `path` is a generated renamed-slug or legacy URL stub."""
     redirect_names = {f"{old}.html" for old, _ in getattr(build, "REDIRECTS", [])}
-    if path.name in redirect_names and path.parent == ROOT:
-        return True
-    try:
-        path.relative_to(ROOT / "docs")
-        return True
-    except ValueError:
-        return False
+    return path.parent != DOCS_DIR or (
+        path.name in redirect_names and path.parent == DOCS_DIR
+    )
 
 
 def _page_path(slug):
-    """Path to a generated page. documentation -> index.html; others -> SLUG.html at root."""
+    """Path to a generated page in docs/. documentation -> index.html."""
     if slug == "documentation":
-        return ROOT / "index.html"
-    return ROOT / f"{slug}.html"
+        return DOCS_DIR / "index.html"
+    return DOCS_DIR / f"{slug}.html"
 
 
 class TestDataIntegrity:
@@ -118,7 +113,7 @@ class TestGeneratedFiles:
     """Verify generated HTML files have correct structure."""
 
     def test_index_exists(self):
-        assert (ROOT / "index.html").exists()
+        assert INDEX_PATH.exists()
 
     def test_all_doc_pages_exist(self):
         for slug in build.PAGES:
@@ -126,10 +121,14 @@ class TestGeneratedFiles:
             assert page.exists(), f"Missing doc page: {page}"
 
     def test_sitemap_exists(self):
-        assert (ROOT / "sitemap.xml").exists()
+        assert (DOCS_DIR / "sitemap.xml").exists()
 
     def test_robots_txt_exists(self):
-        assert (ROOT / "robots.txt").exists()
+        assert (DOCS_DIR / "robots.txt").exists()
+
+    def test_nojekyll_is_preserved_and_no_cname_is_created(self):
+        assert (DOCS_DIR / ".nojekyll").exists()
+        assert not (DOCS_DIR / "CNAME").exists()
 
     def test_doc_pages_have_doctype(self):
         for html_file in _doc_html_files():
@@ -170,20 +169,20 @@ class TestGeneratedFiles:
             )
 
     def test_index_has_sidebar_nav(self):
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         assert 'sidebar-nav' in content, "index.html missing sidebar navigation"
 
     def test_index_has_search_input(self):
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         assert 'search' in content.lower(), "index.html missing search"
 
     def test_index_has_search_index(self):
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         assert '__SEARCH_INDEX__' in content, "index.html missing search index"
 
     def test_search_index_contains_all_pages(self):
         import json
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         start = content.index('__SEARCH_INDEX__=') + len('__SEARCH_INDEX__=')
         end = content.index(';</script>', start)
         index = json.loads(content[start:end])
@@ -198,7 +197,7 @@ class TestGeneratedFiles:
 
     def test_search_index_has_section_entries_with_anchors(self):
         import json
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         start = content.index('__SEARCH_INDEX__=') + len('__SEARCH_INDEX__=')
         end = content.index(';</script>', start)
         index = json.loads(content[start:end])
@@ -214,7 +213,7 @@ class TestGeneratedFiles:
 
     def test_search_index_entries_have_body_text(self):
         import json
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         start = content.index('__SEARCH_INDEX__=') + len('__SEARCH_INDEX__=')
         end = content.index(';</script>', start)
         index = json.loads(content[start:end])
@@ -228,7 +227,7 @@ class TestRelativePaths:
     """Verify no hardcoded domains in internal links."""
 
     def test_no_hardcoded_github_pages_url_in_html(self):
-        for html_file in ROOT.glob("**/*.html"):
+        for html_file in DOCS_DIR.glob("**/*.html"):
             content = html_file.read_text()
             assert 'wickett.github.io' not in content, (
                 f"{html_file} contains hardcoded GitHub Pages URL"
@@ -249,11 +248,11 @@ class TestRelativePaths:
             )
 
     def test_root_page_uses_relative_css(self):
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         assert 'style.css' in content, "index.html should reference style.css"
 
     def test_external_links_have_target_blank(self):
-        for html_file in ROOT.glob("**/*.html"):
+        for html_file in DOCS_DIR.glob("**/*.html"):
             if _is_redirect_html(html_file):
                 continue
             content = html_file.read_text()
@@ -270,7 +269,7 @@ class TestAccessibility:
 
     @staticmethod
     def _parse_css():
-        return (ROOT / "style.css").read_text()
+        return CSS_PATH.read_text()
 
     def test_base_font_size_at_least_16px(self):
         css = self._parse_css()
@@ -298,7 +297,7 @@ class TestAccessibility:
         )
 
     def test_all_images_have_alt_text(self):
-        for html_file in ROOT.glob("**/*.html"):
+        for html_file in DOCS_DIR.glob("**/*.html"):
             content = html_file.read_text()
             for match in re.finditer(r'<img\s+([^>]*)>', content):
                 attrs = match.group(1)
@@ -307,7 +306,7 @@ class TestAccessibility:
                 )
 
     def test_html_has_lang_attribute(self):
-        content = (ROOT / "index.html").read_text()
+        content = INDEX_PATH.read_text()
         assert '<html lang=' in content.lower(), (
             "index.html missing lang attribute on <html> element"
         )
@@ -337,7 +336,7 @@ class TestResponsiveCSS:
 
     @staticmethod
     def _parse_css():
-        return (ROOT / "style.css").read_text()
+        return CSS_PATH.read_text()
 
     def test_sidebar_search_styles_exist(self):
         """CSS must define sidebar search styles."""
@@ -664,8 +663,8 @@ class TestSearchIndex:
             )
 
 
-class TestRedirects:
-    """Verify static redirect pages for renamed slugs."""
+class TestRedirectDefinitions:
+    """Verify known renamed slug mappings remain documented in the generator."""
 
     def test_redirects_defined(self):
         assert hasattr(build, "REDIRECTS"), "build.py must expose a REDIRECTS list"
@@ -676,141 +675,21 @@ class TestRedirects:
         assert ("coverage-matrix-vulnerability-categories",
                 "vulnerability-coverage-matrix") in build.REDIRECTS
 
-    def test_redirect_files_exist(self):
-        for old_slug, _ in build.REDIRECTS:
-            path = ROOT / f"{old_slug}.html"
-            assert path.exists(), f"Missing redirect page: {path}"
+class TestGitHubPagesOutput:
+    """Verify docs/ contains the real site served by GitHub Pages."""
 
-    def test_redirect_targets_exist(self):
-        for _, new_slug in build.REDIRECTS:
-            target = ROOT / f"{new_slug}.html"
-            assert target.exists(), f"Redirect target page missing: {target}"
-
-    def test_redirect_page_has_meta_refresh_and_canonical(self):
-        for old_slug, new_slug in build.REDIRECTS:
-            content = (ROOT / f"{old_slug}.html").read_text()
-            target_url = f"https://docs.dryrun.security/{new_slug}"
-            assert f'http-equiv="refresh"' in content, (
-                f"{old_slug}.html missing meta refresh"
-            )
-            assert f'content="0; url={target_url}"' in content, (
-                f"{old_slug}.html meta refresh does not target {target_url}"
-            )
-            assert f'rel="canonical" href="{target_url}"' in content, (
-                f"{old_slug}.html missing canonical link to {target_url}"
-            )
-            assert f"window.location.replace(\"{target_url}\")" in content, (
-                f"{old_slug}.html missing JS fallback redirect"
-            )
-            assert "This page has moved." in content, (
-                f"{old_slug}.html missing human-readable moved message"
-            )
-            assert f'href="{target_url}"' in content, (
-                f"{old_slug}.html missing anchor link to new URL"
-            )
-
-
-class TestLegacyDocsRedirects:
-    """Verify every page has a legacy /docs/<slug> redirect to the canonical URL.
-
-    Google indexed pages under the old `/docs/<slug>` path before the site was
-    flattened. Each current page must have a redirect file at both
-    `docs/<slug>.html` and `docs/<slug>/index.html` that points to the page's
-    current canonical URL (`/` for documentation, `/<slug>` for everything else).
-    Renamed slugs from REDIRECTS also get a /docs/<old_slug> redirect.
-    """
-
-    @staticmethod
-    def _legacy_slugs():
-        slugs = set(build.ORDERED_PAGES)
-        slugs.update(old for old, _ in build.REDIRECTS)
-        return slugs
-
-    @staticmethod
-    def _canonical_url(slug):
-        if slug == "documentation":
-            return "https://docs.dryrun.security/"
-        # Renamed slugs redirect to the new slug; current slugs redirect to themselves.
-        for old, new in build.REDIRECTS:
-            if slug == old:
-                return f"https://docs.dryrun.security/{new}"
-        return f"https://docs.dryrun.security/{slug}"
-
-    def test_legacy_docs_redirect_exists_for_every_page(self):
+    def test_flat_page_files_are_real_documentation(self):
         for slug in build.ORDERED_PAGES:
-            flat = ROOT / "docs" / f"{slug}.html"
-            dir_index = ROOT / "docs" / slug / "index.html"
-            assert flat.exists(), (
-                f"Missing legacy redirect file: docs/{slug}.html"
-            )
-            assert dir_index.exists(), (
-                f"Missing legacy redirect file: docs/{slug}/index.html"
-            )
-
-    def test_legacy_docs_redirect_exists_for_renamed_slugs(self):
-        for old_slug, _ in build.REDIRECTS:
-            flat = ROOT / "docs" / f"{old_slug}.html"
-            dir_index = ROOT / "docs" / old_slug / "index.html"
-            assert flat.exists(), (
-                f"Missing legacy redirect file for renamed slug: docs/{old_slug}.html"
-            )
-            assert dir_index.exists(), (
-                f"Missing legacy redirect file for renamed slug: docs/{old_slug}/index.html"
-            )
-
-    def test_legacy_docs_redirect_targets_canonical_url(self):
-        for slug in self._legacy_slugs():
-            target_url = self._canonical_url(slug)
-            for path in (ROOT / "docs" / f"{slug}.html",
-                         ROOT / "docs" / slug / "index.html"):
-                content = path.read_text()
-                assert f'http-equiv="refresh"' in content, (
-                    f"{path.relative_to(ROOT)} missing meta refresh"
-                )
-                assert f'content="0; url={target_url}"' in content, (
-                    f"{path.relative_to(ROOT)} meta refresh does not target {target_url}"
-                )
-                assert f'rel="canonical" href="{target_url}"' in content, (
-                    f"{path.relative_to(ROOT)} missing canonical link to {target_url}"
-                )
-                assert f'window.location.replace("{target_url}")' in content, (
-                    f"{path.relative_to(ROOT)} missing JS fallback redirect"
-                )
-                assert "This page has moved." in content, (
-                    f"{path.relative_to(ROOT)} missing human-readable moved message"
-                )
-                assert f'href="{target_url}"' in content, (
-                    f"{path.relative_to(ROOT)} missing anchor link to canonical URL"
-                )
-
-    def test_legacy_docs_redirect_marks_noindex(self):
-        for slug in self._legacy_slugs():
-            for path in (ROOT / "docs" / f"{slug}.html",
-                         ROOT / "docs" / slug / "index.html"):
-                content = path.read_text()
-                assert 'name="robots" content="noindex"' in content, (
-                    f"{path.relative_to(ROOT)} should mark itself noindex so search "
-                    f"engines drop the legacy URL"
-                )
-
-    def test_documentation_legacy_redirect_points_to_root(self):
-        for path in (ROOT / "docs" / "documentation.html",
-                     ROOT / "docs" / "documentation" / "index.html"):
+            path = _page_path(slug)
             content = path.read_text()
-            assert 'content="0; url=https://docs.dryrun.security/"' in content, (
-                f"{path.relative_to(ROOT)} should redirect to site root, not /documentation"
+            assert "This page has moved." not in content, (
+                f"{path.relative_to(ROOT)} is a redirect stub instead of documentation"
+            )
+            assert "site-header" in content, (
+                f"{path.relative_to(ROOT)} is missing rendered documentation content"
             )
 
-    def test_no_legacy_redirect_for_unknown_slug(self):
-        """The docs/ directory should only contain redirects for known slugs."""
-        legacy = self._legacy_slugs()
-        for path in (ROOT / "docs").glob("*.html"):
-            slug = path.stem
-            assert slug in legacy, (
-                f"Unexpected redirect file docs/{path.name} for unknown slug {slug!r}"
-            )
-        for path in (ROOT / "docs").iterdir():
-            if path.is_dir():
-                assert path.name in legacy, (
-                    f"Unexpected redirect dir docs/{path.name}/ for unknown slug"
-                )
+    def test_deployment_assets_are_copied(self):
+        assert (DOCS_DIR / "style.css").exists()
+        assert (DOCS_DIR / "app.js").exists()
+        assert (DOCS_DIR / "assets" / "favicon.ico").exists()

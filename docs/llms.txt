@@ -1,0 +1,32 @@
+# DryRun Security Docs
+
+> AI-native application security platform documentation. Covers PR scanning, DeepScan, secrets detection, IaC scanning, SCA, custom code policies, risk register, finding tuning, and integrations.
+
+## Docs
+- [Documentation](https://docs.dryrun.security/): DryRun Security is an AI-native application security platform that reviews every pull request and repository scan for vulnerabilities in real time. It builds an intelligence layer on top of all scan data, surfacing trends, patterns, and risks across your entire codebase and development organization. These docs cover setup, scanning, code security intelligence, platform administration, and integrations.
+- [Quick Start](https://docs.dryrun.security/quick-start): Install DryRun Security on GitHub or GitLab and start scanning pull requests in minutes.
+- [Repository Scanning with DeepScan](https://docs.dryrun.security/deepscan): DeepScan analyzes your entire codebase, not just recent pull requests, to find vulnerabilities that accumulate over time.
+- [PR Scanning](https://docs.dryrun.security/pr-scanning): Understand how DryRun Security automatically analyzes your pull requests for security vulnerabilities.
+- [Secrets Scanning](https://docs.dryrun.security/secrets-scanning): How DryRun Security detects hardcoded credentials, API keys, tokens, and other secrets in your codebase.
+- [IaC Scanning](https://docs.dryrun.security/iac-scanning): DryRun Security scans Terraform configurations for security misconfigurations and insecure defaults in pull requests.
+- [SCA](https://docs.dryrun.security/sca): Dependency scanning and supply chain risk detection - find vulnerable third-party packages before they reach production.
+- [Auto Fix](https://docs.dryrun.security/auto-fix): Automated remediation guidance and fix verification for security findings.
+- [Language and Framework Support](https://docs.dryrun.security/language-support): Languages, frameworks, and package ecosystems supported across all DryRun Security scanning capabilities.
+- [Vulnerability Coverage Matrix](https://docs.dryrun.security/vulnerability-coverage-matrix): All finding types detectable by DryRun Security across PR scanning, DeepScan, and SCA, with CWE mappings.
+- [Code Security Intelligence](https://docs.dryrun.security/code-security-intelligence): DryRun Security builds an intelligence layer on top of vulnerability findings and scan data, enabling actionable security workflows across your codebase and development organization.
+- [PR Scanning Configuration](https://docs.dryrun.security/pr-scanning-configuration): Customize DryRun Security behavior per repository - enable agents, attach policies, configure blocking, and set up notifications.
+- [Custom Code Policies](https://docs.dryrun.security/custom-code-policies): Create custom security rules in plain English using Custom Code Policies.
+- [Repository Context](https://docs.dryrun.security/repository-context): Repository context lets teams share application-specific knowledge with DryRun Security's agents - covering architecture decisions, accepted patterns, and security controls that exist outside the code itself.
+- [Risk Register](https://docs.dryrun.security/risk-register): One view to see, search, and act on all security risk across your organization.
+- [Finding Tuning with Feedback](https://docs.dryrun.security/finding-tuning): Tune security findings and reduce false positives with feedback from developers and AppSec engineers.
+- [PR Blocking](https://docs.dryrun.security/pr-blocking): Configure DryRun Security to block pull requests when critical vulnerabilities are detected.
+- [Compliance & GRC](https://docs.dryrun.security/compliance-grc): Compliance reporting, audit readiness, and SBOM generation.
+- [Permissions](https://docs.dryrun.security/permissions): Understand the two-role permission model in DryRun Security and how SCM platform roles map to Admin and Developer access.
+- [MCP](https://docs.dryrun.security/mcp): Connect AI assistants to DryRun Security insights using the Model Context Protocol for natural language queries about your security data.
+- [DryRun API](https://docs.dryrun.security/dryrun-api): Programmatic access to DryRun Security findings, scans, configurations, and insights via the Simple API.
+- [Dashboard](https://docs.dryrun.security/dashboard): The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.
+- [Slack Integration](https://docs.dryrun.security/slack-integration): Receive DryRun Security alerts and notifications in Slack.
+- [Webhook Integration](https://docs.dryrun.security/webhook-integration): Receive a POST request to any HTTP endpoint when DryRun Security detects a finding on a pull request.
+- [Jira Integration](https://docs.dryrun.security/jira-integration): Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.
+- [API Access Keys](https://docs.dryrun.security/api-access-keys): Create and manage API access keys for programmatic access to DryRun Security.
+- [DryRun Skill](https://docs.dryrun.security/dryrun-skill): The DryRun Security skill gives your AI coding tool the context it needs to author, review, and remediate code securely.

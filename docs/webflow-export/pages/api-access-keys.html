@@ -1,0 +1,39 @@
+<div class="drs-doc-content">
+<h2 id="overview">Overview</h2>
+
+<p>API access keys allow you to authenticate with the <a href="./dryrun-api">DryRun API</a> for programmatic access to DryRun Security. Use API keys to integrate DryRun Security into your CI/CD pipelines, custom tooling, or automation workflows.</p>
+
+<h2 id="creating-keys">Creating an API Key</h2>
+
+<p>Navigate to <strong>Settings &gt; Access Keys</strong> in the sidebar at <a href="https://app.dryrun.security/settings/access-keys" target="_blank" rel="noopener noreferrer">app.dryrun.security</a>. The Access Keys page provides two sections:</p>
+
+<ul>
+  <li><strong>API Keys</strong> - Create and manage API keys for your applications. Click <strong>+ Generate New API Key</strong> to create a new key.</li>
+  <li><strong>Your API Keys</strong> - View and manage your existing API keys. You can revoke any key at any time.</li>
+</ul>
+
+<div class="callout callout-warning">
+  <strong>Keep your API keys secure.</strong> Treat API keys like passwords. Never share them in public repositories, client-side code, or unsecured locations. If a key is compromised, revoke it immediately from the Access Keys page.
+</div>
+
+<p>The API key must be scoped to at least one account. One API key can be used to access more than one account. After creating the key, copy it to a safe place - it will not be shown again.</p>
+
+<h2 id="using-keys">Using API Keys</h2>
+
+<p>Send your API key in the <code>Authorization</code> header using the <code>Bearer</code> scheme:</p>
+
+<pre><code>Authorization: Bearer dryrunsec_**********************</code></pre>
+
+<h2 id="key-management">Key Management</h2>
+
+<ul>
+  <li><strong>Rotate keys regularly</strong> - Generate a new key and revoke the old one periodically.</li>
+  <li><strong>Use descriptive names</strong> - Name keys after their use case for easy identification.</li>
+  <li><strong>Revoke unused keys</strong> - Delete keys that are no longer in use from the API Keys settings page.</li>
+  <li><strong>Never commit keys to source control</strong> - Use environment variables or secret management tools.</li>
+</ul>
+
+<h2 id="rate-limits">Rate Limits</h2>
+
+<p>API keys are subject to rate limits to ensure platform stability. Current limits are displayed in the API Keys settings page. If you need higher limits, contact <a href="https://dryrun.security" target="_blank" rel="noopener noreferrer">DryRun Security support</a>.</p>
+</div>
