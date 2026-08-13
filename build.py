@@ -4497,7 +4497,7 @@ def generate_webflow_csv(output_dir: Path) -> None:
         writer.writerow([title, slug, clean, meta_desc, section])
 
     csv_path.write_text(buf.getvalue(), encoding='utf-8')
-    print(f'  Generated: webflow-export/pages.csv')
+    print('  Generated: webflow-export/pages.csv')
 
 
 def generate_webflow_pages(output_dir: Path) -> None:
@@ -4613,7 +4613,7 @@ Images referenced in the content use relative paths. Before importing:
 '''
 
     (webflow_dir / 'README.md').write_text(readme, encoding='utf-8')
-    print(f'  Generated: webflow-export/README.md')
+    print('  Generated: webflow-export/README.md')
 
 
 # ---------------------------------------------------------------------------
