@@ -1,0 +1,41 @@
+<div class="drs-doc-content">
+<h2 id="overview">Overview</h2>
+
+<p>AI coding tools are fast, but they operate in a silo. Left to their defaults, they may skip pull requests, ignore organizational best practices, and even when a PR is opened, they will not check for security findings unless explicitly told to. The DryRun Security skill closes that gap, giving the AI the context it needs to follow proper PR workflow and treat security findings as a required step in the process.</p>
+
+<p>Works with Claude Code, Codex, Cursor, Windsurf, and VS Code.</p>
+
+<h2 id="what-the-skill-does">What the DryRun Security Skill Does</h2>
+
+<p>The DryRun Security skill equips your AI coding tool with the context it needs to author, review, and remediate code securely. It guides the AI through three steps: opening changes as a pull request so DryRun Security can scan them, waiting for and surfacing any findings, and applying well-informed fixes when vulnerabilities are found.</p>
+
+<blockquote>
+<p><strong>Note:</strong> For most AI coding tools this workflow is packaged as a single skill. For Claude Code, it is split across two skills - one covering Author and Review, one covering Remediate. The workflow and experience are the same either way.</p>
+</blockquote>
+
+<h3 id="author">Author</h3>
+
+<p>The skill instructs the AI coding tool to open a pull request rather than push changes directly to the main branch. This is what makes DryRun Security scanning possible. DryRun Security analyzes pull requests in real time. If code is pushed directly to main, there is no pull request to scan and no opportunity to catch vulnerabilities before they land.</p>
+
+<h3 id="review">Review</h3>
+
+<p>The skill gives the AI coding tool awareness that DryRun Security will scan the open pull request and post findings as a comment in GitHub or GitLab. After the PR is opened, the AI polls for that comment, waits for findings to be posted, and presents each one to the developer. After every commit to the branch, the AI re-polls for new findings and presents them, keeping the developer informed throughout the lifecycle of the PR.</p>
+
+<h3 id="remediate">Remediate</h3>
+
+<p>When the developer wants to fix a finding, the skill gives the AI coding tool additional context to work from: how DryRun Security identified the vulnerability, background on the vulnerability class, OWASP guidance, and relevant framework documentation. This context helps the AI produce a fix that is accurate, minimal, and appropriate for the codebase.</p>
+
+<h2 id="example-prompts">Example Prompts</h2>
+
+<p>To start the Author and Review workflow, describe your change and include a prompt to open a pull request. The skill takes over from there:</p>
+
+<pre><code>[Describe the change you want]. When ready, open a pull request.</code></pre>
+
+<p>To invoke Remediate, paste the DryRun Security finding directly. The skill extracts the vulnerability details and applies a contextual fix:</p>
+
+<pre><code>Fix this DryRun Security finding: [paste the finding comment]</code></pre>
+
+<h2 id="installation">Installation</h2>
+
+<p>Install instructions for each tool are available in the DryRun Security dashboard under <strong>Settings &gt; Integrations</strong>.</p>
+</div>

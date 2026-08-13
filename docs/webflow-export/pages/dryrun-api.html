@@ -1,0 +1,1096 @@
+<div class="drs-doc-content">
+<h2 id="dryrun-simple-api">DryRun Simple API</h2>
+
+<p>The DryRun Simple API provides programmatic access to your organization's security data: findings, scans, deepscans, configurations, repositories, and insights.</p>
+
+<ul>
+  <li><strong>Swagger UI:</strong> <a href="https://simple-api.dryrun.security/api-docs/index.html" target="_blank" rel="noopener noreferrer">https://simple-api.dryrun.security/api-docs/index.html</a></li>
+  <li><strong>OpenAPI (v3.0) spec:</strong> <a href="https://simple-api.dryrun.security/api-docs/v1/swagger.yaml" target="_blank" rel="noopener noreferrer">https://simple-api.dryrun.security/api-docs/v1/swagger.yaml</a></li>
+  <li><strong>Base URL:</strong> <code>https://simple-api.dryrun.security/v1</code></li>
+</ul>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>For information on creating and managing API keys, see the <a href="./api-access-keys">API Access Keys</a> page. All API requests require a valid API key sent in the <code>Authorization</code> header using the <code>Bearer</code> scheme.</p>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<p>Most endpoints are scoped to an account. You will need:</p>
+<ul>
+  <li><code>account_id</code> - provided by the DryRun Security platform (e.g., <code>12345678-1234-1234-1234-1234567890ab</code>)</li>
+  <li><code>repository_id</code> - a UUID for a repository</li>
+</ul>
+
+<p>Typical workflow:</p>
+<ol>
+  <li>List your accessible accounts.</li>
+  <li>Pick an account, then list repositories in that account.</li>
+  <li>Use repository IDs to fetch scans and findings.</li>
+</ol>
+
+<h3 id="step-1-list-accounts">Step 1: List accounts</h3>
+
+<pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts"</code></pre>
+
+<p>Example response:</p>
+
+<pre><code>{
+  "data": [
+    {
+      "account_id": "22222222-2222-2222-2222-222222222222",
+      "org_name": "SampleOrg",
+      ...
+    }
+  ]
+}</code></pre>
+
+<h3 id="step-2-get-repositories">Step 2: Get repositories</h3>
+
+<pre><code>curl -X 'GET' \
+  -H 'Authorization: Bearer $DRYRUN_API_KEY' \
+  'https://simple-api.dryrun.security/v1/accounts/22222222-2222-2222-2222-222222222222/repositories'</code></pre>
+
+<p>Example response:</p>
+
+<pre><code>{
+  "data": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "name": "some-demo-repo-name",
+      ...
+    }
+  ]
+}</code></pre>
+
+<h3 id="step-3-get-findings">Step 3: Get findings for a repository</h3>
+
+<pre><code>curl -X 'GET' \
+  -H 'Authorization: Bearer $DRYRUN_API_KEY' \
+  'https://simple-api.dryrun.security/v1/accounts/22222222-2222-2222-2222-222222222222/repositories/11111111-1111-1111-1111-111111111111/findings'</code></pre>
+
+<p>Example response:</p>
+
+<pre><code>{
+  "data": [
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "dashboard_url": "https://app.dryrun.security/risk-register/44444444-4444-4444-4444-444444444444",
+      "severity": "error",
+      "type": "Missing Authorization and IDOR in User Deletion",
+      "description": "The new DELETE /users/{id} endpoint is registered without any authentication or authorization middleware...",
+      "filename": "backend/main.go",
+      "line_start": 516,
+      "line_end": 553,
+      "created_at": "2026-03-03T00:00:00Z"
+    },
+    ...
+  ]
+}</code></pre>
+
+<h2 id="endpoint-reference">Endpoint Reference</h2>
+
+<!-- Accounts -->
+<h3 id="accounts">Accounts</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts</code>
+    <span class="api-endpoint-desc">List all accounts accessible by the API key.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all accounts that the authenticated API key has access to, including organization information.</p>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - accounts listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts"</code></pre>
+  </div>
+</details>
+
+<!-- Repositories -->
+<h3 id="repositories">Repositories</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories</code>
+    <span class="api-endpoint-desc">List all repositories for an account.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all repositories associated with the specified account.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - repositories listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories"</code></pre>
+  </div>
+</details>
+
+<!-- Scans -->
+<h3 id="scans">Scans</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/scans</code>
+    <span class="api-endpoint-desc">List PR scans for a repository.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>List PR scans for a repository. Supports filtering by PR number, date range, severity, result, and the user who initiated the scan.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+        <tr><td>pr_number</td><td>query</td><td>no</td><td>integer</td><td>Filter by pull request number</td></tr>
+        <tr><td>date_from</td><td>query</td><td>no</td><td>string (ISO 8601)</td><td>Return scans on or after this date</td></tr>
+        <tr><td>date_to</td><td>query</td><td>no</td><td>string (ISO 8601)</td><td>Return scans on or before this date</td></tr>
+        <tr><td>severity</td><td>query</td><td>no</td><td>string</td><td>Filter by highest severity finding: <code>critical</code>, <code>high</code>, <code>medium</code>, <code>low</code>, <code>none</code></td></tr>
+        <tr><td>result</td><td>query</td><td>no</td><td>string</td><td>Filter by scan result: <code>pass</code> or <code>fail</code></td></tr>
+        <tr><td>initiated_by</td><td>query</td><td>no</td><td>string</td><td>Filter by the username or email of the user who triggered the scan</td></tr>
+      </tbody>
+    </table>
+    <h4>Response Fields</h4>
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>scan_id</td><td>string</td><td>Unique identifier for the scan</td></tr>
+        <tr><td>dashboard_url</td><td>string</td><td>Link to the scan results in the DryRun Security dashboard</td></tr>
+        <tr><td>pr_number</td><td>integer</td><td>Pull request number</td></tr>
+        <tr><td>pr_title</td><td>string</td><td>Title of the pull request</td></tr>
+        <tr><td>pr_status</td><td>string</td><td>Current status of the pull request: <code>open</code>, <code>closed</code>, or <code>merged</code></td></tr>
+        <tr><td>scan_date</td><td>string (ISO 8601)</td><td>Date and time the scan was completed</td></tr>
+        <tr><td>initiated_by</td><td>string</td><td>Username or email of the user who triggered the scan</td></tr>
+        <tr><td>status</td><td>string</td><td>Scan status: <code>pass</code> or <code>fail</code></td></tr>
+        <tr><td>summary</td><td>string</td><td>Short plain-text summary of scan results</td></tr>
+        <tr><td>vulnerability_summary</td><td>object</td><td>Counts of findings by severity: <code>critical</code>, <code>high</code>, <code>medium</code>, <code>low</code></td></tr>
+        <tr><td>risk_threshold</td><td>string</td><td>The highest-severity finding that caused the scan to fail, if applicable</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - scans listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/scans?pr_number=42"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/scans/{id}</code>
+    <span class="api-endpoint-desc">Get detailed PR scan results including findings.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Get detailed results for a specific PR scan, including all findings.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+        <tr><td>id</td><td>path</td><td>yes</td><td>string</td><td>Scan ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - scan found</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/scans/{id}"</code></pre>
+  </div>
+</details>
+
+<!-- Findings -->
+<h3 id="findings">Findings</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/findings</code>
+    <span class="api-endpoint-desc">List all PR findings for a repository.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>List all PR findings for a repository. Each finding includes a <code>dashboard_url</code> linking to the finding in the DryRun Security dashboard.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - findings listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/findings"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/all_findings</code>
+    <span class="api-endpoint-desc">List all findings across PR scans, DeepScans, SCA, and code policies for an account.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>List all findings across PR scans, DeepScans, SCA, and code policies for an account. By default, returns only findings from the latest scan. Results are sorted by newest first.</p>
+    <p>Each finding includes a <code>state</code> field indicating its current status: <code>open</code> (present in the latest scan and not triaged), <code>dismissed</code> (triaged with a category such as false positive or accepted risk), or <code>resolved</code> (no longer present in the latest scan). For triaged findings, the response also includes a <code>triage</code> object with the <code>category</code> (<code>false_positive</code>, <code>wont_fix</code>, <code>accepted_risk</code>, <code>in_progress</code>) and <code>category_name</code>.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>days</td><td>query</td><td>yes</td><td>integer</td><td>Filter to findings from the last N days (1-365)</td></tr>
+        <tr><td>finding_type</td><td>query</td><td>no</td><td>string</td><td>Filter by finding type. One of: deepscan, pullrequest, sca, code_policy, all. Defaults to 'all'</td></tr>
+        <tr><td>severity</td><td>query</td><td>no</td><td>string</td><td>Filter by severity (comma-separated: critical, high, medium, low)</td></tr>
+        <tr><td>repository_id</td><td>query</td><td>no</td><td>string</td><td>Filter by repository ID</td></tr>
+        <tr><td>branch</td><td>query</td><td>no</td><td>string</td><td>Filter SCA and DeepScan findings by branch name. When omitted, returns findings from the default branch. Does not affect PR or code policy findings.</td></tr>
+        <tr><td>all_results</td><td>query</td><td>no</td><td>boolean</td><td>When true, returns all findings including historical scans. Defaults to false (latest scan only).</td></tr>
+        <tr><td>page</td><td>query</td><td>no</td><td>integer</td><td>Page number (default: 1)</td></tr>
+        <tr><td>per_page</td><td>query</td><td>no</td><td>integer</td><td>Results per page (default: 50, max: 100)</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - findings listed</li>
+    </ul>
+    <h4>Example response</h4>
+    <pre><code>{
+  "data": [
+    {
+      "id": "00000000-0000-0000-0000-000000000000",
+      "finding_type": "pullrequest",
+      "dashboard_url": "https://app.dryrun.security/risk-register/44444444-4444-4444-4444-444444444444",
+      "severity": "high",
+      "type": "Missing Authorization and IDOR in User Deletion",
+      "description": "The DELETE /users/{id} endpoint is registered without authentication or authorization middleware...",
+      "filename": "backend/main.go",
+      "line_start": 516,
+      "line_end": 553,
+      "repository_name": "some-demo-repo-name",
+      "state": "open",
+      "triage": null,
+      "created_at": "2026-03-03T00:00:00Z"
+    }
+  ]
+}</code></pre>
+    <h4>Response Fields</h4>
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td>id</td><td>string</td><td>Finding ID, used with the triage endpoints</td></tr>
+    <tr><td>finding_type</td><td>string</td><td>Source of the finding: <code>deepscan</code>, <code>pullrequest</code>, <code>sca</code>, <code>code_policy</code></td></tr>
+    <tr><td>dashboard_url</td><td>string</td><td>Link to the finding in the DryRun Security dashboard</td></tr>
+    <tr><td>severity</td><td>string</td><td>Finding severity: <code>critical</code>, <code>high</code>, <code>medium</code>, <code>low</code></td></tr>
+    <tr><td>type</td><td>string</td><td>Finding type or title</td></tr>
+    <tr><td>label</td><td>string</td><td>Classifier label (e.g. <code>auth_bypass</code>, <code>sqli</code>, <code>idor</code>)</td></tr>
+    <tr><td>description</td><td>string</td><td>Finding description</td></tr>
+    <tr><td>filename</td><td>string</td><td>File path where the finding was detected</td></tr>
+    <tr><td>line_start</td><td>integer</td><td>Starting line number</td></tr>
+    <tr><td>line_end</td><td>integer</td><td>Ending line number</td></tr>
+    <tr><td>repository_name</td><td>string</td><td>Repository name</td></tr>
+    <tr><td>pr_number</td><td>integer</td><td>Pull request number (for <code>pullrequest</code> findings only)</td></tr>
+    <tr><td>created_at</td><td>string (ISO 8601)</td><td>When the finding was detected</td></tr>
+    <tr><td>state</td><td>string</td><td>Derived finding state: <code>open</code> (from latest scan, not triaged), <code>dismissed</code> (triaged), <code>resolved</code> (not in latest scan)</td></tr>
+    <tr><td>triage</td><td>object</td><td>Triage details if triaged, otherwise <code>null</code>. Includes <code>category</code> (<code>false_positive</code>, <code>wont_fix</code>, <code>accepted_risk</code>, <code>in_progress</code>) and <code>category_name</code>.</td></tr>
+  </tbody>
+</table>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/all_findings?days=30"</code></pre>
+  </div>
+</details>
+
+<!-- Finding Triage -->
+<h3 id="finding-triage">Finding Triage</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-post">POST</span>
+    <code>/v1/accounts/{account_id}/findings/{finding_id}/triage</code>
+    <span class="api-endpoint-desc">Set a triage category for a finding.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Set a triage category for a finding to track its resolution status.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>finding_id</td><td>path</td><td>yes</td><td>string</td><td>Finding ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request Body</h4>
+    <pre><code>{
+  "triage_category": "false_positive"
+}</code></pre>
+    <p>Valid values for <code>triage_category</code>: <code>false_positive</code>, <code>wont_fix</code>, <code>accepted_risk</code>, <code>in_progress</code>.</p>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - triage category set</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X POST \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"triage_category": "false_positive"}' \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/findings/{finding_id}/triage"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/findings/{finding_id}/triage</code>
+    <span class="api-endpoint-desc">Get the triage status for a finding.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve the current triage status for a specific finding.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>finding_id</td><td>path</td><td>yes</td><td>string</td><td>Finding ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - triage status returned</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/findings/{finding_id}/triage"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-delete">DELETE</span>
+    <code>/v1/accounts/{account_id}/findings/{finding_id}/triage</code>
+    <span class="api-endpoint-desc">Remove the triage category from a finding.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Remove the triage category from a finding, resetting its triage status.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>finding_id</td><td>path</td><td>yes</td><td>string</td><td>Finding ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - triage category removed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X DELETE \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/findings/{finding_id}/triage"</code></pre>
+  </div>
+</details>
+
+<!-- Deepscans -->
+<h3 id="deepscans">Deepscans</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/deepscans</code>
+    <span class="api-endpoint-desc">List all deepscans for an account.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all deepscans associated with the specified account.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - deepscans listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/deepscans"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/deepscans</code>
+    <span class="api-endpoint-desc">List deepscans for a repository.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all deepscans for a specific repository.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - deepscans listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-post">POST</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/deepscans</code>
+    <span class="api-endpoint-desc">Trigger a new DeepScan on a repository.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Trigger a full-repository DeepScan programmatically. Useful for integrating DeepScan into CI/CD pipelines, scheduled automation, or external workflows. All request body fields are optional. Omitting <code>branch</code> and <code>commit_sha</code> scans the repository&rsquo;s default branch at HEAD.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request body</h4>
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>branch</code></td><td>string</td><td>no</td><td>Branch to scan. Defaults to the repository&rsquo;s default branch.</td></tr>
+        <tr><td><code>commit_sha</code></td><td>string</td><td>no</td><td>Specific commit SHA to scan.</td></tr>
+        <tr><td><code>full_scan</code></td><td>boolean</td><td>no</td><td>Whether to run a full scan. Defaults to <code>true</code>.</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>202</code> - scan triggered</li>
+      <li><code>404</code> - repository not found</li>
+      <li><code>422</code> - API key has no associated user</li>
+      <li><code>429</code> - scan quota exceeded</li>
+      <li><code>502</code> - internal invocation error</li>
+    </ul>
+    <p>Teams running DeepScan through automation should handle <code>429</code> quota exceeded errors gracefully, as accounts have a limit on concurrent scans.</p>
+    <h4>Example response</h4>
+    <pre><code>{
+  "data": {
+    "id": "11111111-1111-1111-1111-111111111111",
+    "repository_id": "22222222-2222-2222-2222-222222222222",
+    "status": "queued"
+  }
+}</code></pre>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X POST \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d &apos;{"branch": "main"}&apos; \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/results</code>
+    <span class="api-endpoint-desc">List findings for a specific deepscan.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all findings from a specific deepscan run.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+        <tr><td>deepscan_id</td><td>path</td><td>yes</td><td>string</td><td>DeepScan ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - deepscan results listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/results"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sca_results</code>
+    <span class="api-endpoint-desc">List SCA findings for a specific DeepScan run.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>List SCA findings for a specific DeepScan run.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+        <tr><td>deepscan_id</td><td>path</td><td>yes</td><td>string</td><td>DeepScan ID</td></tr>
+        <tr><td>severity</td><td>query</td><td>no</td><td>string</td><td>Filter by severity (comma-separated). Valid values: critical, high, medium, low</td></tr>
+      </tbody>
+    </table>
+    <h4>Response Fields</h4>
+    <p><code>id</code>, <code>dashboard_url</code>, <code>title</code>, <code>description</code>, <code>severity</code>, <code>package_name</code>, <code>package_version</code>, <code>package_ecosystem</code>, <code>cve_id</code>, <code>cvss_score</code>, <code>fixed_version</code>, <code>remediation</code>, <code>locations</code>, <code>references</code>, <code>created_at</code></p>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - SCA results listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer &lt;your-api-key&gt;" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sca_results"</code></pre>
+  </div>
+</details>
+
+<!-- SBOM -->
+<h3 id="sbom">SBOM</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sbom</code>
+    <span class="api-endpoint-desc">Get the CycloneDX SBOM for a specific DeepScan run.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve SBOM metadata and a time-limited download URL for the CycloneDX SBOM generated during a DeepScan. The <code>download_url</code> is valid until <code>download_url_expires_at</code> and points directly to the SBOM file.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+        <tr><td>deepscan_id</td><td>path</td><td>yes</td><td>string</td><td>DeepScan ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - SBOM metadata and download URL</li>
+      <li><code>404</code> - DeepScan not found</li>
+    </ul>
+    <h4>Response fields</h4>
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><code>deepscan_id</code></td><td>string (uuid)</td><td>ID of the DeepScan that produced this SBOM</td></tr>
+        <tr><td><code>repository_id</code></td><td>string (uuid)</td><td>Repository ID</td></tr>
+        <tr><td><code>branch</code></td><td>string</td><td>Branch scanned (nullable)</td></tr>
+        <tr><td><code>commit_sha</code></td><td>string</td><td>Commit SHA at time of scan (nullable)</td></tr>
+        <tr><td><code>format</code></td><td>string</td><td>SBOM format, e.g. <code>cyclonedx</code></td></tr>
+        <tr><td><code>component_count</code></td><td>integer</td><td>Total number of components in the SBOM</td></tr>
+        <tr><td><code>generated_at</code></td><td>string (date-time)</td><td>When the SBOM was generated (nullable)</td></tr>
+        <tr><td><code>vulnerability_summary</code></td><td>object</td><td>Counts of vulnerable components by severity: <code>critical</code>, <code>high</code>, <code>medium</code>, <code>low</code>, <code>total</code></td></tr>
+        <tr><td><code>download_url</code></td><td>string (uri)</td><td>Time-limited URL to download the SBOM file</td></tr>
+        <tr><td><code>download_url_expires_at</code></td><td>string (date-time)</td><td>Expiry time for the download URL</td></tr>
+      </tbody>
+    </table>
+    <h4>Example response</h4>
+    <pre><code>{
+  "data": {
+    "deepscan_id": "11111111-1111-1111-1111-111111111111",
+    "repository_id": "22222222-2222-2222-2222-222222222222",
+    "branch": "main",
+    "commit_sha": "abc123def456",
+    "format": "cyclonedx",
+    "component_count": 142,
+    "generated_at": "2026-06-01T00:00:00Z",
+    "vulnerability_summary": {
+      "critical": 1,
+      "high": 3,
+      "medium": 7,
+      "low": 4,
+      "total": 15
+    },
+    "download_url": "https://...",
+    "download_url_expires_at": "2026-06-01T01:00:00Z"
+  }
+}</code></pre>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sbom"</code></pre>
+  </div>
+</details>
+
+<!-- Configurations -->
+<h3 id="configurations">Configurations</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/configurations</code>
+    <span class="api-endpoint-desc">List configurations for an account.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all configurations associated with the specified account.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - configurations listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-post">POST</span>
+    <code>/v1/accounts/{account_id}/configurations</code>
+    <span class="api-endpoint-desc">Create a new configuration.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Create a new configuration for the specified account.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request Body</h4>
+    <pre><code>{
+  "configuration": {
+    "name": "string",
+    "configuration": {
+      "comment": "disabled",
+      "show_scan_confirmation": false,
+      "risk_threshold": 0,
+      "analyzers": {},
+      "code_policies": [
+        {
+          "id": null,
+          "enabled": null,
+          "silent": null,
+          "blocking": null
+        }
+      ],
+      "notifications": {
+        "enabled": false,
+        "deduplicate": false,
+        "integrationNames": [null]
+      }
+    }
+  },
+  "repositories": [
+    "00000000-0000-0000-0000-000000000000"
+  ]
+}</code></pre>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>201</code> - configuration created</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X POST \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"configuration": {"name": "My Config", "configuration": {"comment": "disabled", "risk_threshold": 0, "analyzers": {}}}, "repositories": []}' \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-post">POST</span>
+    <code>/v1/accounts/{account_id}/configurations/assign_repositories</code>
+    <span class="api-endpoint-desc">Assign a configuration to multiple repositories.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Assign a configuration to one or more repositories by ID, name, or pattern.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request Body</h4>
+    <pre><code>{
+  "configuration_id": "00000000-0000-0000-0000-000000000000",
+  "repository_ids": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "repository_names": [
+    "string"
+  ],
+  "repository_pattern": "string"
+}</code></pre>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - repositories assigned</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X POST \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"configuration_id": "CONFIG_ID", "repository_ids": ["REPO_ID"]}' \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations/assign_repositories"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-post">POST</span>
+    <code>/v1/accounts/{account_id}/configurations/bulk_update</code>
+    <span class="api-endpoint-desc">Bulk update multiple configurations.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Apply the same updates to multiple configurations at once.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request Body</h4>
+    <pre><code>{
+  "configuration_ids": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "updates": {
+    "comment": "disabled",
+    "show_scan_confirmation": false,
+    "risk_threshold": 0,
+    "analyzers": {},
+    "code_policies": [
+      {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "enabled": false,
+        "silent": false,
+        "blocking": false
+      }
+    ],
+    "notifications": {
+      "enabled": false,
+      "deduplicate": false,
+      "integrationNames": ["string"]
+    }
+  }
+}</code></pre>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - configurations updated</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X POST \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"configuration_ids": ["CONFIG_ID_1", "CONFIG_ID_2"], "updates": {"risk_threshold": 5}}' \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations/bulk_update"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/configurations/{id}</code>
+    <span class="api-endpoint-desc">Get a single configuration.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve details for a specific configuration.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>id</td><td>path</td><td>yes</td><td>string</td><td>Configuration ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - configuration found</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations/{id}"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-put">PUT</span>
+    <code>/v1/accounts/{account_id}/configurations/{id}</code>
+    <span class="api-endpoint-desc">Update a configuration.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Update an existing configuration.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>id</td><td>path</td><td>yes</td><td>string</td><td>Configuration ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request Body</h4>
+    <pre><code>{
+  "configuration": {
+    "name": "string",
+    "configuration": {
+      "comment": "disabled",
+      "show_scan_confirmation": false,
+      "risk_threshold": 0,
+      "analyzers": {},
+      "code_policies": [
+        {
+          "id": null,
+          "enabled": null,
+          "silent": null,
+          "blocking": null
+        }
+      ],
+      "notifications": {
+        "enabled": false,
+        "deduplicate": false,
+        "integrationNames": [null]
+      }
+    }
+  }
+}</code></pre>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - configuration updated</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X PUT \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"configuration": {"name": "Updated Config", "configuration": {"risk_threshold": 5}}}' \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations/{id}"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-patch">PATCH</span>
+    <code>/v1/accounts/{account_id}/configurations/{id}</code>
+    <span class="api-endpoint-desc">Partially update a configuration.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Apply a partial update to an existing configuration. Only the fields provided in the request body are updated.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>id</td><td>path</td><td>yes</td><td>string</td><td>Configuration ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Request Body</h4>
+    <pre><code>{
+  "configuration": {
+    "name": "string",
+    "configuration": {
+      "comment": "disabled",
+      "show_scan_confirmation": false,
+      "risk_threshold": 0,
+      "analyzers": {},
+      "code_policies": [
+        {
+          "id": null,
+          "enabled": null,
+          "silent": null,
+          "blocking": null
+        }
+      ],
+      "notifications": {
+        "enabled": false,
+        "deduplicate": false,
+        "integrationNames": [null]
+      }
+    }
+  }
+}</code></pre>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - configuration updated</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X PATCH \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"configuration": {"configuration": {"risk_threshold": 5}}}' \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations/{id}"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-delete">DELETE</span>
+    <code>/v1/accounts/{account_id}/configurations/{id}</code>
+    <span class="api-endpoint-desc">Delete a configuration.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Permanently delete a configuration. This action cannot be undone.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>id</td><td>path</td><td>yes</td><td>string</td><td>Configuration ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - configuration deleted</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl -X DELETE \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/configurations/{id}"</code></pre>
+  </div>
+</details>
+
+<!-- Analyzers -->
+<h3 id="analyzers">Analyzers</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/analyzers</code>
+    <span class="api-endpoint-desc">List available analyzers.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all enabled and visible analyzers. Use the <code>slug</code> field as the key in configuration analyzer settings.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - analyzers listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/analyzers"</code></pre>
+  </div>
+</details>
+
+<!-- Custom Policies -->
+<h3 id="custom-policies">Custom Policies</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/custom_policies</code>
+    <span class="api-endpoint-desc">List all Custom Code Policies for an account.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve all Custom Code Policies associated with the specified account.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - custom policies listed</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/custom_policies"</code></pre>
+  </div>
+</details>
+
+<!-- Insights -->
+<h3 id="insights">Insights</h3>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/insights</code>
+    <span class="api-endpoint-desc">Retrieve the daily insights digest.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve the daily insights digest for an account. Supports an optional <code>date</code> query parameter in <code>YYYY-MM-DD</code> format.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>date</td><td>query</td><td>no</td><td>string</td><td>Date in YYYY-MM-DD format</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - insights returned</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/insights?date=2026-01-15"</code></pre>
+  </div>
+</details>
+
+<h2 id="conventions">Conventions</h2>
+
+<ul>
+  <li><strong>IDs and scoping:</strong> <code>account_id</code> is required for most endpoints. <code>repository_id</code> is required for repository-scoped endpoints.</li>
+  <li><strong>Response shape:</strong> Most list endpoints return a top-level <code>data</code> array.</li>
+  <li><strong>Errors:</strong> If an item is not found, endpoints return <code>404</code> with <code>{"error": "not found"}</code>.</li>
+</ul>
+
+<h2 id="support">Support</h2>
+
+<p>If you have questions about authentication, account access, or expected responses, contact DryRun Security support and include the endpoint URL you called, the HTTP status code, and the <code>request_id</code> header (if present).</p>
+</div>

@@ -1,0 +1,97 @@
+<div class="drs-doc-content">
+<p>Configurations let you customize how DryRun Security behaves for each repository or group of repositories. You can control which agents run, which policies are enforced, whether findings block PRs, and how notifications are delivered.</p>
+
+<h2 id="creating-a-configuration">Creating a Configuration</h2>
+
+<ol>
+  <li>Log in to the DryRun Security portal at <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a>.</li>
+  <li>Navigate to <strong>Settings &gt; Configurations</strong> in the sidebar.
+    <br><strong>Note:</strong> The <code>default</code> configuration is editable and applies to all repositories not included in another configuration.</li>
+  <li>Click <strong>Add new Configuration +</strong>.</li>
+  <li>Enter a <strong>Configuration Name</strong> at the top of the page.</li>
+</ol>
+
+<h2 id="configuration-walkthrough">Configuration Walkthrough</h2>
+
+<p>The Configurations page shows all your existing repository configurations.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/01-configurations.png" alt="Repository configurations list in DryRun Security dashboard" loading="lazy"></figure>
+
+<p>Click <strong>Add New Configuration</strong> to create a configuration for your repositories.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/02-add-new-config.png" alt="Add New Configuration dialog" loading="lazy"></figure>
+
+<h3 id="select-repositories">Select Repositories</h3>
+<p>Choose which repositories this configuration applies to.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/03-select-repos.png" alt="Selecting repositories for a configuration" loading="lazy"></figure>
+
+<h3 id="pr-comments-and-notifications">PR Comments and Notifications</h3>
+<p>Enable or disable PR issue comments for this configuration.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/04-issue-comment.png" alt="Issue comment toggle" loading="lazy"></figure>
+
+<p>Enable notifications to get alerts when security findings are detected.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/05-notifications.png" alt="Notifications toggle" loading="lazy"></figure>
+<p><strong>Draft PRs:</strong> Comments are not sent to draft PRs. Findings from draft PR scans still appear in the Risk Register dashboard, but no comment is posted to the SCM until the PR is marked ready for review.</p>
+
+<h3 id="attach-policies">Attach Code Policies</h3>
+<p>Add up to 7 Custom Code Policies to a configuration.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/06-add-policies.png" alt="Adding code policies to a configuration" loading="lazy"></figure>
+<figure class="docs-screenshot"><img src="assets/images/configurations/07-configure-policies.png" alt="Configuring attached policies" loading="lazy"></figure>
+
+<h3 id="configure-security-agents">Code Security Agents</h3>
+<p>Configure which security agents are enabled and whether they block or run silently.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/08-configure-agents.png" alt="Configuring code security agents" loading="lazy"></figure>
+
+<p>Save the configuration when complete.</p>
+<figure class="docs-screenshot"><img src="assets/images/configurations/09-config-save.png" alt="Saving a repository configuration" loading="lazy"></figure>
+
+<h2 id="code-security-agents">Code Security Agents</h2>
+
+<p>The bottom section of the configuration page lists all available Security Analyzers. Each analyzer has its own row with three controls:</p>
+
+<table>
+  <thead>
+    <tr><th>Analyzer</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Cross-Site Scripting Analyzer</strong></td><td>Detects XSS vulnerabilities across rendering contexts</td></tr>
+    <tr><td><strong>General Security Analyzer</strong></td><td>Broad-spectrum analyzer covering auth gaps, crypto, debug artifacts, and more</td></tr>
+    <tr><td><strong>IDOR Analyzer</strong></td><td>Surfaces broken object-level authorization</td></tr>
+    <tr><td><strong>Mass Assignment</strong></td><td>Detects unsafe model binding patterns</td></tr>
+    <tr><td><strong>Secrets Analyzer</strong></td><td>Catches committed credentials, API keys, and tokens</td></tr>
+    <tr><td><strong>Server-Side Request Forgery Analyzer</strong></td><td>Identifies SSRF via user-controlled outbound requests</td></tr>
+    <tr><td><strong>SQL Injection Analyzer</strong></td><td>Traces data flow to detect unsafe query composition</td></tr>
+  </tbody>
+</table>
+
+<h2 id="setting-descriptions">Setting Descriptions</h2>
+
+<p>The top section of a configuration provides these controls:</p>
+
+<ul>
+  <li><strong>Select Repositories</strong> - A dropdown selector to choose which repositories use this configuration. Repositories can only belong to one configuration at a time; repositories already assigned to another configuration will be greyed out.</li>
+  <li><strong>Issue Comment Enabled</strong> - Toggle to enable or disable DryRun Security's PR/MR comment. When enabled, DryRun posts a summary comment on each pull request with findings. Comments are not sent to draft PRs; findings from draft PR scans are still visible in the Risk Register.</li>
+  <li><strong>PR Blocking Enabled</strong> - Toggle to enable PR blocking globally for this configuration. When enabled, findings from configured agents and policies will create status checks on GitHub Cloud and GitHub Enterprise Server (GHES) that must pass before merging.</li>
+  <li><strong>Notifications Enabled</strong> - Toggle to enable notification delivery. When enabled, choose which integrations receive alerts (see <a href="./slack-integration">Notifications</a> for setup details).</li>
+  <li><strong>Severity-Based PR Blocking</strong> - Toggle to block PRs based on severity. When enabled, set a minimum severity threshold; any finding at or above that level will block the PR from being merged. See <a href="./pr-blocking">PR Blocking</a> for threshold options.</li>
+  <li><strong>Show Comment for No Findings</strong> - Toggle to control whether DryRun posts a comment even when no security findings are detected. Toggle off for the familiar behavior where DryRun posts a comment only when scans produce findings. Toggle on to have DryRun post a comment on every PR scanned, useful for visibility and audit trails.</li>
+  <li><strong>Deduplicate Notifications</strong> - Toggle to reduce duplicate notifications on PRs where the severity has not changed. When enabled, repeated notifications for the same severity are suppressed, reducing noise.</li>
+</ul>
+
+<h3 id="policy-enforcement">Policy Enforcement Agent</h3>
+
+<p>Below the general settings, the <strong>Policy Enforcement Agent</strong> section lets you attach Custom Code Policies to this configuration:</p>
+
+<ul>
+  <li><strong>Add Policy</strong> - Attach an existing policy from your organization's <a href="./custom-code-policies">Policy Library</a></li>
+  <li><strong>Create Policy</strong> - Write a new Custom Code Policy directly from this screen</li>
+</ul>
+
+<p>Each attached policy is shown as a row with its own controls:</p>
+
+<ul>
+  <li><strong>Blocking</strong> - Toggle to make this policy a required status check. When enabled, a policy violation prevents the PR from being merged.</li>
+  <li><strong>Silent Mode</strong> - Toggle to run the policy without posting findings in the PR comment. Useful for testing new policies before enforcing them.</li>
+  <li><strong>Risk Level</strong> - Dropdown to set the severity label returned when the policy has findings. Options are <strong>Critical</strong>, <strong>High</strong>, <strong>Medium</strong>, or <strong>Low</strong>.</li>
+</ul>
+
+<p>The Policy Enforcement Agent can run up to 7 code policies per repository.</p>
+</div>

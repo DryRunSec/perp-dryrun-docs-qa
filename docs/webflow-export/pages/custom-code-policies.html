@@ -1,0 +1,71 @@
+<div class="drs-doc-content">
+<h2 id="custom-code-policies">Custom Code Policies</h2>
+
+<p>DryRun Security's Custom Code Policies let you define and enforce security policies in your codebase using natural language instead of complex scripting or specialized rule languages. Rather than writing regex patterns or static analysis rules, you describe what you care about in plain English and the LLM reasons through the code to evaluate it.</p>
+
+<p>The key advantage of Custom Code Policies is that they are <strong>agentic</strong>. The LLM does not simply pattern-match against your code. Instead, it reasons about the code in context. It can follow function calls, trace data flow, understand business logic, and make judgments that traditional static analysis tools cannot. This means your policies can go far beyond what is possible with grep-style rules or AST matchers.</p>
+
+<p>Custom Code Policies can be laser-focused on a unique function or structure specific to your application. Because you control the context (through the Question, Background, and Guidance fields), you can guide the analysis to look exactly where it matters and reason about the patterns that are unique to your codebase.</p>
+
+<p>When a pull request is opened, DryRun Security's Policy Enforcement Agent runs all configured Custom Code Policies for the repository. The Policy Enforcement Agent can run up to 7 code policies per repository. Results appear in the PR comment and in the GitHub Checks area, with the option to block merges when a policy has findings.</p>
+
+
+<h2 id="use-cases">Use Cases</h2>
+
+<h3 id="identifying-vulnerabilities">1. Identifying specific vulnerabilities unique to your codebase</h3>
+
+<p>Custom Code Policies can find security issues that generic scanners miss, including vulnerabilities tied to your application's specific architecture, patterns, or business logic. Because the LLM reasons through your code agenetically, it can identify risks that only make sense in the context of how your application actually works.</p>
+
+<p>For example, a Custom Code Policy could detect an authentication bypass that only exists because of how your specific auth model chains middleware, or flag an injection risk in a custom query builder that is unique to your application. These are the kinds of vulnerabilities that generic scanners overlook because they lack the context of your particular codebase.</p>
+
+<h3 id="monitoring-non-vulnerability-changes">2. Monitoring for non-vulnerability changes</h3>
+
+<p>Custom Code Policies are not limited to security vulnerabilities. They can detect any type of change you want to monitor, including compliance checks, procedural guardrails, and architectural standards.</p>
+
+<p>For example, you can create policies that detect when a regulated data model is modified, flag the use of deprecated internal APIs, or monitor for changes to configuration files that require a review process. This makes Custom Code Policies a flexible tool for enforcing organizational standards beyond traditional security scanning.</p>
+
+
+<h2 id="creating-a-policy">Creating a Policy</h2>
+
+<h3 id="using-the-ai-assistant">Using the AI Assistant</h3>
+
+<p>The AI assistant provides a chat interface where you simply explain the type of vulnerability or change you want to monitor for. The assistant will ask you clarifying questions to understand your intent and gather the context needed. When you're ready, tell it to create the policy and it will automatically fill out all the related fields for you. This is the recommended approach for most users.</p>
+
+<h3 id="manual-creation">Manual Creation</h3>
+
+<p>For users who prefer direct control over every field, policies can be created manually:</p>
+
+<ol>
+  <li>Log in to the DryRun Security portal at <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a>.</li>
+  <li>Navigate to the <strong>Code Policies</strong> section. You'll see a list of previously saved Code Policies.</li>
+  <li>Click <strong>Add New Code Policy</strong>. You'll see the Code Policy Builder, which can be used to evaluate and save a Custom Code Policy.</li>
+  <li>Enter a <strong>Name</strong> for the policy.</li>
+  <li>Choose a <strong>Repository</strong> and <strong>Pull Request</strong> to evaluate.</li>
+  <li>Enter the Custom Code Policy details:
+    <ul>
+      <li><strong>Question</strong> (required): A natural language question that identifies whether a specific change relates to the policy. For example, "Does this change expose any sensitive data?"</li>
+      <li><strong>Background</strong> (optional): Background information or examples that may be used to refine the evaluation. For example, "We are concerned about..."</li>
+      <li><strong>Guidance</strong> (optional): Additional information on actions to take when the policy condition is met.</li>
+    </ul>
+  </li>
+  <li>Click <strong>Run</strong> to see the results of the Code Policy evaluation.</li>
+  <li>Once the policy is returning expected results, click <strong>Save</strong> to save it for use in a Repository configuration.</li>
+</ol>
+
+<p>To apply the Code Policy to one or more repositories, click <strong>Configure</strong> and follow the steps in <a href="./pr-scanning-configuration">Configure Repositories</a>.</p>
+
+
+<h2 id="field-usage">Field Usage</h2>
+
+<h3 id="question">Question</h3>
+
+<p>The question field is the prompt given to the LLM that triggers it to begin investigating for the vulnerability. This field should contain a series of things you want the model to check for or validate against. Think of it as the investigation directive: it should be specific enough to focus the analysis but broad enough to cover the relevant variations of the issue you want to catch.</p>
+
+<h3 id="background">Background</h3>
+
+<p>The background field provides context that loads alongside the question, giving the LLM the background information it needs to properly assess the code it is reviewing for this vulnerability type. Use this field to provide factual details about your app&rsquo;s function, architecture, authentication handling, data flow, or other dynamics. Do not tell the LLM what you want it to do here. Just provide factual details about your application so the model has the context it needs to make accurate assessments.</p>
+
+<h3 id="guidance">Guidance</h3>
+
+<p>The guidance field contains the instructions that the LLM will deliver to your development team when a vulnerability is identified by the code policy. This text appears as a comment in your SCM (GitHub, GitLab, etc.) on the relevant PR, so it should be written as actionable remediation instructions, telling developers exactly what to fix and how.</p>
+</div>

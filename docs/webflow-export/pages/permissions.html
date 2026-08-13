@@ -1,0 +1,59 @@
+<div class="drs-doc-content">
+<h2 id="overview">Overview</h2>
+
+<p>DryRun Security uses your SCM platform (GitHub or GitLab) for authentication. Because DryRun already knows your SCM role at login, it maps that role directly to a DryRun permission level with no additional setup required.</p>
+
+<p>GitHub Enterprise Server (GHES) follows the same permission model as GitHub Cloud. Anywhere this page refers to GitHub, it applies equally to GHES.</p>
+
+<p>DryRun uses a two-role model: <strong>Admin</strong> and <strong>Developer</strong>. To give a user more access, you can either elevate their permissions in the SCM, or request an <a href="#admin-override">Admin Override</a> (see the Admin Override section below).</p>
+
+<h2 id="permissions-matrix">Permissions Matrix</h2>
+
+<p><em>Note: Developers can only view findings, repositories, and pull requests for repositories they have membership access to in GitHub or GitLab. All other access listed below applies to the full platform.</em></p>
+
+<table>
+  <thead>
+    <tr><th>Feature</th><th>Admin</th><th>Developer</th><th>Details</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Install</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Install DryRun Security on GitHub or GitLab organizations and repositories.</td></tr>
+    <tr><td>Risk Register</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>Central view of security findings across repositories, organized by severity and status. Developers see findings only for repos they have membership access to.</td></tr>
+    <tr><td>Repositories</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>View repositories connected to DryRun Security and their scan status. Developers see only repos they have membership access to.</td></tr>
+    <tr><td>Pull Requests</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>View pull requests and their associated security findings. Developers see only PRs for repos they have membership access to.</td></tr>
+    <tr><td>Dismiss Findings</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>Dismiss a finding from the DryRun dashboard or directly from the SCM PR comment.</td></tr>
+    <tr><td>DeepScan: View</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>View DeepScan runs, reports, and findings for repositories.</td></tr>
+    <tr><td>DeepScan: Trigger</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Initiate a new DeepScan run on a repository on demand.</td></tr>
+    <tr><td>Code Policies: View</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>View existing custom code policies configured for the account.</td></tr>
+    <tr><td>Code Policies: Configure</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Create, edit, and manage custom code policies used during scanning.</td></tr>
+    <tr><td>Insights & AI Assistant</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>AI-powered security insights and a chat assistant for querying findings and trends.</td></tr>
+    <tr><td>Daily Digest</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Automated daily summary of new findings, trends, and security posture changes.</td></tr>
+    <tr><td>Configurations: View</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>View PR scanner behavior, blocking rules, and policy enforcement settings.</td></tr>
+    <tr><td>Configurations: Edit</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Edit PR scanner behavior, blocking rules, and policy enforcement settings.</td></tr>
+    <tr><td>Integrations: View</td><td><span class="check">&#x2713;</span></td><td><span class="check">&#x2713;</span></td><td>View connected integrations including Slack, webhooks, and AI coding integrations (MCP/IDE).</td></tr>
+    <tr><td>Integrations: Configure</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Set up and manage Slack, webhook, and AI coding integrations (MCP/IDE).</td></tr>
+    <tr><td>Access Keys</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Generate and manage API access keys for programmatic access to DryRun Security.</td></tr>
+    <tr><td>Install / Uninstall Repos</td><td><span class="check">&#x2713;</span></td><td class="no-access"><span class="cross">&#x2717;</span></td><td>Add or remove repositories from DryRun Security scanning.</td></tr>
+  </tbody>
+</table>
+
+<h2 id="scm-role-mapping">SCM Role Mapping</h2>
+
+<p>DryRun Security automatically maps SCM roles to DryRun roles at login. No manual configuration is required.</p>
+
+<table>
+  <thead>
+    <tr><th>SCM Platform</th><th>SCM Role</th><th>DryRun Role</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>GitHub</td><td>Admin</td><td>Admin</td></tr>
+    <tr><td>GitHub</td><td>Member</td><td>Developer</td></tr>
+    <tr><td>GitLab</td><td>Owner</td><td>Admin</td></tr>
+    <tr><td>GitLab</td><td>Maintainer</td><td>Admin</td></tr>
+    <tr><td>GitLab</td><td>Developer</td><td>Developer</td></tr>
+  </tbody>
+</table>
+
+<h2 id="admin-override">Admin Override</h2>
+
+<p>An account administrator can request that a developer be promoted to Admin within the platform. This setting is not self-serve and is managed by our team. The override applies only within DryRun Security and does not change the user's role in GitHub or GitLab. To request an override, contact us at <a href="mailto:hi@dryrun.security">hi@dryrun.security</a>.</p>
+</div>

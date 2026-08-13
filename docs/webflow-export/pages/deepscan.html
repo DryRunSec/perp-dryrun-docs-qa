@@ -1,0 +1,83 @@
+<div class="drs-doc-content">
+<h2 id="what-is-deepscan">What Is DeepScan?</h2>
+
+<p>DryRun Security's standard PR Code Review analyzes changes as they arrive in each pull request. This is highly effective for catching new vulnerabilities before they merge, but it doesn't address risk that was already present in the codebase before DryRun Security was installed - or vulnerabilities that were introduced gradually across many small commits.</p>
+
+<p><strong>DeepScan</strong> solves this by triggering a full-repository analysis. Rather than examining a diff, DeepScan ingests and analyzes the complete codebase, tracing data flows across files, identifying vulnerable patterns in legacy code, and surfacing risks that would never appear in a PR-only workflow.</p>
+
+<h2 id="when-to-use-deepscan">When to Use DeepScan</h2>
+
+<p>DeepScan is most valuable in several scenarios:</p>
+
+<ul>
+  <li><strong>Initial onboarding</strong> - Run a DeepScan when first connecting a repository to DryRun Security to establish your baseline security posture.</li>
+  <li><strong>After a security incident</strong> - Use DeepScan to sweep a repository for related vulnerabilities after a finding is reported.</li>
+  <li><strong>Compliance and audit preparation</strong> - Generate a comprehensive findings report for auditors or regulators who need evidence of security review.</li>
+  <li><strong>Periodic security reviews</strong> - Schedule DeepScans on a regular cadence to catch drift and regression that PR-level analysis might miss across long periods.</li>
+  <li><strong>Major refactors or dependency upgrades</strong> - When significant portions of the codebase change outside of a single PR, DeepScan ensures the full scope of changes is reviewed.</li>
+</ul>
+
+<h2 id="triggering-a-deepscan">Triggering a DeepScan</h2>
+
+<ol>
+  <li>Log in to the <strong>DryRun Security Dashboard</strong>.</li>
+  <li>Navigate to the <strong>DeepScan</strong> page.</li>
+  <li>Click <strong>&ldquo;New Scan&rdquo;</strong>.</li>
+  <li>Select the repository and branch if desired.</li>
+  <li>Monitor scan progress on the <strong>DeepScan</strong> page.</li>
+</ol>
+
+<h2 id="deepscan-workflow">DeepScan Workflow</h2>
+
+<ol>
+  <li><strong>Understand the codebase</strong> - Profile the app&rsquo;s language, frameworks, components, and data stores.</li>
+  <li><strong>Gather security-relevant info</strong> - Map routes, auth files, configs, and authorization patterns.</li>
+  <li><strong>Plan the review</strong> - Generate a targeted attack plan for each security domain.</li>
+  <li><strong>Run the reviews</strong> - Analyze each domain (auth, injection, crypto, config, SCA, etc.) and log findings.</li>
+  <li><strong>Clean up the report</strong> - Calibrate severities, remove hallucinations, deduplicate, and add exec summary and recommendations.</li>
+  <li><strong>Publish and triage</strong> - Findings land in the dashboard where users can categorize and annotate each one.</li>
+</ol>
+
+<h2 id="deepscan-findings">DeepScan Findings</h2>
+
+<p>There are two ways to review findings from a completed DeepScan:</p>
+
+<h3 id="option-1-risk-register">Option 1 - Risk Register</h3>
+
+<p>Filter the <a href="./risk-register">Risk Register</a> by DeepScan to see all findings surfaced by DeepScan across repositories. This gives a unified view alongside PR scan findings for triage and prioritization.</p>
+
+<h3 id="option-2-deepscan-page">Option 2 - DeepScan Page</h3>
+
+<p>From the DeepScan page, click on a previously scanned repository to see findings from the latest scan. A severity summary at the top shows counts across Critical, High, Medium, and Low. Previous scans can be reviewed by date, and findings can be filtered by risk level, SCA, or dismissed status.</p>
+<p>Clicking on an individual finding opens a pop-out module with the finding detail, the DeepScan summary, and any artifact files. The Scan Details view provides the full scan report and includes a report download option.</p>
+
+<h2 id="vulnerability-categories">Vulnerability Categories</h2>
+
+<p>DeepScan detects a broad set of vulnerability categories across your codebase. For the complete list of all finding types surfaced by DeepScan, PR scanning, and SCA, see the <a href="./vulnerability-coverage-matrix">Vulnerability Coverage Matrix</a>.</p>
+
+<h2 id="supported-languages">Supported Languages</h2>
+
+<p>DeepScan supports a wide range of languages and frameworks. For the full list including PR scanning and SCA ecosystem coverage, see <a href="./language-support">Language and Framework Support</a>.</p>
+
+<h2 id="behavioral-analysis">Git Behavioral Analysis</h2>
+
+<p class="lead">DryRun Security constructs a <strong>Git Behavioral Graph</strong> before its AI agent reads a single line of code - analyzing commit history across five behavioral axes to steer the scanner toward the code that matters most.</p>
+
+<div class="callout callout-info">
+<p>The techniques described here are grounded in Adam Tornhill's <em>Your Code as a Crime Scene</em> (2nd ed., Pragmatic Programmers, 2024). DryRun Security engineered these forensic principles into a pipeline that steers an AI agent with deterministic precision. <a href="https://www.dryrun.security/blog/steering-agentic-security-scanners-with-git-behavioral-graphs" target="_blank" rel="noopener noreferrer">Read the full blog post</a> for additional context.</p>
+</div>
+
+<h3 id="why-git-history-matters">Why Git History Matters for Security</h3>
+
+<p>Traditional static analysis lacks a fundamental dimension of context: the human element. Vulnerabilities are rarely just syntactical errors - they are the byproduct of diffuse ownership, shifting requirements, and knowledge decay. The Git Behavioral Graph provides a deterministic, high-signal heuristic to prioritize the agent's attention before it reads any code.</p>
+
+<h3 id="five-behavioral-axes">The Five Behavioral Axes</h3>
+
+<ul>
+  <li><strong>Code churn</strong> - Files with high revision counts and many distinct contributors historically correlate with vulnerability density. The pipeline quantifies this as a normalized churn score.</li>
+  <li><strong>Contributor coupling</strong> - When many authors touch the same file, implicit knowledge can be lost. The ratio of unique contributors to total revisions produces a diffuse-ownership signal.</li>
+  <li><strong>Temporal coupling</strong> - Files that change together frequently suggest hidden dependencies. If a change to <code>auth_middleware.py</code> always accompanies changes to <code>session_handler.py</code>, a change to one without the other is suspicious.</li>
+  <li><strong>Recency weighting</strong> - Recent changes carry more risk than ancient stable code. The pipeline applies exponential decay weighting so churn from last week outweighs churn from last year.</li>
+  <li><strong>Complexity hotspot scoring</strong> - Combining churn and contributor metrics with code complexity produces composite hotspot scores that identify the files most likely to harbor latent vulnerabilities.</li>
+</ul>
+</div>

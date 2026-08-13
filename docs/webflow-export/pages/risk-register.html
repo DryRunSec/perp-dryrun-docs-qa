@@ -1,0 +1,52 @@
+<div class="drs-doc-content">
+<p>The Risk Register is the working space for AppSec engineers, designed to surface findings that need action taken. It aggregates findings from two sources: the <a href="./pr-scanning">PR Scanner</a>, which reviews every pull request for vulnerabilities in real time, and <a href="./deepscan">DeepScan</a>, which performs full-repository security analysis on demand. Findings range from critical vulnerabilities and secrets exposures to policy violations and dependency risks. Because these findings represent real or potential security issues in your codebase, the Risk Register provides a single place to review, triage, and act on them before they become incidents.</p>
+
+<figure class="docs-screenshot"><img src="assets/images/risk-register/01-risk-register.png" alt="DryRun Security Risk Register dashboard" loading="lazy"></figure>
+
+<h2 id="common-workflows">Common Workflows</h2>
+
+<h3 id="reviewing-merged-risk">Reviewing Merged Risk</h3>
+<p>Filter by &ldquo;merged&rdquo; PR status. This shows findings DryRun Security identified as containing a vulnerability but that were merged anyway, meaning the vulnerability lives in the codebase. These represent accepted or overlooked risk and should be reviewed to determine if remediation is needed.</p>
+
+<h3 id="triaging-open-prs">Triaging Open PRs</h3>
+<p>Filter by &ldquo;open&rdquo; PR status. This surfaces findings on pull requests that are still open and have not been merged to main yet. Because the PR is still open, there is still time to fix the issue before it reaches production. These findings should be prioritized and actioned first.</p>
+<p>Draft PRs are also surfaced here. DryRun Security scans draft PRs and surfaces findings in the Risk Register, but does not post comments to the SCM until the PR is marked ready for review.</p>
+
+<h3 id="reviewing-dismissed-findings">Reviewing Dismissed Findings</h3>
+<p>Filter to show dismissed findings. AppSec engineers can see who dismissed each finding and take appropriate follow-up action: override the dismissal if the finding represents real risk, reach out to the developer to help educate them, or stay informed about what is being marked as &ldquo;won&rsquo;t fix&rdquo;, &ldquo;nit pick&rdquo;, or &ldquo;false positive&rdquo;. This workflow supports both risk oversight and developer security education.</p>
+
+<h2 id="search-and-filter">Search and Filter</h2>
+
+<p>The Risk Register provides several ways to narrow your view:</p>
+<figure class="docs-screenshot"><img src="assets/images/risk-register/02-risk-filter.png" alt="Risk Register filtering and search options" loading="lazy"></figure>
+
+<ul>
+  <li><strong>Search</strong> - A full-text search box lets you search across finding titles, file paths, repository names, PR titles, PR numbers, and other fields</li>
+  <li><strong>30D date filter</strong> - Quickly scope findings to the last 30 days, or adjust the date range to match your review period</li>
+  <li><strong>Filter</strong> - Opens advanced filtering options to narrow by risk level, agent type (including Code Policy), status, and more</li>
+  <li><strong>Triage</strong> - Select one or more findings and triage them in bulk with a reason and optional context</li>
+</ul>
+
+<h2 id="findings-table">Findings Table</h2>
+
+<p>The main findings table shows all findings with the following columns:</p>
+
+<table>
+  <thead>
+    <tr><th>Column</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Risk</strong></td><td>Severity label (Critical, High, Medium, Low) with color coding. Sortable.</td></tr>
+    <tr><td><strong>Type</strong></td><td>The vulnerability or finding description (e.g., "Authorization Bypass in Next.js", "Token Validation Check", "client-side-trust")</td></tr>
+    <tr><td><strong>File</strong></td><td>The file path where the finding was detected (e.g., <code>package-lock.json</code>, <code>app/api/generate-vi...</code>, <code>firestore.rules</code>)</td></tr>
+    <tr><td><strong>Repo</strong></td><td>The repository name where the finding originated</td></tr>
+    <tr><td><strong>Detected</strong></td><td>Timestamp showing when the finding was first detected (e.g., 03/18/26 16:51:18)</td></tr>
+    <tr><td><strong>Agent</strong></td><td>Which agent produced the finding - SCA, Code Policy, DeepScan, or a specific Security Analyzer</td></tr>
+    <tr><td><strong>Status</strong></td><td>The current state of the finding, shown as an icon indicating open, triaged, or resolved</td></tr>
+  </tbody>
+</table>
+
+<p>Each row has a checkbox for bulk selection, and findings are paginated (e.g., "Showing 1-20 of 203 entries") with page navigation at the bottom.</p>
+
+<p>Clicking a finding row expands the inline detail view. This shows the full finding description alongside a code snippet at the exact location of the finding. For findings where DryRun Security has gathered support evidence, that context appears in the detail view alongside the finding. For DeepScan findings, the inline view includes application details surfaced during the scan, such as relevant framework context, data flows, and authentication patterns that informed the finding.</p>
+</div>

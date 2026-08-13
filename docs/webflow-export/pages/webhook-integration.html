@@ -1,0 +1,122 @@
+<div class="drs-doc-content">
+<h2 id="overview">Overview</h2>
+
+<p>DryRun Security sends a webhook POST request to a configured endpoint when a finding is detected on a pull request. Use this to route finding data to custom dashboards, ticketing systems, SIEMs, or automation tools.</p>
+
+<p>Webhook setup is a two-step process: first create the webhook in Integrations, then attach it to a configuration to activate it for specific repositories.</p>
+
+<h2 id="step-1-create-a-webhook">Step 1: Create a Webhook</h2>
+
+<ol>
+  <li>In the left nav of the <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">DryRun Security dashboard</a>, click <strong>Integrations</strong>.</li>
+  <li>Find the <strong>Generic Webhook</strong> entry and click <strong>Details</strong>.</li>
+  <li>Click <strong>Add Webhook +</strong>.</li>
+  <li>Enter a <strong>Name</strong> for the webhook.</li>
+  <li>Enter the <strong>Webhook URL</strong> of your endpoint.</li>
+  <li>Select a <strong>Risk Level</strong>. Findings at the selected severity and above will trigger the webhook.</li>
+</ol>
+
+<table>
+  <thead>
+    <tr><th>Risk Level</th><th>Findings included</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>All</td><td>All findings regardless of severity</td></tr>
+    <tr><td>Medium</td><td>Medium, High, and Critical</td></tr>
+    <tr><td>High</td><td>High and Critical</td></tr>
+    <tr><td>Critical</td><td>Critical only</td></tr>
+  </tbody>
+</table>
+
+<ol start="7">
+  <li>Use the <strong>Enabled</strong> toggle to activate or pause the webhook at any time.</li>
+  <li>Check <strong>Global</strong> to trigger this webhook for all repositories, regardless of configuration. Leave it unchecked to activate it only through specific configurations (see Step 2).</li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+
+<h2 id="step-2-activate-for-repositories">Step 2: Activate for Repositories</h2>
+
+<p>A webhook only fires for repositories included in a configuration with notifications enabled. To attach your webhook to a configuration:</p>
+
+<ol>
+  <li>Navigate to <strong>Configurations</strong> in the dashboard.</li>
+  <li>Click <strong>Edit</strong> on an existing configuration.</li>
+  <li>Toggle <strong>Notifications Enabled</strong> on.</li>
+  <li>In the <strong>Select Integrations</strong> dropdown, choose the webhook you created in Step 1.</li>
+  <li>Click <strong>Save</strong> at the bottom of the page.</li>
+</ol>
+
+<p>The webhook will now fire for any PR finding in the repositories covered by that configuration.</p>
+
+<p class="docs-note">If you have not created a webhook yet, click <strong>Add +</strong> on the Configurations page to go directly to the Generic Webhook setup page.</p>
+
+<h2 id="payload-format">Payload Format</h2>
+
+<p>DryRun Security sends an HTTP POST with a JSON body to your endpoint when a scan completes. The body includes PR context, scan metadata, and the full list of findings.</p>
+
+<pre><code>{
+    "dashboard_url": "https://app.dryrun.security/pull-requests/00000000-0000-0000-0000-000000000000",
+    "github_url": "https://github.com/org/repo/pull/123",
+    "risk_threshold": "high",
+    "org": "your-org",
+    "repo_name": "your-repo",
+    "repo_full_name": "your-org/your-repo",
+    "pr_number": 123,
+    "pr_title": "Add payment endpoint",
+    "pr_status": "open",
+    "branch": "feature/payments",
+    "commit_author": "developer",
+    "issue_status": "open",
+    "run_time": "2026-06-09T16:48:44.960558Z",
+    "results": [
+        {
+            "id": "00000000-0000-0000-0000-000000000001",
+            "finding_type": "pullrequest",
+            "type": "Missing Authorization on Payment Endpoint",
+            "filename": "src/payments/handler.py",
+            "line_start": 42,
+            "line_end": 58,
+            "description": "The POST /payments endpoint does not verify the caller's identity...",
+            "risk": "high"
+        }
+    ]
+}</code></pre>
+
+<h3 id="top-level-fields">Top-level fields</h3>
+
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>dashboard_url</code></td><td>string</td><td>Link to the PR in the DryRun Security dashboard</td></tr>
+    <tr><td><code>github_url</code></td><td>string</td><td>Link to the pull request in your SCM</td></tr>
+    <tr><td><code>risk_threshold</code></td><td>string</td><td>Highest risk level among all findings in this scan: <code>critical</code>, <code>high</code>, <code>medium</code>, or <code>low</code>. Returns <code>passing</code> when no findings meet the configured Risk Level threshold.</td></tr>
+    <tr><td><code>org</code></td><td>string</td><td>Organization name</td></tr>
+    <tr><td><code>repo_name</code></td><td>string</td><td>Repository name</td></tr>
+    <tr><td><code>repo_full_name</code></td><td>string</td><td>Full repository identifier in <code>org/repo</code> format</td></tr>
+    <tr><td><code>pr_number</code></td><td>integer</td><td>Pull request number</td></tr>
+    <tr><td><code>pr_title</code></td><td>string</td><td>Pull request title</td></tr>
+    <tr><td><code>pr_status</code></td><td>string</td><td>Pull request status: <code>open</code> or <code>closed</code></td></tr>
+    <tr><td><code>branch</code></td><td>string</td><td>Branch the pull request was opened from</td></tr>
+    <tr><td><code>commit_author</code></td><td>string</td><td>Author of the triggering commit</td></tr>
+    <tr><td><code>issue_status</code></td><td>string</td><td>Whether any open findings remain: <code>open</code> or <code>resolved</code></td></tr>
+    <tr><td><code>run_time</code></td><td>string (date-time)</td><td>Timestamp of when the scan completed</td></tr>
+    <tr><td><code>results</code></td><td>array</td><td>List of findings from this scan. Empty when no findings meet the configured Risk Level.</td></tr>
+  </tbody>
+</table>
+
+<h3 id="result-fields">Result fields</h3>
+
+<table>
+  <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>id</code></td><td>string (uuid)</td><td>Unique finding ID</td></tr>
+    <tr><td><code>finding_type</code></td><td>string</td><td>Source of the finding: <code>pullrequest</code>, <code>code_policy</code>, <code>deepscan</code>, or <code>sca</code></td></tr>
+    <tr><td><code>type</code></td><td>string</td><td>Finding name</td></tr>
+    <tr><td><code>filename</code></td><td>string</td><td>File where the finding was detected</td></tr>
+    <tr><td><code>line_start</code></td><td>integer</td><td>Starting line of the affected code</td></tr>
+    <tr><td><code>line_end</code></td><td>integer</td><td>Ending line of the affected code</td></tr>
+    <tr><td><code>description</code></td><td>string</td><td>Full finding description</td></tr>
+    <tr><td><code>risk</code></td><td>string</td><td>Risk level of this finding: <code>critical</code>, <code>high</code>, <code>medium</code>, or <code>low</code></td></tr>
+  </tbody>
+</table>
+</div>

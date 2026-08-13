@@ -1,0 +1,121 @@
+<div class="drs-doc-content">
+<figure class="docs-screenshot"><img src="assets/images/code-security-intelligence/01-csi-architecture.jpg" alt="Code Security Intelligence architecture diagram showing sources, the DryRun intelligence layer, access methods, and intelligence workflows" loading="lazy"></figure>
+
+<h2 id="overview">Overview</h2>
+
+<p>DryRun Security takes vulnerability scanning to the next level by building an intelligence layer on top of all the finding data and trends from <a href="./pr-scanning">PR scanning</a> and <a href="./deepscan">DeepScan</a>. This intelligence layer is actionable and enables AppSec teams to do meaningful security work beyond just reviewing individual findings, surfacing trends, patterns, risks, and insights across the entire codebase and development organization.</p>
+
+<p>Every pull request DryRun Security reviews and every DeepScan contributes to a structured, queryable intelligence index. This index powers a range of security workflows that would otherwise require manual data collection, spreadsheet tracking, and cross-referencing multiple tools.</p>
+
+<h2 id="intelligence-workflows">Intelligence Workflows</h2>
+
+<p>The intelligence layer enables a range of security workflows. Each workflow draws on the findings and scan data DryRun Security continuously collects across your repositories.</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Workflow</th>
+      <th>What It Shows</th>
+      <th>Example Use Case</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Feature Ships</td>
+      <td>Security posture of features shipped in a sprint or release, with risk annotations and PR links</td>
+      <td>Summarize the security status of features shipped this sprint for a release review</td>
+    </tr>
+    <tr>
+      <td>Resolved Risk</td>
+      <td>Pull requests from the last 30 days that were merged after an identified risk was resolved, with links to the PR and the resolution</td>
+      <td>Confirm that all findings identified in last sprint&rsquo;s merged PRs were addressed before a release</td>
+    </tr>
+    <tr>
+      <td>Vulnerability Trends</td>
+      <td>Trending vulnerability patterns and coverage data across repos over time, including OWASP Top 10 mapping</td>
+      <td>Compare critical finding counts quarter over quarter to measure security program effectiveness</td>
+    </tr>
+    <tr>
+      <td>Architecture Risks</td>
+      <td>Structural risk patterns in the codebase, including trust boundary changes, auth drift, and data flow modifications</td>
+      <td>Identify new unauthenticated endpoints or service-to-service communication paths added this month</td>
+    </tr>
+    <tr>
+      <td>Developer Trends</td>
+      <td>Which teams or repos have recurring finding patterns, remediation velocity, and code change activity</td>
+      <td>Determine which teams would benefit most from targeted security training based on finding patterns</td>
+    </tr>
+    <tr>
+      <td>Shadow AI</td>
+      <td>AI and LLM usage detected across the codebase: tool fingerprints, code pattern analysis, and volume anomalies</td>
+      <td>Audit all AI-generated code contributions in security-critical paths for governance reporting</td>
+    </tr>
+    <tr>
+      <td>Incident Response</td>
+      <td>Queryable record of code changes, findings, and triage decisions for rapid incident investigation</td>
+      <td>Trace which PR introduced a vulnerable dependency and assess blast radius during an active incident</td>
+    </tr>
+    <tr>
+      <td>Application Summary</td>
+      <td>Security profile of a specific service or application: open findings, scan coverage, and risk trends</td>
+      <td>Generate an application security profile for a new team member onboarding onto a service</td>
+    </tr>
+    <tr>
+      <td>Security Reviews</td>
+      <td>Contextual security analysis results, business logic detection, and multi-model verification insights</td>
+      <td>Investigate which findings required cross-file analysis to detect and would be missed by pattern matchers</td>
+    </tr>
+    <tr>
+      <td>New Feature/Repo Review</td>
+      <td>Precedent-based risk assessment for new features or repositories using historical findings</td>
+      <td>Before building a new payment integration, review security findings from similar past implementations</td>
+    </tr>
+    <tr>
+      <td>PR Variant Analysis</td>
+      <td>Deep investigation of individual PR findings using the Insights AI assistant</td>
+      <td>Click &ldquo;Investigate&rdquo; on a finding to explore its security implications interactively</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="how-to-access-insights">How to Access Insights</h2>
+
+<p>Users interact with these intelligence capabilities through the <strong>Insights</strong> page in the DryRun Security dashboard in two ways:</p>
+
+<h3 id="ai-assistant">AI Assistant</h3>
+
+<p>The Insights page has an AI assistant chat interface. Users can interact with it to generate security reports, feature ship summaries, risk assessments, and more, all grounded in real DryRun Security findings data. Simply describe what you want (e.g., &ldquo;Create a security summary for the features shipped this week&rdquo;) and the assistant generates it from your actual scan data.</p>
+
+<p>Example prompts:</p>
+
+<ul>
+  <li>&ldquo;What features shipped this sprint and what are their security implications?&rdquo;</li>
+  <li>&ldquo;Show me the top vulnerability trends across my repos for the past quarter&rdquo;</li>
+  <li>&ldquo;Which repos need the most attention right now?&rdquo;</li>
+  <li>&ldquo;Generate an incident response summary for this vulnerability&rdquo;</li>
+  <li>&ldquo;What AI coding tools are being used across our organization?&rdquo;</li>
+  <li>&ldquo;Summarize the security posture of repo X&rdquo;</li>
+  <li>&ldquo;Which PRs in the last 30 days were merged after a risk was resolved?&rdquo;</li>
+</ul>
+
+<p>Because DryRun Security continuously scans every pull request and repository, these responses are grounded in real findings from your codebase, not generic checklists. They pull from live data, so the answers reflect your current state.</p>
+
+<h3 id="saved-queries">Saved Queries</h3>
+
+<p>Users can create and save custom queries in the Insights page for questions they return to regularly. For example:</p>
+
+<ul>
+  <li>A report on new critical findings across all repositories</li>
+  <li>A developer trend summary highlighting teams with the most new findings</li>
+  <li>A risk overview comparing finding rates period over period</li>
+  <li>A sprint-aligned feature ship summary for release reviews</li>
+</ul>
+
+<p>Saved queries stay available in the Insights page and can be run any time by selecting them from the query list.</p>
+
+<h2 id="mcp-integration">MCP Integration</h2>
+
+<p>AppSec engineers and AI coding tools can also access the intelligence layer programmatically via DryRun Security&#x27;s MCP integration. This enables AI coding assistants and agents to query findings, trends, and risk data directly from the development environment. See <a href="./mcp">MCP Integration</a> for setup instructions.</p>
+</div>

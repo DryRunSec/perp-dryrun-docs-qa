@@ -1,0 +1,300 @@
+<div class="drs-doc-content">
+<h2 id="getting-started">Getting Started</h2>
+
+<p>DryRun Security is an AI-native application security platform that reviews every pull request for vulnerabilities in real time. This guide helps you install DryRun Security on GitHub or GitLab, run your first scan, and configure the platform to match your workflow.</p>
+
+<h3 id="deployment-rollout-best-practices">Deployment Rollout Best Practices</h3>
+
+<p>Follow these steps to get the most out of DryRun Security:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Step</th>
+      <th>Action</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><strong><a href="#github-installation">Install DryRun Security</a></strong></td>
+      <td>Connect your repositories on GitHub or GitLab so every pull request is automatically reviewed.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong><a href="./deepscan">DeepScan</a></strong></td>
+      <td>Run a full-repository scan to establish your baseline security posture.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong><a href="./risk-register">Review findings in the Risk Register</a></strong></td>
+      <td>Examine and prioritize vulnerabilities surfaced across your repositories.</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong><a href="./finding-tuning">Triage false positives as needed</a></strong></td>
+      <td>Suppress findings that are not applicable so future scans stay focused on real risks.</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong><a href="./repository-context">Configure context</a></strong></td>
+      <td>Provide repository-level context so DryRun Security&#x27;s analysis is tailored to your codebase.</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><strong><a href="./custom-code-policies">Create Custom Code Policies</a></strong></td>
+      <td>Define organization-specific security rules written in plain English.</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><strong><a href="./slack-integration">Configure integrations and notifications</a></strong></td>
+      <td>Route alerts to Slack, webhooks, or other channels your team already uses.</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td><strong><a href="./pr-blocking">Enforcement</a></strong></td>
+      <td>Configure blocking rules to prevent PRs from merging when findings exceed your defined severity or policy thresholds.</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td><strong><a href="./code-security-intelligence">Unlock the power of Code Security Intelligence</a></strong></td>
+      <td>Query the intelligence index to track features, trends, and risks across your organization.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="supported-platforms">Supported Platforms</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th>Supported Versions</th>
+      <th>Setup Guide</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GitHub</td>
+      <td>GitHub.com (Cloud)</td>
+      <td><a href="#github-installation">GitHub Installation</a></td>
+    </tr>
+    <tr>
+      <td>GitHub</td>
+      <td>GitHub Enterprise Server (On-Premises)</td>
+      <td><a href="#ghes-installation">GitHub Enterprise Server Installation</a></td>
+    </tr>
+    <tr>
+      <td>GitLab</td>
+      <td>GitLab.com (Cloud)</td>
+      <td><a href="#gitlab-installation">GitLab Installation</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="installation-requirements">Installation Requirements</h3>
+
+<p>Before installing DryRun Security, confirm the account performing the installation has the required permissions for your platform:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th>Who Can Install</th>
+      <th>Access Granted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GitHub</td>
+      <td>Organization admin, or Enterprise admin if an enterprise account is in use</td>
+      <td>GitHub App with read access to code and metadata, and read/write access to checks, issues, and pull requests</td>
+    </tr>
+    <tr>
+      <td>GitLab</td>
+      <td>System Administrator or Group Owner</td>
+      <td>API access via a scoped Group Access Token</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="github-installation">GitHub Installation</h2>
+
+<h3 id="authorize-and-install">Authorize and Install the DryRun Security GitHub Application</h3>
+
+<p><strong>Note:</strong> You must be signed in as an organization admin (or an enterprise admin, if your organization is part of a GitHub Enterprise account) to install the GitHub App.</p>
+
+<ol>
+  <li>
+    <p>Navigate to <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a> and click the <strong>Log in with GitHub</strong> button.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/01-login.png" alt="DryRun Security Login page" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Log in to the GitHub account where DryRun Security will be installed.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/02-github-login.png" alt="GitHub Login for DryRun Security" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Authorize the DryRun Security GitHub Application by clicking the <strong>Authorize DryRunSecurity</strong> button.</p>
+    <p><strong>Note:</strong> This is a standard authorization screen for all applications in GitHub.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/06-github-authorize.png" alt="Authorize DryRun Security on GitHub" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>You'll be redirected to the DryRun Security portal. Click the <strong>Install</strong> button.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/04-install.png" alt="DryRun Security Install button" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Click the <strong>Install</strong> button on the DryRunSecurity GitHub Application page.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/03-github-install.png" alt="DryRun Security GitHub Application install" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Choose the GitHub repositories DryRun Security will run by selecting <strong>All Repositories</strong> or <strong>Only selected repositories</strong>.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/05-github-installation.png" alt="Select repositories for DryRun Security" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>After step one your installation may be paused for up to 2 business days as we activate your account.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/07-awaiting-activation.png" alt="DryRun Security awaiting account activation" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Once your account has been activated, you'll see the <strong>Installation Complete</strong> message the next time you visit <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a>.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/08-installation-complete.png" alt="DryRun Security installation complete" loading="lazy"></figure>
+  </li>
+</ol>
+
+<p><strong>Congratulations!</strong> Installation is complete. At this point DryRun Security will run checks on your repository as code is committed to Pull Requests.</p>
+
+<h2 id="ghes-installation">GitHub Enterprise Server Installation</h2>
+
+<p>DryRun Security supports on-premises GitHub Enterprise Server (GHES) installations. Setup requires a brief coordination with the DryRun Security team before installation can proceed.</p>
+
+<h3 id="step-1---initial-setup">Step 1 - Initial Setup</h3>
+
+<p>To get started, email <a href="mailto:hi@dryrun.security">hi@dryrun.security</a> with your <strong>Enterprise Profile URL</strong> (e.g., <code>https://github.yourcompany.com/enterprises/your-enterprise</code>).</p>
+
+<p>DryRun Security will verify that your GitHub Enterprise Server is reachable at the provided URL before installation can proceed. Once confirmed, DryRun Security will follow up with next steps.</p>
+
+<p><strong>Note:</strong> If your instance is not yet publicly accessible to DryRun Security over HTTPS, reach out and we can discuss connectivity options for your environment before moving forward.</p>
+
+<h3 id="step-2---create-the-github-app">Step 2 - Create the GitHub App</h3>
+
+<p>DryRun Security will send you a link to begin installation. When you open it, you will see a Webhook Secret and a <strong>Create GitHub App</strong> button.</p>
+
+<ol>
+  <li>Copy the Webhook Secret shown on the page - you will need to paste it into the GitHub App during creation</li>
+  <li>Click <strong>Create GitHub App</strong> - this opens the GitHub App creation page in your GHES instance with DryRun Security's configuration pre-filled</li>
+  <li>Paste the Webhook Secret into the Webhook Secret field in the GitHub App creation form</li>
+  <li>
+    <p>Click <strong>Create GitHub App</strong> on GitHub to complete the creation</p>
+    <p><strong>Note:</strong> Depending on your GHES version, you may see a radio button at the bottom of the creation page to install this app for <strong>Any organization and any user</strong>. If present, select this option to ensure the app is available across your enterprise and not limited to the user creating it.</p>
+  </li>
+  <li>Return to the DryRun Security setup page and click <strong>I've created my App - Continue to Step 2</strong></li>
+</ol>
+
+<h3 id="step-3---enter-app-credentials">Step 3 - Enter App Credentials</h3>
+
+<p>Step 2 of the DryRun Security setup asks for credentials from the GitHub App you just created. In your GHES GitHub App settings page:</p>
+
+<ol>
+  <li>Copy the <strong>App ID</strong> and <strong>Client ID</strong> shown at the top of the page</li>
+  <li>Click <strong>Generate a new client secret</strong> and copy the value</li>
+  <li>Scroll to the bottom of the settings page and click <strong>Generate a private key</strong> - this downloads a <code>.pem</code> file</li>
+</ol>
+
+<p>Return to the DryRun Security setup page and fill in the App ID, Client ID, and Client Secret fields, then upload the <code>.pem</code> file. Click <strong>Submit</strong>. Once complete, you can install DryRun Security on your repositories.</p>
+
+<h3 id="step-4---install-on-repositories">Step 4 - Install on Repositories</h3>
+
+<ol>
+  <li>
+    <p>Navigate to <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a> and select your corporate organization from the org picker. The org picker may default to your personal GitHub account - make sure the correct enterprise organization is selected before proceeding.</p>
+  </li>
+  <li>
+    <p>Click the <strong>Install</strong> button.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/04-install.png" alt="DryRun Security Install button" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Click the <strong>Install</strong> button on the DryRunSecurity GitHub Application page.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/03-github-install.png" alt="DryRun Security GitHub Application install" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Choose the GitHub repositories DryRun Security will run by selecting <strong>All Repositories</strong> or <strong>Only selected repositories</strong>.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/05-github-installation.png" alt="Select repositories for DryRun Security" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>After installation your account may be paused for up to 2 business days as we activate your account.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/07-awaiting-activation.png" alt="DryRun Security awaiting account activation" loading="lazy"></figure>
+  </li>
+  <li>
+    <p>Once your account has been activated, you'll see the <strong>Installation Complete</strong> message the next time you visit <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a>.</p>
+    <figure class="docs-screenshot"><img src="assets/images/install/08-installation-complete.png" alt="DryRun Security installation complete" loading="lazy"></figure>
+  </li>
+</ol>
+
+<p><strong>Congratulations!</strong> Installation is complete. DryRun Security will run checks on your repositories as code is committed to Pull Requests.</p>
+
+<h2 id="gitlab-installation">GitLab Installation</h2>
+
+<p>DryRun Security for GitLab.com enables fast, contextual code reviews that help your team spot unknown risks before they start.</p>
+
+<p>This guide will walk you through connecting your GitLab environment to DryRun Security by:</p>
+
+<ul>
+  <li>Creating a GitLab Group Access Token with the correct scopes.</li>
+  <li>Installing DryRun Security via the DryRun Security Dashboard.</li>
+</ul>
+
+<p>Once installed and activated, you&#x27;ll get immediate visibility into security risks across your GitLab projects, without slowing development down.</p>
+
+<h3 id="create-a-group-access-token">Create a Group Access Token</h3>
+
+<p>This section describes creating a Group Access Token that will be used during the installation of DryRun Security. Creating a Group Access Token requires <strong>System Administrator</strong> or <strong>Group Owner</strong> permissions.</p>
+
+<h4 id="generating-the-group-access-token">Generating the Group Access Token</h4>
+
+<ol>
+  <li>Log in to <a href="https://gitlab.com" target="_blank" rel="noopener noreferrer">gitlab.com</a>.</li>
+  <li>Navigate to the Group where DryRun Security will be installed.</li>
+  <li>Go to <strong>Settings &gt; Access Tokens</strong>.</li>
+  <li>Click <strong>Add new token</strong>.</li>
+  <li>Add a token name, set the role to at least <strong>Maintainer</strong>, and select the <code>api</code> scope.</li>
+  <li>Click <strong>Create group access token</strong>.</li>
+  <li>Copy the token and save it for later use.</li>
+</ol>
+
+<p>Done! The Group Access Token can be used to install DryRun Security.</p>
+
+<h3 id="install-via-dashboard">Install DryRun Security via the Dashboard</h3>
+
+<ol>
+  <li>Navigate to <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a> and click the <strong>Log in with GitLab</strong> button.</li>
+  <li>Authorize the DryRun Security OAuth Application.</li>
+</ol>
+
+<p><strong>Important:</strong> Choose the User or Group where DryRun Security will run from the User/Group Selector. This is usually a Group.</p>
+
+<ol start="3">
+  <li>Click the <strong>Add Token</strong> button or navigate to <strong>Settings &gt; GitLab</strong>.</li>
+  <li>Enter the Group Access Token created earlier and click <strong>Save Token</strong>.</li>
+  <li>Verify the User/Group for the Installation and click <strong>Confirm</strong> to confirm API access.</li>
+  <li>Install on Projects by clicking <strong>+</strong> next to the Project and then click <strong>Save Projects</strong>.</li>
+</ol>
+
+<h4 id="activation">Activation</h4>
+
+<p>Your installation may be paused for up to 2 business days as we activate your account. We&#x27;ll notify you as soon as your account has been activated.</p>
+
+<p>Once your account has been activated, you&#x27;ll see the <strong>Installation Complete</strong> message the next time you log in to the portal at <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a>.</p>
+
+<p><strong>Congratulations!</strong> Installation is complete.</p>
+
+<p><strong>Note:</strong> At this point the DryRun Security application will run and analyze changes as code is committed to the Project(s).</p>
+
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="./pr-scanning">PR Code Reviews</a> - understand how DryRun Security analyzes your pull requests.</li>
+  <li><a href="./pr-scanning-configuration">Configurations</a> - customize which agents and policies run on each repository.</li>
+  <li><a href="./custom-code-policies">Custom Code Policies</a> - create custom security rules in plain English.</li>
+</ul>
+</div>

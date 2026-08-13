@@ -1,0 +1,22 @@
+<div class="drs-doc-content">
+<h2 id="overview">Overview</h2>
+
+<p>DryRun Security provides Infrastructure as Code scanning focused on Terraform configurations. When a pull request modifies <code>.tf</code> files, DryRun Security analyzes the changes for security misconfigurations and flags findings as part of its <a href="pr-scanning.html">PR scanning</a> workflow.</p>
+
+<h2 id="what-it-detects">What It Detects</h2>
+
+<p>IaC scanning identifies common Terraform security issues including:</p>
+
+<ul>
+  <li><strong>Overly permissive IAM policies</strong> - Roles granting broader access than required, violating least privilege</li>
+  <li><strong>Exposed resources</strong> - Security groups, firewall rules, or storage buckets with unintended public access</li>
+  <li><strong>Insecure defaults</strong> - Unencrypted data stores, disabled logging, or missing audit trails</li>
+  <li><strong>Subdomain takeover risks</strong> - Dangling DNS records or CDN configurations that could be claimed by an attacker</li>
+</ul>
+
+<p>Beyond the built-in IaC checks, teams can use <a href="./custom-code-policies">Custom Code Policies</a> to monitor additional infrastructure concerns. Custom policies let you enforce specific configuration requirements, flag unapproved resource types, or define any other infrastructure rules that matter to your organization. This extends IaC coverage to match your team's specific infrastructure security requirements.</p>
+
+<h2 id="how-findings-appear">How Findings Appear</h2>
+
+<p>IaC findings are reported the same way as other DryRun Security results: as comments on pull requests and as entries in the <a href="risk-register.html">Risk Register</a> dashboard. Each finding includes the affected resource, a description of the risk, and guidance on remediation.</p>
+</div>

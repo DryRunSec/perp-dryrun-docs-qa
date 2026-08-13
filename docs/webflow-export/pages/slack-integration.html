@@ -1,0 +1,85 @@
+<div class="drs-doc-content">
+<p>In this section we set up an integration webhook and use it to receive event notifications from DryRun Security. There is a dedicated Slack integration and a Generic webhook option. The configuration steps are identical for both.</p>
+
+<p><strong>Prerequisite:</strong> You'll need to have already created a Webhook URL on the system you wish to integrate. Messages sent are JSON-formatted POST requests.</p>
+
+
+<h2 id="notifications-setup-walkthrough">Notification Setup Walkthrough</h2>
+
+<p>The Integrations page in the DryRun Security dashboard shows available notification channels.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/01-integrations.png" alt="Notification integrations page in DryRun Security" loading="lazy"></figure>
+
+<h3 id="slack-integration">Slack Integration</h3>
+<p>Connect DryRun Security to Slack for real-time security alerts.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/02-slack-setup.png" alt="Slack integration setup" loading="lazy"></figure>
+
+<h3 id="generic-webhook">Generic Webhook</h3>
+<p>Configure a generic webhook to send notifications to any HTTP endpoint.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/03-generic-webhook.png" alt="Generic webhook configuration" loading="lazy"></figure>
+
+<h3 id="integration-scope">Integration Scope</h3>
+<p>Global integrations notify on findings across all repositories in your organization.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/04-global-integration.png" alt="Global integration settings" loading="lazy"></figure>
+
+<p>Targeted integrations notify only for specific repositories.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/05-targeted-integration.png" alt="Targeted integration settings" loading="lazy"></figure>
+
+<h3 id="risk-triggers">Risk Level Triggers</h3>
+<p>Configure which risk levels trigger notifications.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/06-risk-trigger.png" alt="Risk level trigger configuration" loading="lazy"></figure>
+
+<p>Use the test button to validate your notification configuration.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/07-test-notification.png" alt="Test notification button" loading="lazy"></figure>
+
+<h3 id="webhook-format">Webhook Format</h3>
+<p>Example JSON body sent by the generic webhook:</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/08-webhook-body.png" alt="Generic webhook JSON body example" loading="lazy"></figure>
+
+<p>Example of a Slack notification message:</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/09-slack-message.png" alt="Slack notification message example" loading="lazy"></figure>
+
+<figure class="docs-screenshot"><img src="assets/images/notifications/10-notification-config.png" alt="Notification configuration overview" loading="lazy"></figure>
+<figure class="docs-screenshot"><img src="assets/images/notifications/11-notification-list.png" alt="List of configured notifications" loading="lazy"></figure>
+
+<h2 id="configure-global-integration">Configure a Global Integration</h2>
+
+<p>A global integration works across all repositories in your organization with no additional configuration required.</p>
+
+<ol>
+  <li>Log in to the DryRun Security portal at <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a>.</li>
+  <li>Navigate to <strong>Settings</strong>, then click <strong>Integrations</strong>.</li>
+  <li>Click <strong>Details</strong> on the integration card you want to configure.</li>
+  <li>In the <strong>Webhook URL</strong> box, add the URL for the target webhook to receive notifications.</li>
+  <li>Choose a <strong>Risk Level</strong>. Notifications will be triggered when a change has a risk at or above the chosen level.</li>
+  <li>Leave <strong>Enabled</strong> selected.</li>
+  <li>Leave <strong>Global</strong> checked.</li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+
+<p>Once saved, the <strong>Test</strong> button will be enabled. Click it to send a test message to the Webhook URL to validate the setup.</p>
+
+<h2 id="configure-targeted-integration">Configure a Targeted Integration</h2>
+
+<p>A targeted integration can be used to receive notifications about one or more specific repositories. It must be assigned to a Configuration.</p>
+
+<ol>
+  <li>Follow steps 1–5 above.</li>
+  <li>Leave <strong>Enabled</strong> selected.</li>
+  <li>Uncheck the <strong>Global</strong> option. A <strong>Name</strong> box will appear - this name is used to reference the integration in a Configuration.</li>
+  <li>Click <strong>Save</strong>, then click <strong>Test</strong> to validate.</li>
+</ol>
+
+<p><strong>Note:</strong> You'll need to add your webhook to a Configuration before notifications will be sent.</p>
+
+<h2 id="add-to-configuration">Add Notification to a Configuration</h2>
+
+<ol>
+  <li>Navigate to <strong>Settings &gt; Configurations</strong>.</li>
+  <li>Select the Configuration you want to edit.</li>
+  <li>Toggle on <strong>Notifications Enabled</strong>.</li>
+  <li>Select the desired webhook name(s) from the <strong>Integrations</strong> dropdown.</li>
+  <li>Click <strong>Save</strong>.</li>
+</ol>
+
+<p>Changes in the repository that match the integration's risk level will now trigger a notification.</p>
+</div>

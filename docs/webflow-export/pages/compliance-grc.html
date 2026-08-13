@@ -1,0 +1,95 @@
+<div class="drs-doc-content">
+<h2 id="compliance-audit">Compliance and Audit Readiness</h2>
+
+<h2 id="overview">Overview</h2>
+
+<p>DryRun Security provides the evidence trail that compliance and audit workflows require. Every PR review, finding, remediation, and policy enforcement action is tracked and accessible through the platform's reporting capabilities.</p>
+
+<h2 id="soc2-certification">SOC2 Type II Certification</h2>
+
+<p>DryRun Security is SOC2 Type II certified. This means the platform itself has been independently audited for security, availability, and confidentiality controls. Your data is handled according to the same standards your organization is working to meet.</p>
+
+<h2 id="audit-evidence">Audit Evidence Generation</h2>
+
+<p>The platform automatically generates evidence that auditors and regulators commonly request:</p>
+
+<ul>
+  <li><strong>Findings history</strong> - complete record of every vulnerability found, when it was found, and when it was resolved</li>
+  <li><strong>Remediation timelines</strong> - time-to-fix metrics for each finding, broken down by severity and category</li>
+  <li><strong>Policy enforcement records</strong> - which <a href="./custom-code-policies">Custom Code Policies</a> were evaluated, what they found, and how findings were resolved</li>
+  <li><strong>Scan coverage</strong> - which repositories were scanned, how frequently, and what percentage of PRs received security review</li>
+  <li><strong>DeepScan reports</strong> - point-in-time full-repository security assessments for baseline evidence</li>
+</ul>
+
+<h2 id="dashboard-reporting">Dashboard and Reporting</h2>
+
+<p>The <a href="./code-security-intelligence">Security Dashboard</a> provides real-time metrics that map to common compliance requirements:</p>
+
+<ul>
+  <li>Vulnerability trends over time (are things getting better or worse?)</li>
+  <li>Open findings by severity and category</li>
+  <li>Mean time to remediation</li>
+  <li>Policy compliance rates across repositories</li>
+  <li>Coverage gaps (repositories not yet connected)</li>
+</ul>
+
+<p>Use the <a href="./code-security-intelligence">intelligence index</a> to generate custom audit-ready reports by asking natural language questions like "show me a chart of risky alerts by repo for last quarter."</p>
+
+<h2 id="risk-register">Risk Register as Audit Trail</h2>
+
+<p>The <a href="./risk-register">Risk Register</a> serves as the central audit trail for all findings. Every finding includes:</p>
+
+<ul>
+  <li>The specific code change that introduced the vulnerability</li>
+  <li>Which analyzer detected it and why</li>
+  <li>The remediation status and any associated PR that fixed it</li>
+  <li>Triage records with notes explaining why a finding was marked as acceptable risk</li>
+</ul>
+
+<p>This level of traceability satisfies auditors who need to understand not just what vulnerabilities exist, but how the organization identified and responded to them.</p>
+
+<h2 id="sbom-and-ai-bom">SBOM and AI-BOM</h2>
+
+<p>DryRun Security generates <a href="./compliance-grc">Software Bills of Materials (SBOM)</a> that document the third-party components in your codebase. SBOMs are increasingly required by regulation (Executive Order 14028, EU Cyber Resilience Act) and by enterprise customers who need supply chain transparency.</p>
+
+<h2 id="deepscan-compliance">DeepScan for Compliance Assessments</h2>
+
+<p>Run a <a href="./deepscan">DeepScan</a> to generate a point-in-time security assessment of an entire repository. This is useful for:</p>
+
+<ul>
+  <li>Initial onboarding - establishing a security baseline when connecting a repository</li>
+  <li>Pre-audit preparation - generating comprehensive findings reports ahead of an audit</li>
+  <li>Regulatory submissions - providing evidence of security review for compliance certifications</li>
+  <li>Periodic assessments - quarterly or annual full-repository reviews beyond continuous PR scanning</li>
+</ul>
+
+
+<h2 id="sbom-generation">SBOM Generation</h2>
+
+<h2 id="what-is-sbom">What Is an SBOM?</h2>
+
+<p>A Software Bill of Materials (SBOM) is a formal inventory of all the components in a software product - every library, package, framework, and dependency, along with version information and provenance data. SBOMs have become an important tool for supply chain security, enabling organizations to quickly determine whether they're affected when a new vulnerability is disclosed in a widely-used library.</p>
+
+<p>Regulatory frameworks and government procurement requirements increasingly mandate SBOM production. Executive Order 14028 in the United States requires SBOM from software vendors selling to the federal government. Similar requirements are emerging in the EU and other jurisdictions. Even organizations not subject to regulatory mandates benefit from the visibility SBOMs provide into their software supply chain.</p>
+
+<h2 id="sbom-with-dryrun">SBOM with DryRun Security</h2>
+
+<p>DryRun Security generates SBOMs as a natural output of its dependency scanning capability. Because DryRun Security already analyzes your dependency manifests and lock files on every scan, the data needed for SBOM production is continuously maintained and up to date.</p>
+
+<p>SBOMs can be exported in industry-standard formats, enabling integration with vulnerability management platforms, procurement systems, and compliance tools that consume SBOM data.</p>
+
+<h2 id="ai-bom">AI-BOM: Bill of Materials for AI Components</h2>
+
+<p>As AI-generated code and AI-powered libraries become prevalent in modern software, a new challenge emerges: understanding what AI components are present in your software and what their provenance is. DryRun Security generates <strong>AI-BOMs</strong> - bills of materials specifically tracking AI-originated components and AI library dependencies.</p>
+
+<p>An AI-BOM captures:</p>
+<ul>
+  <li>AI and ML libraries present in the codebase and their versions</li>
+  <li>Model dependencies and third-party AI service integrations</li>
+  <li>Sections of code identified as AI-generated (via DryRun's AI coding visibility capability)</li>
+</ul>
+
+<h2 id="compliance-readiness">Compliance and Audit Readiness</h2>
+
+<p>SBOM and AI-BOM data produced by DryRun Security can be provided directly to auditors, customers, or regulators as evidence of supply chain visibility and control. Combined with DryRun Security's continuous vulnerability scanning and risk trending, this provides the documented, traceable security program that compliance frameworks require.</p>
+</div>
