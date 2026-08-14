@@ -480,10 +480,11 @@
   <summary class="api-endpoint-summary">
     <span class="method-post">POST</span>
     <code>/v1/accounts/{account_id}/repositories/{repository_id}/deepscans</code>
-    <span class="api-endpoint-desc">Trigger a new DeepScan on a repository.</span>
+    <span class="api-endpoint-desc">Trigger a new DeepScan for a repository.</span>
   </summary>
   <div class="api-endpoint-body">
-    <p>Trigger a full-repository DeepScan programmatically. Useful for integrating DeepScan into CI/CD pipelines, scheduled automation, or external workflows. All request body fields are optional. Omitting <code>branch</code> and <code>commit_sha</code> scans the repository&rsquo;s default branch at HEAD.</p>
+    <h4>Trigger a DeepScan</h4>
+    <p>Trigger a new DeepScan for a repository.</p>
     <h4>Parameters</h4>
     <table>
       <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
@@ -492,37 +493,13 @@
         <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
       </tbody>
     </table>
-    <h4>Request body</h4>
-    <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td><code>branch</code></td><td>string</td><td>no</td><td>Branch to scan. Defaults to the repository&rsquo;s default branch.</td></tr>
-        <tr><td><code>commit_sha</code></td><td>string</td><td>no</td><td>Specific commit SHA to scan.</td></tr>
-        <tr><td><code>full_scan</code></td><td>boolean</td><td>no</td><td>Whether to run a full scan. Defaults to <code>true</code>.</td></tr>
-      </tbody>
-    </table>
     <h4>Responses</h4>
     <ul>
-      <li><code>202</code> - scan triggered</li>
-      <li><code>404</code> - repository not found</li>
-      <li><code>422</code> - API key has no associated user</li>
-      <li><code>429</code> - scan quota exceeded</li>
-      <li><code>502</code> - internal invocation error</li>
+      <li><code>202</code> - DeepScan queued</li>
     </ul>
-    <p>Teams running DeepScan through automation should handle <code>429</code> quota exceeded errors gracefully, as accounts have a limit on concurrent scans.</p>
-    <h4>Example response</h4>
-    <pre><code>{
-  "data": {
-    "id": "11111111-1111-1111-1111-111111111111",
-    "repository_id": "22222222-2222-2222-2222-222222222222",
-    "status": "queued"
-  }
-}</code></pre>
     <h4>Example (curl)</h4>
     <pre><code>curl -X POST \
   -H "Authorization: Bearer $DRYRUN_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d &apos;{"branch": "main"}&apos; \
   "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans"</code></pre>
   </div>
 </details>
@@ -596,7 +573,8 @@
     <span class="api-endpoint-desc">Get the CycloneDX SBOM for a specific DeepScan run.</span>
   </summary>
   <div class="api-endpoint-body">
-    <p>Retrieve SBOM metadata and a time-limited download URL for the CycloneDX SBOM generated during a DeepScan. The <code>download_url</code> is valid until <code>download_url_expires_at</code> and points directly to the SBOM file.</p>
+    <p>Get SBOM for a specific DeepScan.</p>
+    <p>Retrieve SBOM metadata and a time-limited download URL for the CycloneDX SBOM generated during a specific DeepScan run.</p>
     <h4>Parameters</h4>
     <table>
       <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
@@ -608,7 +586,7 @@
     </table>
     <h4>Responses</h4>
     <ul>
-      <li><code>200</code> - SBOM metadata and download URL</li>
+      <li><code>200</code> - SBOM metadata and download URL returned</li>
       <li><code>404</code> - DeepScan not found</li>
     </ul>
     <h4>Response fields</h4>
@@ -652,6 +630,33 @@
     <pre><code>curl \
   -H "Authorization: Bearer $DRYRUN_API_KEY" \
   "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sbom"</code></pre>
+  </div>
+</details>
+
+<details class="api-endpoint">
+  <summary class="api-endpoint-summary">
+    <span class="method-get">GET</span>
+    <code>/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/sbom</code>
+    <span class="api-endpoint-desc">Get the latest SBOM for a repository.</span>
+  </summary>
+  <div class="api-endpoint-body">
+    <p>Retrieve SBOM metadata and a time-limited download URL for the most recent CycloneDX SBOM generated for a repository, without requiring a specific DeepScan ID.</p>
+    <h4>Parameters</h4>
+    <table>
+      <thead><tr><th>Name</th><th>In</th><th>Required</th><th>Type</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>account_id</td><td>path</td><td>yes</td><td>string</td><td>Account ID</td></tr>
+        <tr><td>repository_id</td><td>path</td><td>yes</td><td>string</td><td>Repository ID</td></tr>
+      </tbody>
+    </table>
+    <h4>Responses</h4>
+    <ul>
+      <li><code>200</code> - SBOM metadata and download URL returned</li>
+    </ul>
+    <h4>Example (curl)</h4>
+    <pre><code>curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/sbom"</code></pre>
   </div>
 </details>
 

@@ -15,13 +15,14 @@
   <url><loc>https://docs.dryrun.security/custom-code-policies</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/repository-context</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/risk-register</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://docs.dryrun.security/dependencies</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/finding-tuning</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/pr-blocking</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/compliance-grc</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/permissions</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/mcp</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/dryrun-api</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
-  <url><loc>https://docs.dryrun.security/dashboard</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
+  <url><loc>https://docs.dryrun.security/reporting</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/slack-integration</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/webhook-integration</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>
   <url><loc>https://docs.dryrun.security/jira-integration</loc><priority>0.8</priority><lastmod>2026-08-14</lastmod></url>

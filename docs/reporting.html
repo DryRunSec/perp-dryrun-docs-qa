@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jira Integration - DryRun Security Docs</title>
-  <meta name="description" content="Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.">
+  <title>Reporting - DryRun Security Docs</title>
+  <meta name="description" content="The Reporting page provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.">
   <!-- OpenGraph -->
-  <meta property="og:title" content="Jira Integration - DryRun Security Docs">
-  <meta property="og:description" content="Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.">
+  <meta property="og:title" content="Reporting - DryRun Security Docs">
+  <meta property="og:description" content="The Reporting page provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://docs.dryrun.security/jira-integration">
+  <meta property="og:url" content="https://docs.dryrun.security/reporting">
   <meta property="og:image" content="https://docs.dryrun.security/assets/og-default.png">
   <meta property="og:site_name" content="DryRun Security Docs">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Jira Integration - DryRun Security Docs">
-  <meta name="twitter:description" content="Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.">
+  <meta name="twitter:title" content="Reporting - DryRun Security Docs">
+  <meta name="twitter:description" content="The Reporting page provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.">
   <meta name="twitter:image" content="https://docs.dryrun.security/assets/og-default.png">
   <!-- Canonical & robots -->
-  <link rel="canonical" href="https://docs.dryrun.security/jira-integration">
+  <link rel="canonical" href="https://docs.dryrun.security/reporting">
   <meta name="robots" content="index, follow">
   <meta name="author" content="DryRun Security">
   <link rel="icon" href="./assets/favicon.ico" type="image/png">
@@ -31,9 +31,9 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "name": "Jira Integration",
-    "description": "Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.",
-    "url": "https://docs.dryrun.security/jira-integration",
+    "name": "Reporting",
+    "description": "The Reporting page provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.",
+    "url": "https://docs.dryrun.security/reporting",
     "publisher": {
       "@type": "Organization",
       "name": "DryRun Security",
@@ -55,8 +55,8 @@
       {
         "@type": "ListItem",
         "position": 2,
-        "name": "Jira Integration",
-        "item": "https://docs.dryrun.security/jira-integration"
+        "name": "Reporting",
+        "item": "https://docs.dryrun.security/reporting"
       }
     ]
   }
@@ -125,7 +125,7 @@
 <li><a href="./permissions">Permissions</a></li>
 <li><a href="./mcp">MCP</a></li>
 <li><a href="./dryrun-api">DryRun API</a></li>
-<li><a href="./reporting">Reporting</a></li>
+<li><a href="./reporting" class="active">Reporting</a></li>
 </ul>
 </div>
 <div class="sidebar-section">
@@ -133,7 +133,7 @@
 <ul class="sidebar-links">
 <li><a href="./slack-integration">Slack Integration</a></li>
 <li><a href="./webhook-integration">Webhook Integration</a></li>
-<li><a href="./jira-integration" class="active">Jira Integration</a></li>
+<li><a href="./jira-integration">Jira Integration</a></li>
 <li><a href="./api-access-keys">API Access Keys</a></li>
 <li><a href="./dryrun-skill">DryRun Skill</a></li>
 </ul>
@@ -150,161 +150,74 @@
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="document.querySelector('.sidebar').classList.remove('open');document.getElementById('sidebarOverlay').style.display='none'"></div>
     <main class="content-area">
       <div class="content-inner">
-        <div class="breadcrumb"><a href="./">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">Integrations</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Jira Integration</span></div>
+        <div class="breadcrumb"><a href="./">Docs</a><span class="breadcrumb-sep">/</span><span class="breadcrumb-section">Platform</span><span class="breadcrumb-sep">/</span><span class="breadcrumb-current">Reporting</span></div>
         <div class="page-heading-row">
-          <h1 class="page-heading">Jira Integration</h1>
+          <h1 class="page-heading">Reporting</h1>
           <button class="btn-download-pdf" onclick="window.print()" title="Download as PDF"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.5 7.5 8 10l3.5-2.5"/><path d="M2.5 11v2a1 1 0 001 1h9a1 1 0 001-1v-2"/></svg><span>PDF</span></button>
         </div>
-        <p class="page-description">Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.</p>
+        <p class="page-description">The Reporting page provides a real-time view of your organization&#x27;s security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.</p>
         <div class="doc-content">
 <h2 id="overview">Overview <a class="anchor-link" href="#overview" aria-label="Link to this section">#</a></h2>
 
-<p>DryRun Security does not have a native Jira integration today, but admins can connect DryRun Security to Jira using an automation middleware tool, either <strong>Tines</strong> or <strong>Zapier</strong>. DryRun Security sends a webhook when a finding is detected on a PR scan. The middleware receives the webhook, unpacks the finding details, checks Jira for an existing ticket for that finding, and either creates a new ticket or updates the existing one.</p>
+<p>The Reporting page provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors. All metrics are scoped to a configurable time window - 24 hours, 7 days, 30 days, or 90 days - so security and engineering teams can evaluate both current state and longer-term trends.</p>
 
-<p>When a PR is scanned and a finding is returned, DryRun Security sends a POST request with a JSON payload containing the event type, timestamp, repository, pull request number, and a finding object with <code>id</code>, <code>severity</code>, <code>category</code>, <code>title</code>, <code>file</code>, <code>line</code>, and <code>description</code>. See the <a href="./webhook-integration">Webhook Integration</a> page for the full payload structure and configuration details.</p>
+<h2 id="overview-metrics">Overview Metrics <a class="anchor-link" href="#overview-metrics" aria-label="Link to this section">#</a></h2>
 
-<h2 id="prerequisites">Prerequisites <a class="anchor-link" href="#prerequisites" aria-label="Link to this section">#</a></h2>
+<p>Six summary tiles appear across the top of the Reporting page, giving an at-a-glance picture of activity and risk across the selected period.</p>
 
-<ul>
-  <li>DryRun Security webhook configured (see <a href="./webhook-integration">Webhook Integration</a>)</li>
-  <li>A Jira project with API access (Jira API token and project key)</li>
-  <li>A <a href="https://www.tines.com/" target="_blank" rel="noopener noreferrer">Tines</a> or <a href="https://zapier.com/" target="_blank" rel="noopener noreferrer">Zapier</a> account</li>
-</ul>
+<figure class="docs-screenshot"><img src="./assets/images/dashboard/dashboard-chart.jpg" alt="DryRun Security Reporting overview" loading="lazy"></figure>
 
-<h2 id="jira-field-mapping">Jira Field Mapping <a class="anchor-link" href="#jira-field-mapping" aria-label="Link to this section">#</a></h2>
+<h3 id="prs-scanned">PRs Scanned <a class="anchor-link" href="#prs-scanned" aria-label="Link to this section">#</a></h3>
 
-<p>Map DryRun Security finding fields to Jira ticket fields as follows:</p>
+<p>The total number of pull requests DryRun Security analyzed in the selected window. This is your coverage signal - every PR that entered review was evaluated for security issues across the repositories connected to your account.</p>
 
-<table>
-  <thead>
-    <tr><th>Jira Field</th><th>Value from DryRun</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Summary</td><td><code>[DryRun] {finding.title} in {finding.file}:{finding.line}</code></td></tr>
-    <tr><td>Description</td><td>Full finding description, repository, PR number, severity, file path, finding ID</td></tr>
-    <tr><td>Labels</td><td><code>dryrun-security</code>, <code>{finding.severity}</code>, <code>{finding.category}</code>, <code>{finding.id}</code> (used for deduplication)</td></tr>
-    <tr><td>Priority</td><td>Critical &rarr; Highest, High &rarr; High, Medium &rarr; Medium, Low &rarr; Low</td></tr>
-  </tbody>
-</table>
+<h3 id="total-findings">Total Findings <a class="anchor-link" href="#total-findings" aria-label="Link to this section">#</a></h3>
 
-<p><strong>Note:</strong> The <code>finding.id</code> label is used as the deduplication key to check whether a ticket already exists.</p>
+<p>The cumulative number of security findings identified across all scanned PRs during the period. This represents the full volume of security signals your team is working through, spanning all severity levels and vulnerability classes.</p>
 
-<h2 id="tines-workflow">Tines Workflow <a class="anchor-link" href="#tines-workflow" aria-label="Link to this section">#</a></h2>
+<h3 id="merged-prs">Merged PRs <a class="anchor-link" href="#merged-prs" aria-label="Link to this section">#</a></h3>
 
-<p><a href="https://www.tines.com/" target="_blank" rel="noopener noreferrer">Tines</a> is a security automation platform. Use it to receive DryRun Security webhooks and automate Jira ticket creation with deduplication logic.</p>
+<p>The total number of PRs merged during the period. Read alongside PRs Scanned and Merged PRs w/ Risk, this provides a clear picture of code velocity relative to security outcomes.</p>
 
-<ol>
-  <li>
-    <strong>Create a Webhook action in Tines:</strong> Add a &ldquo;Webhook&rdquo; action as the trigger. Tines will generate a unique URL. Copy this URL and use it as the DryRun Security webhook destination in <strong>Settings &gt; Integrations</strong>.
-  </li>
-  <li>
-    <strong>Add a Filter action:</strong> Filter on <code>event == &quot;new_finding&quot;</code> to ensure the workflow only runs for new findings (not scan completions or resolved findings).
-  </li>
-  <li>
-    <strong>Search Jira for an existing ticket:</strong> Add an HTTP Request action to call the Jira REST API:
-<pre><code>GET {JIRA_BASE_URL}/rest/api/3/search
-  ?jql=project={PROJECT_KEY} AND labels=&quot;{finding.id}&quot; AND statusCategory != Done
-Authorization: Basic {base64(email:api_token)}</code></pre>
-    <p>This checks whether a ticket already exists for this specific finding by searching for its unique ID in labels.</p>
-  </li>
-  <li>
-    <strong>Add a Branch (condition) action:</strong> Check the <code>issues</code> array in the Jira search response:
-    <ul>
-      <li>If <code>issues.length &gt; 0</code> &rarr; ticket exists &rarr; go to Step 5</li>
-      <li>If <code>issues.length == 0</code> &rarr; no ticket &rarr; go to Step 6</li>
-    </ul>
-  </li>
-  <li>
-    <strong>Add a comment to the existing Jira ticket.</strong> HTTP Request action:
-<pre><code>POST {JIRA_BASE_URL}/rest/api/3/issue/{issues[0].id}/comment
-Body:
-{
-  &quot;body&quot;: &quot;DryRun Security flagged this finding again on PR #{pull_request} in {repository} at {timestamp}.&quot;
-}</code></pre>
-  </li>
-  <li>
-    <strong>Create a new Jira ticket.</strong> HTTP Request action:
-<pre><code>POST {JIRA_BASE_URL}/rest/api/3/issue
-Body:
-{
-  &quot;fields&quot;: {
-    &quot;project&quot;: { &quot;key&quot;: &quot;{PROJECT_KEY}&quot; },
-    &quot;summary&quot;: &quot;[DryRun] {finding.title} in {finding.file}:{finding.line}&quot;,
-    &quot;description&quot;: {
-      &quot;type&quot;: &quot;doc&quot;, &quot;version&quot;: 1,
-      &quot;content&quot;: [
-        { &quot;type&quot;: &quot;paragraph&quot;, &quot;content&quot;: [{ &quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;PR: #{pull_request} | Repository: {repository}&quot; }] },
-        { &quot;type&quot;: &quot;paragraph&quot;, &quot;content&quot;: [{ &quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;Severity: {finding.severity} | Category: {finding.category}&quot; }] },
-        { &quot;type&quot;: &quot;paragraph&quot;, &quot;content&quot;: [{ &quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;File: {finding.file}:{finding.line}&quot; }] },
-        { &quot;type&quot;: &quot;paragraph&quot;, &quot;content&quot;: [{ &quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;Finding ID: {finding.id}&quot; }] },
-        { &quot;type&quot;: &quot;paragraph&quot;, &quot;content&quot;: [{ &quot;type&quot;: &quot;text&quot;, &quot;text&quot;: &quot;{finding.description}&quot; }] }
-      ]
-    },
-    &quot;issuetype&quot;: { &quot;name&quot;: &quot;Bug&quot; },
-    &quot;labels&quot;: [&quot;dryrun-security&quot;, &quot;{finding.severity}&quot;, &quot;{finding.id}&quot;],
-    &quot;priority&quot;: { &quot;name&quot;: &quot;{mapped priority}&quot; }
-  }
-}</code></pre>
-  </li>
-</ol>
+<h3 id="merged-prs-with-risk">Merged PRs w/ Risk <a class="anchor-link" href="#merged-prs-with-risk" aria-label="Link to this section">#</a></h3>
 
-<p><strong>Workflow diagram:</strong> Webhook &rarr; Filter (<code>new_finding</code>) &rarr; Search Jira &rarr; Branch &rarr; [Comment on existing ticket | Create new ticket]</p>
+<p>PRs authored by a developer and merged while carrying at least one unresolved finding. This is a direct measure of residual risk entering your codebase. A low count relative to total merged PRs indicates your team is consistently resolving findings before code ships.</p>
 
-<h2 id="zapier-workflow">Zapier Workflow <a class="anchor-link" href="#zapier-workflow" aria-label="Link to this section">#</a></h2>
+<h3 id="improvement-rate">Improvement Rate <a class="anchor-link" href="#improvement-rate" aria-label="Link to this section">#</a></h3>
 
-<p><a href="https://zapier.com/" target="_blank" rel="noopener noreferrer">Zapier</a> is a no-code automation platform. Use it to build the same DryRun Security &rarr; Jira workflow without writing code.</p>
+<p>The percentage of scanned PRs flagged as improved during the selected period. A PR is considered improved when a finding identified in one scan is no longer present in the next scan of that same PR - meaning the developer addressed it within the review cycle, before merge. A high improvement rate indicates findings are being caught and fixed at the point of introduction rather than carried forward.</p>
 
-<ol>
-  <li>
-    <strong>Create a new Zap and choose &ldquo;Webhooks by Zapier&rdquo; as the trigger:</strong> Select &ldquo;Catch Hook&rdquo; as the trigger event. Zapier generates a webhook URL. Copy it and configure it as the DryRun Security webhook destination in <strong>Settings &gt; Integrations</strong>.
-  </li>
-  <li>
-    <strong>Test the trigger:</strong> Use DryRun Security&rsquo;s <strong>Test</strong> button in the webhook configuration to send a sample payload. This lets Zapier detect the field structure from the finding payload.
-  </li>
-  <li>
-    <strong>Add a Filter step:</strong> Insert a &ldquo;Filter&rdquo; action and set the condition: <code>event</code> (exactly) <code>new_finding</code>. This ensures the Zap only continues for new findings.
-  </li>
-  <li>
-    <strong>Add a &ldquo;Find Issue&rdquo; Jira action:</strong> Choose the Jira Cloud app and select &ldquo;Find Issue.&rdquo; Configure the search using JQL:
-<pre><code>project = {PROJECT_KEY} AND labels = &quot;{finding.id}&quot; AND statusCategory != Done</code></pre>
-    <p>Map <code>finding.id</code> from the DryRun Security payload as the label value.</p>
-  </li>
-  <li>
-    <strong>Add a &ldquo;Paths&rdquo; step (two branches)</strong>:
-    <ul>
-      <li>
-        <strong>Path A: Ticket exists</strong> (Find Issue returned a result):
-        <ul>
-          <li>Add a Jira &ldquo;Add Comment to Issue&rdquo; action.</li>
-          <li>Set the Issue ID from the Find Issue result.</li>
-          <li>Comment body: <code>DryRun Security flagged this finding again on PR #{pull_request} in {repository}.</code></li>
-        </ul>
-      </li>
-      <li>
-        <strong>Path B: No ticket</strong> (Find Issue returned no result):
-        <ul>
-          <li>Add a Jira &ldquo;Create Issue&rdquo; action.</li>
-          <li>Map fields from the DryRun Security payload:
-            <ul>
-              <li>Summary: <code>[DryRun] {finding.title} in {finding.file}:{finding.line}</code></li>
-              <li>Description: <code>PR: #{pull_request} | Repository: {repository} | Severity: {finding.severity} | File: {finding.file}:{finding.line} | Finding ID: {finding.id} | {finding.description}</code></li>
-              <li>Labels: <code>dryrun-security</code>, severity value, finding ID</li>
-              <li>Priority: map from severity</li>
-              <li>Issue Type: Bug</li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-  <li>
-    <strong>Turn on the Zap:</strong> Once all steps are configured and tested, enable the Zap.
-  </li>
-</ol>
+<h3 id="hardcoded-credentials">Hardcoded Credentials <a class="anchor-link" href="#hardcoded-credentials" aria-label="Link to this section">#</a></h3>
+
+<p>A dedicated count of credential-related findings - API keys, tokens, secrets, and similar sensitive values - across all scanned PRs. Hardcoded credentials represent one of the highest-impact risks in any codebase and are surfaced separately so they remain visible regardless of overall finding volume.</p>
+
+<h2 id="charts">Charts <a class="anchor-link" href="#charts" aria-label="Link to this section">#</a></h2>
+
+<h3 id="findings-over-time">Findings Over Time <a class="anchor-link" href="#findings-over-time" aria-label="Link to this section">#</a></h3>
+
+<p>A stacked line chart tracking findings at each severity level - Critical, High, Medium, and Low - across the selected time window. Each line moves independently, so you can see whether risk is shifting between severity tiers over time, not just whether the total is going up or down.</p>
+
+<h3 id="findings-by-repository">Findings by Repository <a class="anchor-link" href="#findings-by-repository" aria-label="Link to this section">#</a></h3>
+
+<p>A ranked view of which repositories are generating the most findings. This helps security and platform teams understand where risk is concentrated and prioritize remediation effort across the portfolio.</p>
+
+<h3 id="severity-distribution">Severity Distribution <a class="anchor-link" href="#severity-distribution" aria-label="Link to this section">#</a></h3>
+
+<p>A breakdown of active findings by severity - Critical, High, Medium, and Low - with a count and percentage for each tier. The center of the chart shows the total. Use this to assess whether your open risk is weighted toward high-severity issues that need immediate attention or spread across lower-severity findings.</p>
+
+<h3 id="findings-by-class">Findings by Class <a class="anchor-link" href="#findings-by-class" aria-label="Link to this section">#</a></h3>
+
+<p>A ranked breakdown by vulnerability type - such as Hardcoded Credentials, Cross-Site Scripting, SQL Injection, and others. Recurring patterns within a class often point to a shared dependency, an architectural pattern, or a training gap, making this view useful for identifying systemic issues beyond individual findings.</p>
+
+<h3 id="developer-activity">Developer Activity <a class="anchor-link" href="#developer-activity" aria-label="Link to this section">#</a></h3>
+
+<p>A per-developer breakdown showing PRs opened and the subset of those PRs merged with at least one unresolved finding. This view helps AppSec and engineering leads understand how security habits are distributed across the team and where additional guidance may be needed.</p>
+
+<figure class="docs-screenshot"><img src="./assets/images/dashboard/dashboard-lower.jpg" alt="DryRun Security Reporting charts - findings by repository, severity distribution, findings by class, and developer activity" loading="lazy"></figure>
         </div>
 <nav class="prev-next">
-<a href="./webhook-integration" class="prev-next-link prev-link"><span class="prev-next-label">← Previous</span><span class="prev-next-title">Webhook Integration</span></a>
-<a href="./api-access-keys" class="prev-next-link next-link"><span class="prev-next-label">Next →</span><span class="prev-next-title">API Access Keys</span></a>
+<a href="./dryrun-api" class="prev-next-link prev-link"><span class="prev-next-label">← Previous</span><span class="prev-next-title">DryRun API</span></a>
+<a href="./slack-integration" class="prev-next-link next-link"><span class="prev-next-label">Next →</span><span class="prev-next-title">Slack Integration</span></a>
 </nav>
       </div>
     </main>
@@ -312,10 +225,19 @@ Body:
 <p class="toc-title">On this page</p>
 <ul class="toc-list">
 <li class="toc-h2"><a href="#overview">Overview</a></li>
-<li class="toc-h2"><a href="#prerequisites">Prerequisites</a></li>
-<li class="toc-h2"><a href="#jira-field-mapping">Jira Field Mapping</a></li>
-<li class="toc-h2"><a href="#tines-workflow">Tines Workflow</a></li>
-<li class="toc-h2"><a href="#zapier-workflow">Zapier Workflow</a></li>
+<li class="toc-h2"><a href="#overview-metrics">Overview Metrics</a></li>
+<li class="toc-h3"><a href="#prs-scanned">PRs Scanned</a></li>
+<li class="toc-h3"><a href="#total-findings">Total Findings</a></li>
+<li class="toc-h3"><a href="#merged-prs">Merged PRs</a></li>
+<li class="toc-h3"><a href="#merged-prs-with-risk">Merged PRs w/ Risk</a></li>
+<li class="toc-h3"><a href="#improvement-rate">Improvement Rate</a></li>
+<li class="toc-h3"><a href="#hardcoded-credentials">Hardcoded Credentials</a></li>
+<li class="toc-h2"><a href="#charts">Charts</a></li>
+<li class="toc-h3"><a href="#findings-over-time">Findings Over Time</a></li>
+<li class="toc-h3"><a href="#findings-by-repository">Findings by Repository</a></li>
+<li class="toc-h3"><a href="#severity-distribution">Severity Distribution</a></li>
+<li class="toc-h3"><a href="#findings-by-class">Findings by Class</a></li>
+<li class="toc-h3"><a href="#developer-activity">Developer Activity</a></li>
 </ul>
 </aside>
   </div>

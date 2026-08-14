@@ -393,11 +393,11 @@ DeepScan is most valuable in several scenarios:
 
 Triggering a DeepScan
 
-  Log in to the DryRun Security Dashboard.
-  Navigate to the DeepScan page.
-  Click &ldquo;New Scan&rdquo;.
-  Select the repository and branch if desired.
-  Monitor scan progress on the DeepScan page.
+A DeepScan can be started from the DeepScan page by selecting a repository and branch. DryRun Security pre-selects the repository's default branch automatically, so most scans require only a repository selection to proceed. Any branch can be targeted when a different scope is needed.
+
+Once a scan starts, the DeepScan page updates in real time to show which analysis phase is running, from initial codebase profiling through security domain reviews to report generation. Findings become available as soon as the scan completes.
+
+DeepScans can also be triggered programmatically. See the DryRun API page for endpoint details.
 
 DeepScan Workflow
 
@@ -717,6 +717,10 @@ DeepScan - When a DeepScan is triggered from the dashboard, SCA runs as part of 
 
 Automatic background scanning - DryRun Security also scans active repositories automatically in the background to keep SCA findings current without requiring a manual trigger. Scan frequency is based on PR activity, so the most active repositories are kept up to date most often. See Scan Schedule below.
 
+Reachability Analysis
+
+Finding a vulnerable dependency is only the first step. DryRun Security evaluates how each vulnerable package is actually used within your codebase to determine whether the vulnerability is reachable from a real code path. A vulnerable function in a library used only for unrelated functionality presents a meaningfully different risk profile than one called directly with user-supplied input. Reachability context surfaces alongside each SCA finding, giving your team the information needed to prioritize remediation based on actual exploitability rather than CVSS scores alone.
+
 Scan Schedule
 
 Automatic SCA scans are scheduled based on repository PR activity over the last 30 days:
@@ -746,13 +750,11 @@ DryRun Security scans package manifests and lock files across all major ecosyste
 
 Note: For Gradle projects, SCA requires a committed dependency lock file. Standard Gradle build files (build.gradle, settings.gradle) are not used for dependency resolution. gradle.lockfile and buildscript-gradle.lockfile are supported at any directory level; gradle/verification-metadata.xml is only read from the repository root.
 
-Viewing Findings
+How to View Findings
 
-SCA findings are available in three places in the DryRun Security dashboard:
+SCA findings are available in two places. The Dependencies page provides a dedicated CVE-centric view organized by package and severity, with detail panels showing affected files, patched versions, and cross-repository impact. The Risk Register provides a unified triage view alongside PR scan and DeepScan findings, where findings can be marked as dismissed, in progress, or accepted risk.
 
-  Risk Register - Filter by SCA agent type to see all dependency findings across repositories, alongside PR scan and DeepScan results.
-  Repository pages - SCA findings for a specific repository are visible from that repository&rsquo;s detail page in the dashboard.
-  DeepScan page - SCA findings from a DeepScan run are included in the results and can be filtered separately.
+DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Materials) generation. A complete inventory of your software dependencies can be retrieved via the API for compliance and audit purposes.
 
 SBOM
 
@@ -1009,7 +1011,7 @@ The intelligence layer enables a range of security workflows. Each workflow draw
 
 How to Access Insights
 
-Users interact with these intelligence capabilities through the Insights page in the DryRun Security dashboard in two ways:
+Users interact with these intelligence capabilities through the Insights page, accessible from the top-level navigation in the DryRun Security app, in two ways:
 
 AI Assistant
 
@@ -1344,6 +1346,51 @@ The main findings table shows all findings with the following columns:
 Each row has a checkbox for bulk selection, and findings are paginated (e.g., "Showing 1-20 of 203 entries") with page navigation at the bottom.
 
 Clicking a finding row expands the inline detail view. This shows the full finding description alongside a code snippet at the exact location of the finding. For findings where DryRun Security has gathered support evidence, that context appears in the detail view alongside the finding. For DeepScan findings, the inline view includes application details surfaced during the scan, such as relevant framework context, data flows, and authentication patterns that informed the finding.
+
+---
+
+# Dependencies
+
+URL: https://docs.dryrun.security/dependencies
+
+Dependency scanning and supply chain risk assessment - browse and investigate vulnerable packages across your connected repositories.
+
+Dependency scanning and supply chain risk assessment, with CVE-level detail for every vulnerable package across your connected repositories.
+
+Overview
+
+The Dependencies page provides a dedicated view of all SCA findings across your organization's repositories. Each row represents a unique combination of vulnerable package and CVE, with the repository where it was detected and the current CVSS score. Four severity cards at the top of the page give an immediate count of Critical, High, Medium, and Low findings.
+
+The Dependencies page is a sibling to the Risk Register, sharing the same underlying SCA data. The Risk Register is the primary triage surface for managing finding status across all finding types. The Dependencies page focuses on supply chain risk specifically, with CVE-centric detail and cross-repository impact assessment.
+
+Dependencies page showing SCA findings by severity, package, and CVE
+
+Findings Table
+
+The findings table shows all SCA findings across your connected repositories, sorted by CVSS score by default. Each row includes:
+
+  Risk - the severity level: Critical, High, Medium, or Low
+  Package - the package name and ecosystem, such as pypi or npm
+  CVE - the associated CVE identifier
+  CVSS - the CVSS score for the vulnerability
+  Repository - the repository where the vulnerable package was detected
+  Status - the current lifecycle status of the finding
+
+All columns are sortable. The search bar and filter controls let you narrow results by repository, severity, or other criteria.
+
+Finding Detail
+
+Clicking any row opens a detail panel with two tabs.
+
+CVE Details shows the full vulnerability context: the package name and ecosystem, CVSS score and vector string, the affected and patched versions, the specific files in the repository where the vulnerable package is declared, first and last detection timestamps, the branch where the finding was observed, a description of the vulnerability, and links to external advisories including NVD, GitHub Security Advisories, and the package maintainer's security pages.
+
+Impacted Repositories lists every repository in your organization where the same vulnerable package version appears. This view makes it straightforward to assess the blast radius of a single CVE across your entire codebase before beginning remediation.
+
+Finding detail panel showing CVE context, affected files, and impacted repositories
+
+Relationship to Risk Register
+
+SCA findings in the Dependencies page are the same findings that appear in the Risk Register when filtered by SCA finding type. The Risk Register is the primary triage surface for marking findings as dismissed, in progress, or accepted risk. The Dependencies page provides a CVE-centric view optimized for investigation and cross-repository impact assessment.
 
 ---
 
@@ -2219,10 +2266,11 @@ Deepscans
   
     POST
     /v1/accounts/{account_id}/repositories/{repository_id}/deepscans
-    Trigger a new DeepScan on a repository.
+    Trigger a new DeepScan for a repository.
   
   
-    Trigger a full-repository DeepScan programmatically. Useful for integrating DeepScan into CI/CD pipelines, scheduled automation, or external workflows. All request body fields are optional. Omitting branch and commit_sha scans the repository&rsquo;s default branch at HEAD.
+    Trigger a DeepScan
+    Trigger a new DeepScan for a repository.
     Parameters
     
       NameInRequiredTypeDescription
@@ -2231,37 +2279,13 @@ Deepscans
         repository_idpathyesstringRepository ID
       
     
-    Request body
-    
-      FieldTypeRequiredDescription
-      
-        branchstringnoBranch to scan. Defaults to the repository&rsquo;s default branch.
-        commit_shastringnoSpecific commit SHA to scan.
-        full_scanbooleannoWhether to run a full scan. Defaults to true.
-      
-    
     Responses
     
-      202 - scan triggered
-      404 - repository not found
-      422 - API key has no associated user
-      429 - scan quota exceeded
-      502 - internal invocation error
+      202 - DeepScan queued
     
-    Teams running DeepScan through automation should handle 429 quota exceeded errors gracefully, as accounts have a limit on concurrent scans.
-    Example response
-    {
-  "data": {
-    "id": "11111111-1111-1111-1111-111111111111",
-    "repository_id": "22222222-2222-2222-2222-222222222222",
-    "status": "queued"
-  }
-}
     Example (curl)
     curl -X POST \
   -H "Authorization: Bearer $DRYRUN_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d &apos;{"branch": "main"}&apos; \
   "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans"
   
 
@@ -2328,7 +2352,8 @@ SBOM
     Get the CycloneDX SBOM for a specific DeepScan run.
   
   
-    Retrieve SBOM metadata and a time-limited download URL for the CycloneDX SBOM generated during a DeepScan. The download_url is valid until download_url_expires_at and points directly to the SBOM file.
+    Get SBOM for a specific DeepScan.
+    Retrieve SBOM metadata and a time-limited download URL for the CycloneDX SBOM generated during a specific DeepScan run.
     Parameters
     
       NameInRequiredTypeDescription
@@ -2340,7 +2365,7 @@ SBOM
     
     Responses
     
-      200 - SBOM metadata and download URL
+      200 - SBOM metadata and download URL returned
       404 - DeepScan not found
     
     Response fields
@@ -2384,6 +2409,31 @@ SBOM
     curl \
   -H "Authorization: Bearer $DRYRUN_API_KEY" \
   "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/{deepscan_id}/sbom"
+  
+
+  
+    GET
+    /v1/accounts/{account_id}/repositories/{repository_id}/deepscans/sbom
+    Get the latest SBOM for a repository.
+  
+  
+    Retrieve SBOM metadata and a time-limited download URL for the most recent CycloneDX SBOM generated for a repository, without requiring a specific DeepScan ID.
+    Parameters
+    
+      NameInRequiredTypeDescription
+      
+        account_idpathyesstringAccount ID
+        repository_idpathyesstringRepository ID
+      
+    
+    Responses
+    
+      200 - SBOM metadata and download URL returned
+    
+    Example (curl)
+    curl \
+  -H "Authorization: Bearer $DRYRUN_API_KEY" \
+  "https://simple-api.dryrun.security/v1/accounts/{account_id}/repositories/{repository_id}/deepscans/sbom"
   
 
 Configurations
@@ -2799,19 +2849,19 @@ If you have questions about authentication, account access, or expected response
 
 ---
 
-# Dashboard
+# Reporting
 
-URL: https://docs.dryrun.security/dashboard
+URL: https://docs.dryrun.security/reporting
 
-The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.
+The Reporting page provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.
 
 Overview
 
-The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors. All metrics are scoped to a configurable time window - 24 hours, 7 days, 30 days, or 90 days - so security and engineering teams can evaluate both current state and longer-term trends.
+The Reporting page provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors. All metrics are scoped to a configurable time window - 24 hours, 7 days, 30 days, or 90 days - so security and engineering teams can evaluate both current state and longer-term trends.
 
 Overview Metrics
 
-Six summary tiles appear across the top of the dashboard, giving an at-a-glance picture of activity and risk across the selected period.
+Six summary tiles appear across the top of the Reporting page, giving an at-a-glance picture of activity and risk across the selected period.
 
 PRs Scanned
 
@@ -2865,72 +2915,42 @@ A per-developer breakdown showing PRs opened and the subset of those PRs merged 
 
 URL: https://docs.dryrun.security/slack-integration
 
-Receive DryRun Security alerts and notifications in Slack.
+Receive DryRun Security security alerts and notifications in Slack using an incoming webhook.
 
-In this section we set up an integration webhook and use it to receive event notifications from DryRun Security. There is a dedicated Slack integration and a Generic webhook option. The configuration steps are identical for both.
+Receive DryRun Security security alerts and notifications in Slack using an incoming webhook.
 
-Prerequisite: You'll need to have already created a Webhook URL on the system you wish to integrate. Messages sent are JSON-formatted POST requests.
+How It Works
 
-Notification Setup Walkthrough
+DryRun Security sends notifications to Slack through standard incoming webhooks. You create a Slack incoming webhook URL in your Slack workspace, register it in DryRun Security under Settings &gt; Webhooks, and assign it to configurations to control which repositories and severity levels trigger notifications.
 
-The Integrations page in the DryRun Security dashboard shows available notification channels.
+Each notification includes the repository name, pull request title, severity level, and a direct link to the pull request. Links open directly to the relevant PR.
 
-Slack Integration
-Connect DryRun Security to Slack for real-time security alerts.
+Adding a Slack Webhook
 
-Generic Webhook
-Configure a generic webhook to send notifications to any HTTP endpoint.
+In the DryRun Security app, navigate to Settings &gt; Webhooks and click Add Webhook. Select Slack as the type, enter the Slack webhook URL, give the webhook a name, and save. The name is used to reference this webhook when assigning it to configurations.
 
-Integration Scope
-Global integrations notify on findings across all repositories in your organization.
+A Generic webhook option is also available for sending notifications to any HTTP endpoint. The setup is identical; messages are sent as JSON-formatted POST requests.
 
-Targeted integrations notify only for specific repositories.
+Adding a Slack webhook under Settings &gt; Webhooks
+Generic webhook configuration
 
-Risk Level Triggers
-Configure which risk levels trigger notifications.
+Scoping Notifications
 
-Use the test button to validate your notification configuration.
+Once a webhook is saved, assign it in a configuration to control which repositories trigger notifications.
 
-Webhook Format
-Example JSON body sent by the generic webhook:
+A webhook assigned in the Default Configuration covers all repositories in your organization. A webhook assigned to a targeted configuration covers only the repositories included in that configuration.
 
-Example of a Slack notification message:
+In the configuration's Notifications tab, select the webhook by name and set the minimum severity level that triggers a notification. Only findings at or above that severity generate a Slack message.
 
-Configure a Global Integration
+Assigning a webhook to the Default Configuration for organization-wide notifications
+Assigning a webhook to a targeted configuration for specific repositories
+Setting the minimum severity level that triggers a notification
 
-A global integration works across all repositories in your organization with no additional configuration required.
+Webhook Payload
 
-  Log in to the DryRun Security portal at https://app.dryrun.security.
-  Navigate to Settings, then click Integrations.
-  Click Details on the integration card you want to configure.
-  In the Webhook URL box, add the URL for the target webhook to receive notifications.
-  Choose a Risk Level. Notifications will be triggered when a change has a risk at or above the chosen level.
-  Leave Enabled selected.
-  Leave Global checked.
-  Click Save.
+Generic webhook notifications are JSON-formatted POST requests. The payload includes the repository name, PR title, finding severity, and a direct URL to the finding in the DryRun Security Risk Register.
 
-Once saved, the Test button will be enabled. Click it to send a test message to the Webhook URL to validate the setup.
-
-Configure a Targeted Integration
-
-A targeted integration can be used to receive notifications about one or more specific repositories. It must be assigned to a Configuration.
-
-  Follow steps 1–5 above.
-  Leave Enabled selected.
-  Uncheck the Global option. A Name box will appear - this name is used to reference the integration in a Configuration.
-  Click Save, then click Test to validate.
-
-Note: You'll need to add your webhook to a Configuration before notifications will be sent.
-
-Add Notification to a Configuration
-
-  Navigate to Settings &gt; Configurations.
-  Select the Configuration you want to edit.
-  Toggle on Notifications Enabled.
-  Select the desired webhook name(s) from the Integrations dropdown.
-  Click Save.
-
-Changes in the repository that match the integration's risk level will now trigger a notification.
+Generic webhook JSON payload example
 
 ---
 

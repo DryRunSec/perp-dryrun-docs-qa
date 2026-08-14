@@ -1,85 +1,36 @@
 <div class="drs-doc-content">
-<p>In this section we set up an integration webhook and use it to receive event notifications from DryRun Security. There is a dedicated Slack integration and a Generic webhook option. The configuration steps are identical for both.</p>
+<p>Receive DryRun Security security alerts and notifications in Slack using an incoming webhook.</p>
 
-<p><strong>Prerequisite:</strong> You'll need to have already created a Webhook URL on the system you wish to integrate. Messages sent are JSON-formatted POST requests.</p>
+<h2 id="how-it-works">How It Works</h2>
 
+<p>DryRun Security sends notifications to Slack through standard incoming webhooks. You create a Slack incoming webhook URL in your Slack workspace, register it in DryRun Security under Settings &gt; Webhooks, and assign it to configurations to control which repositories and severity levels trigger notifications.</p>
 
-<h2 id="notifications-setup-walkthrough">Notification Setup Walkthrough</h2>
+<p>Each notification includes the repository name, pull request title, severity level, and a direct link to the pull request. Links open directly to the relevant PR.</p>
 
-<p>The Integrations page in the DryRun Security dashboard shows available notification channels.</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/01-integrations.png" alt="Notification integrations page in DryRun Security" loading="lazy"></figure>
+<h2 id="adding-a-slack-webhook">Adding a Slack Webhook</h2>
 
-<h3 id="slack-integration">Slack Integration</h3>
-<p>Connect DryRun Security to Slack for real-time security alerts.</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/02-slack-setup.png" alt="Slack integration setup" loading="lazy"></figure>
+<p>In the DryRun Security app, navigate to <strong>Settings &gt; Webhooks</strong> and click <strong>Add Webhook</strong>. Select <strong>Slack</strong> as the type, enter the Slack webhook URL, give the webhook a name, and save. The name is used to reference this webhook when assigning it to configurations.</p>
 
-<h3 id="generic-webhook">Generic Webhook</h3>
-<p>Configure a generic webhook to send notifications to any HTTP endpoint.</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/03-generic-webhook.png" alt="Generic webhook configuration" loading="lazy"></figure>
+<p>A Generic webhook option is also available for sending notifications to any HTTP endpoint. The setup is identical; messages are sent as JSON-formatted POST requests.</p>
 
-<h3 id="integration-scope">Integration Scope</h3>
-<p>Global integrations notify on findings across all repositories in your organization.</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/04-global-integration.png" alt="Global integration settings" loading="lazy"></figure>
+<figure class="docs-screenshot"><img src="assets/images/notifications/02-slack-setup.png" alt="Adding a Slack webhook under Settings and Webhooks" loading="lazy"><figcaption>Adding a Slack webhook under Settings &gt; Webhooks</figcaption></figure>
+<figure class="docs-screenshot"><img src="assets/images/notifications/03-generic-webhook.png" alt="Generic webhook configuration" loading="lazy"><figcaption>Generic webhook configuration</figcaption></figure>
 
-<p>Targeted integrations notify only for specific repositories.</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/05-targeted-integration.png" alt="Targeted integration settings" loading="lazy"></figure>
+<h2 id="scoping-notifications">Scoping Notifications</h2>
 
-<h3 id="risk-triggers">Risk Level Triggers</h3>
-<p>Configure which risk levels trigger notifications.</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/06-risk-trigger.png" alt="Risk level trigger configuration" loading="lazy"></figure>
+<p>Once a webhook is saved, assign it in a configuration to control which repositories trigger notifications.</p>
 
-<p>Use the test button to validate your notification configuration.</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/07-test-notification.png" alt="Test notification button" loading="lazy"></figure>
+<p>A webhook assigned in the <strong>Default Configuration</strong> covers all repositories in your organization. A webhook assigned to a targeted configuration covers only the repositories included in that configuration.</p>
 
-<h3 id="webhook-format">Webhook Format</h3>
-<p>Example JSON body sent by the generic webhook:</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/08-webhook-body.png" alt="Generic webhook JSON body example" loading="lazy"></figure>
+<p>In the configuration's Notifications tab, select the webhook by name and set the minimum severity level that triggers a notification. Only findings at or above that severity generate a Slack message.</p>
 
-<p>Example of a Slack notification message:</p>
-<figure class="docs-screenshot"><img src="assets/images/notifications/09-slack-message.png" alt="Slack notification message example" loading="lazy"></figure>
+<figure class="docs-screenshot"><img src="assets/images/notifications/04-global-integration.png" alt="Assigning a webhook to the Default Configuration for organization-wide notifications" loading="lazy"><figcaption>Assigning a webhook to the Default Configuration for organization-wide notifications</figcaption></figure>
+<figure class="docs-screenshot"><img src="assets/images/notifications/05-targeted-integration.png" alt="Assigning a webhook to a targeted configuration for specific repositories" loading="lazy"><figcaption>Assigning a webhook to a targeted configuration for specific repositories</figcaption></figure>
+<figure class="docs-screenshot"><img src="assets/images/notifications/06-risk-trigger.png" alt="Setting the minimum severity level that triggers a notification" loading="lazy"><figcaption>Setting the minimum severity level that triggers a notification</figcaption></figure>
 
-<figure class="docs-screenshot"><img src="assets/images/notifications/10-notification-config.png" alt="Notification configuration overview" loading="lazy"></figure>
-<figure class="docs-screenshot"><img src="assets/images/notifications/11-notification-list.png" alt="List of configured notifications" loading="lazy"></figure>
+<h2 id="webhook-payload">Webhook Payload</h2>
 
-<h2 id="configure-global-integration">Configure a Global Integration</h2>
+<p>Generic webhook notifications are JSON-formatted POST requests. The payload includes the repository name, PR title, finding severity, and a direct URL to the finding in the DryRun Security Risk Register.</p>
 
-<p>A global integration works across all repositories in your organization with no additional configuration required.</p>
-
-<ol>
-  <li>Log in to the DryRun Security portal at <a href="https://app.dryrun.security" target="_blank" rel="noopener noreferrer">https://app.dryrun.security</a>.</li>
-  <li>Navigate to <strong>Settings</strong>, then click <strong>Integrations</strong>.</li>
-  <li>Click <strong>Details</strong> on the integration card you want to configure.</li>
-  <li>In the <strong>Webhook URL</strong> box, add the URL for the target webhook to receive notifications.</li>
-  <li>Choose a <strong>Risk Level</strong>. Notifications will be triggered when a change has a risk at or above the chosen level.</li>
-  <li>Leave <strong>Enabled</strong> selected.</li>
-  <li>Leave <strong>Global</strong> checked.</li>
-  <li>Click <strong>Save</strong>.</li>
-</ol>
-
-<p>Once saved, the <strong>Test</strong> button will be enabled. Click it to send a test message to the Webhook URL to validate the setup.</p>
-
-<h2 id="configure-targeted-integration">Configure a Targeted Integration</h2>
-
-<p>A targeted integration can be used to receive notifications about one or more specific repositories. It must be assigned to a Configuration.</p>
-
-<ol>
-  <li>Follow steps 1–5 above.</li>
-  <li>Leave <strong>Enabled</strong> selected.</li>
-  <li>Uncheck the <strong>Global</strong> option. A <strong>Name</strong> box will appear - this name is used to reference the integration in a Configuration.</li>
-  <li>Click <strong>Save</strong>, then click <strong>Test</strong> to validate.</li>
-</ol>
-
-<p><strong>Note:</strong> You'll need to add your webhook to a Configuration before notifications will be sent.</p>
-
-<h2 id="add-to-configuration">Add Notification to a Configuration</h2>
-
-<ol>
-  <li>Navigate to <strong>Settings &gt; Configurations</strong>.</li>
-  <li>Select the Configuration you want to edit.</li>
-  <li>Toggle on <strong>Notifications Enabled</strong>.</li>
-  <li>Select the desired webhook name(s) from the <strong>Integrations</strong> dropdown.</li>
-  <li>Click <strong>Save</strong>.</li>
-</ol>
-
-<p>Changes in the repository that match the integration's risk level will now trigger a notification.</p>
+<figure class="docs-screenshot"><img src="assets/images/notifications/08-webhook-body.png" alt="Generic webhook JSON payload example" loading="lazy"><figcaption>Generic webhook JSON payload example</figcaption></figure>
 </div>

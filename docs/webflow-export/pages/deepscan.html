@@ -19,13 +19,11 @@
 
 <h2 id="triggering-a-deepscan">Triggering a DeepScan</h2>
 
-<ol>
-  <li>Log in to the <strong>DryRun Security Dashboard</strong>.</li>
-  <li>Navigate to the <strong>DeepScan</strong> page.</li>
-  <li>Click <strong>&ldquo;New Scan&rdquo;</strong>.</li>
-  <li>Select the repository and branch if desired.</li>
-  <li>Monitor scan progress on the <strong>DeepScan</strong> page.</li>
-</ol>
+<p>A DeepScan can be started from the DeepScan page by selecting a repository and branch. DryRun Security pre-selects the repository's default branch automatically, so most scans require only a repository selection to proceed. Any branch can be targeted when a different scope is needed.</p>
+
+<p>Once a scan starts, the DeepScan page updates in real time to show which analysis phase is running, from initial codebase profiling through security domain reviews to report generation. Findings become available as soon as the scan completes.</p>
+
+<p>DeepScans can also be triggered programmatically. See the <a href="./dryrun-api">DryRun API</a> page for endpoint details.</p>
 
 <h2 id="deepscan-workflow">DeepScan Workflow</h2>
 
