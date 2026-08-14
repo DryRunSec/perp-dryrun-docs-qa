@@ -18,14 +18,15 @@
 - [Custom Code Policies](https://docs.dryrun.security/custom-code-policies): Create custom security rules in plain English using Custom Code Policies.
 - [Repository Context](https://docs.dryrun.security/repository-context): Repository context lets teams share application-specific knowledge with DryRun Security's agents - covering architecture decisions, accepted patterns, and security controls that exist outside the code itself.
 - [Risk Register](https://docs.dryrun.security/risk-register): One view to see, search, and act on all security risk across your organization.
+- [Dependencies](https://docs.dryrun.security/dependencies): Dependency scanning and supply chain risk assessment - browse and investigate vulnerable packages across your connected repositories.
 - [Finding Tuning with Feedback](https://docs.dryrun.security/finding-tuning): Tune security findings and reduce false positives with feedback from developers and AppSec engineers.
 - [PR Blocking](https://docs.dryrun.security/pr-blocking): Configure DryRun Security to block pull requests when critical vulnerabilities are detected.
 - [Compliance & GRC](https://docs.dryrun.security/compliance-grc): Compliance reporting, audit readiness, and SBOM generation.
 - [Permissions](https://docs.dryrun.security/permissions): Understand the two-role permission model in DryRun Security and how SCM platform roles map to Admin and Developer access.
 - [MCP](https://docs.dryrun.security/mcp): Connect AI assistants to DryRun Security insights using the Model Context Protocol for natural language queries about your security data.
 - [DryRun API](https://docs.dryrun.security/dryrun-api): Programmatic access to DryRun Security findings, scans, configurations, and insights via the Simple API.
-- [Dashboard](https://docs.dryrun.security/dashboard): The Security Dashboard provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.
-- [Slack Integration](https://docs.dryrun.security/slack-integration): Receive DryRun Security alerts and notifications in Slack.
+- [Reporting](https://docs.dryrun.security/reporting): The Reporting page provides a real-time view of your organization's security posture across every repository and pull request DryRun Security monitors, with overview metrics and trend charts scoped to a configurable time window.
+- [Slack Integration](https://docs.dryrun.security/slack-integration): Receive DryRun Security security alerts and notifications in Slack using an incoming webhook.
 - [Webhook Integration](https://docs.dryrun.security/webhook-integration): Receive a POST request to any HTTP endpoint when DryRun Security detects a finding on a pull request.
 - [Jira Integration](https://docs.dryrun.security/jira-integration): Connect DryRun Security to Jira using automation middleware for automated ticket creation and deduplication.
 - [API Access Keys](https://docs.dryrun.security/api-access-keys): Create and manage API access keys for programmatic access to DryRun Security.

@@ -13,6 +13,10 @@
 
 <p><strong>Automatic background scanning</strong> - DryRun Security also scans active repositories automatically in the background to keep SCA findings current without requiring a manual trigger. Scan frequency is based on PR activity, so the most active repositories are kept up to date most often. See Scan Schedule below.</p>
 
+<h3 id="reachability-analysis">Reachability Analysis</h3>
+
+<p>Finding a vulnerable dependency is only the first step. DryRun Security evaluates how each vulnerable package is actually used within your codebase to determine whether the vulnerability is reachable from a real code path. A vulnerable function in a library used only for unrelated functionality presents a meaningfully different risk profile than one called directly with user-supplied input. Reachability context surfaces alongside each SCA finding, giving your team the information needed to prioritize remediation based on actual exploitability rather than CVSS scores alone.</p>
+
 <h2 id="scan-schedule">Scan Schedule</h2>
 
 <p>Automatic SCA scans are scheduled based on repository PR activity over the last 30 days:</p>
@@ -46,15 +50,11 @@
 
 <p><strong>Note:</strong> For Gradle projects, SCA requires a committed dependency lock file. Standard Gradle build files (<code>build.gradle</code>, <code>settings.gradle</code>) are not used for dependency resolution. <code>gradle.lockfile</code> and <code>buildscript-gradle.lockfile</code> are supported at any directory level; <code>gradle/verification-metadata.xml</code> is only read from the repository root.</p>
 
-<h2 id="viewing-findings">Viewing Findings</h2>
+<h2 id="how-to-view-findings">How to View Findings</h2>
 
-<p>SCA findings are available in three places in the DryRun Security dashboard:</p>
+<p>SCA findings are available in two places. The <strong>Dependencies</strong> page provides a dedicated CVE-centric view organized by package and severity, with detail panels showing affected files, patched versions, and cross-repository impact. The <strong>Risk Register</strong> provides a unified triage view alongside PR scan and DeepScan findings, where findings can be marked as dismissed, in progress, or accepted risk.</p>
 
-<ul>
-  <li><strong>Risk Register</strong> - Filter by SCA agent type to see all dependency findings across repositories, alongside PR scan and DeepScan results.</li>
-  <li><strong>Repository pages</strong> - SCA findings for a specific repository are visible from that repository&rsquo;s detail page in the dashboard.</li>
-  <li><strong>DeepScan page</strong> - SCA findings from a DeepScan run are included in the results and can be filtered separately.</li>
-</ul>
+<p>DryRun Security's dependency analysis also feeds into SBOM (Software Bill of Materials) generation. A complete inventory of your software dependencies can be retrieved via the API for compliance and audit purposes.</p>
 
 <h2 id="sbom">SBOM</h2>
 
