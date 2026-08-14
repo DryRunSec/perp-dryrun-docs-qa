@@ -1,5 +1,5 @@
 /* DryRun Security - Documentation Site */
-/* Light theme: #f9fafb bg, #ffffff surface, #6366f1 accent, Inter + JetBrains Mono fonts */
+/* Light theme: #f9fafb bg, #fff surface, #6366f1 accent, Inter + JetBrains Mono fonts */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -11,7 +11,7 @@
 :root {
   --bg-primary: #f9fafb;
   --bg-secondary: #f3f4f6;
-  --bg-surface: #ffffff;
+  --bg-surface: #fff;
   --bg-elevated: #f3f4f6;
   --bg-hover: #f3f4f6;
   --border: #e5e7eb;
@@ -601,7 +601,7 @@ html:not([data-theme="light"]) .logo-dark-mode { display: block; width: 128px; h
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #ffffff;
+  color: #fff;
 }
 
 .doc-content td {
@@ -1273,7 +1273,7 @@ html:not([data-theme="light"]) .site-header {
 }
 
 html:not([data-theme="light"]) .sidebar-links a.active {
-  color: #ffffff;
+  color: #fff;
   background: #4f46e5;
   border-left-color: transparent;
   border-radius: 6px;
