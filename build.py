@@ -3259,8 +3259,6 @@ PAGES['slack-integration'] = {
     'description': 'Receive DryRun Security security alerts and notifications in Slack using an incoming webhook.',
     'section': 'Integrations',
     'content': '''
-<p>Receive DryRun Security security alerts and notifications in Slack using an incoming webhook.</p>
-
 <h2 id="how-it-works">How It Works</h2>
 
 <p>DryRun Security sends notifications to Slack through standard incoming webhooks. You create a Slack incoming webhook URL in your Slack workspace, register it in DryRun Security under Settings &gt; Webhooks, and assign it to configurations to control which repositories and severity levels trigger notifications.</p>
